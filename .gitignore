@@ -1,3 +1,7 @@
+# exclude the data directory so as to avoid to store the big CSVs
+# exported from the DB
+/data
+
 ######## R project specific (R.gitignore)
 # from https://github.com/github/gitignore/
 # History files
