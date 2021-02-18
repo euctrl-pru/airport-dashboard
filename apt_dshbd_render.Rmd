@@ -104,9 +104,12 @@ config_bar_remove_buttons <- c(
 ### Aerodrome Layout
 
 ```{r airport-layout}
+
 apt_layout_file <- here("layouts", paste0(params$icao,".png"))
-if( file.exists(apt_layout_file)) {
-  knitr::include_graphics(apt_layout_file)
+if(fs::file_exists(apt_layout_file)) {
+  fs::file_copy(apt_layout_file,
+                paste0("docs/", params$icao, ".png"), overwrite = TRUE)
+  knitr::include_graphics(paste0("docs/", params$icao,".png"))
 }
 ```
 
