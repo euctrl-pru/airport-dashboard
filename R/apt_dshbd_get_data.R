@@ -96,6 +96,18 @@ EXPORT_APT_DSHBD_THROUGHPUT() %>%
   readr::write_csv2(here::here("data", "APT_DSHBD_THROUGHPUT.csv"))
 
 
+#***************************************************
+# ---- APT ATFM ----
+#***************************************************
+EXPORT_APT_DSHBD_ATFM <- function() {
+  QUERY <- "SELECT * FROM PRUDEV.V_APT_DSHBD_ATFM"
+  EXPORT_QUERY("PRU_DEV", QUERY)
+}
+
+EXPORT_APT_DSHBD_ATFM() %>%
+  readr::write_csv2(here::here("data", "APT_DSHBD_ATFM.csv"))
+
+
 #***********************************************************************
 # ---- APT APDF DATA (ASMA / TAXI OUT / TAXI IN / PREDEP DLY)  ----
 #***********************************************************************
@@ -132,14 +144,6 @@ EXPORT_APT_DSHBD_TURNAROUND() %>%
 BASEDIR <- "https://coll.eurocontrol.int/sites/pru/dashboard/Data"
 # .----
 
-#***************************************************
-# ---- DOWNLOAD Airport_Arrival_ATFM_Delay.xlsx ----
-#***************************************************
-FILENAME <- c("Airport_Arrival_ATFM_Delay.xlsx")
-FILE_IN  <- paste(BASEDIR, FILENAME, sep = "/")
-FILE_OUT <- fs::path_abs("APT_DSHBD_ATFM.xlsx", start = here::here("data"))
-download.file(FILE_IN, FILE_OUT, mode = "wb")
-
 #*********************************************
 # ---- DOWNLOAD ATFM_Slot_Adherence.xlsx" ----
 #*********************************************
@@ -148,3 +152,4 @@ FILE_IN  <- paste(BASEDIR, FILENAME, sep = "/")
 FILE_OUT <- fs::path_abs("APT_DSHBD_SLOT_AD.xlsx", start = here::here("data"))
 download.file(FILE_IN, FILE_OUT, mode = "wb")
 # .----
+

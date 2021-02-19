@@ -28,11 +28,11 @@ title         : "`r params$icao`"
 author        : "AIU Home"
 
 output: 
-  flexdashboard::flex_dashboard:
-    orientation: rows
-    logo: "/images/euctrl-logo-noname_48x48.png"
-    favicon: "/favicon.png"
-    lib_dir: 'docs/libs'
+  flexdashboard ::flex_dashboard:
+    orientation : rows
+    logo        : 'docs/images/euctrl-logo-noname_48x48.png'
+    favicon     : 'docs/images/favicon.png'
+    lib_dir     : 'docs/libs'
     self_contained: FALSE
 ---
 
@@ -104,11 +104,15 @@ config_bar_remove_buttons <- c(
 ### Aerodrome Layout
 
 ```{r airport-layout}
+
 apt_layout_file <- here("layouts", paste0(params$icao,".png"))
-if( file.exists(apt_layout_file)) {
-  knitr::include_graphics(apt_layout_file)
+if(fs::file_exists(apt_layout_file)) {
+  fs::file_copy(apt_layout_file,
+                paste0("docs/", params$icao, ".png"), overwrite = TRUE)
+  knitr::include_graphics(paste0("docs/", params$icao,".png"))
 }
 ```
+
 
 ### General
 
@@ -640,6 +644,8 @@ filter_years <- atfm_pm %>%
                   pull(YEAR) %>% 
                   unique()
 
+max_year <- max(filter_years)
+
 button_list  <- lapply(1:length(filter_years),function(x){
                                                           list(method = "restyle",
                                                                args = list("transforms[0].value", 
@@ -649,7 +655,7 @@ button_list  <- lapply(1:length(filter_years),function(x){
 
 button_type_list <-  list(  type = 'buttons',
                             bgcolor = '#c3c1e8',
-                            active = length(filter_years),
+                            active = length(filter_years)-1,
                             direction = 'right', 
                             xref = "paper",
                             x = 0.3,
@@ -678,7 +684,7 @@ atfm_pm %>% plot_ly(x          = ~MONTH_NUM,
                     transforms = list(list(type = 'filter',
                                            target = "customdata",
                                            operation = '=',
-                                           value = "2021"))) %>%
+                                           value = max_year))) %>%
             layout( barmode     = "stack",
                     hovermode   = "x unified",
                     xaxis       = tick_yr_no_title,
@@ -798,7 +804,7 @@ share_atfm %>% plot_ly(labels = ~REG_REASON,
 
 ```
 
-<!-- 
+<!--
 
 # ATFM Slot
 
@@ -814,6 +820,7 @@ share_atfm %>% plot_ly(labels = ~REG_REASON,
 
  
 ```
+
 
 ## Row -----------------------------------------------------------
 
@@ -892,7 +899,6 @@ share_atfm %>% plot_ly(labels = ~REG_REASON,
 
 -->
 
-
 # ASMA Time
 
 ## Row -----------------------------------------------------------
@@ -959,6 +965,8 @@ ASMA_MM <- ASMA_MM %>%
 filter_years <- ASMA_MM %>% 
                   pull(YEAR) %>% unique()
 
+max_year <- max(filter_years)
+
 button_list  <- lapply(1:length(filter_years),
                        function(x){
                                   list(method = "restyle",
@@ -988,7 +996,7 @@ ASMA_MM %>%
           transforms = list(list(type      = 'filter',
                                  target    = "customdata",
                                  operation = '=',
-                                 value     = "2020")
+                                 value     = max_year)
                             ) 
          ) %>%
         layout( barmode     = "stack", 
@@ -1005,6 +1013,8 @@ ASMA_MM %>%
 ```
 
 ## Row -----------------------------------------------------------
+
+
 ### Monthly ASMA Trend (current Year)
 
 ```{r ASMA TREND LAYOUT}
@@ -1048,6 +1058,11 @@ TMP %>%
 }
 ```
 
+
+<!-- 
+# Taxi-Out Times
+-->
+
 # Taxi Times
 
 ## Row -----------------------------------------------------------
@@ -1087,7 +1102,7 @@ TXOT_YY %>%
 } else {
 
 cat("
-Analysis on taxi times are only available for airports providing the required data 
+Analysis on taxi-out times are only available for airports providing the required data 
 using the Airport Operator Data Flow (APDF).
 
 If you belong to the airport and would like to implement such data flow, please contact DANSAP@eurocontrol.int")
@@ -1113,6 +1128,8 @@ TXOT_MM <- TXOT_MM %>%
 
 filter_years <- TXOT_MM %>% 
                   pull(YEAR) %>% unique()
+
+max_year <- max(filter_years)
 
 button_list  <- lapply(1:length(filter_years),
                        function(x){
@@ -1143,7 +1160,7 @@ TXOT_MM %>%
           transforms = list(list(type      = 'filter',
                                  target    = "customdata",
                                  operation = '=',
-                                 value     = "2020")
+                                 value     = max_year)
                             ) 
          ) %>%
         layout( barmode     = "stack", 
@@ -1160,9 +1177,15 @@ TXOT_MM %>%
 }
 ```
 
-## Row -----------------------------------------------------------
 
+<!-- 
+## Row -----------------------------------------------------------
+# Taxi-In Times
+-->
+
+## Row -----------------------------------------------------------
 ### Annual Taxi-In Time
+
 
 ```{r TXIN YEARLY LAYOUT}
 if (params$apdf == 'Y')
@@ -1194,9 +1217,16 @@ TXIN_YY %>%
                                   hoverformat = ".2f"))%>% 
           config( displaylogo = FALSE,
                   modeBarButtonsToRemove = config_bar_remove_buttons)
+}else {
+
+cat("
+Analysis on taxi-in times are only available for airports providing the required data 
+using the Airport Operator Data Flow (APDF).
+
+If you belong to the airport and would like to implement such data flow, please contact DANSAP@eurocontrol.int")
+  
 }
 ```
-
 
 ### Monthly Taxi-In Time
 
@@ -1215,6 +1245,8 @@ TXIN_MM <- TXIN_MM %>%
 
 filter_years <- TXIN_MM %>% 
                   pull(YEAR) %>% unique()
+
+max_year <- max(filter_years)
 
 button_list  <- lapply(1:length(filter_years),
                        function(x){
@@ -1245,7 +1277,7 @@ TXIN_MM %>%
           transforms = list(list(type      = 'filter',
                                  target    = "customdata",
                                  operation = '=',
-                                 value     = "2020")
+                                 value     = max_year)
                             ) 
          ) %>%
         layout( barmode     = "stack", 
@@ -1260,6 +1292,10 @@ TXIN_MM %>%
                 modeBarButtonsToRemove = config_bar_remove_buttons)
 }
 ```
+
+<!-- 
+## Row -----------------------------------------------------------
+-->
 
 # Pre-Dep Delay
 
@@ -1323,6 +1359,19 @@ PDDLY_MM$DLY_CAT <- factor(PDDLY_MM$DLY_CAT,
                            levels = c("TOT_DLY_UNID", "TOT_DLY_OTHER", "TOT_DLY_89"),
                            labels = c("Unidentified", "Other reasons", "ATC Pre-Departure <br> delay (code 89)"))
 
+filter_years <- PDDLY_MM %>% 
+                  pull(YEAR) %>% unique()
+
+max_year <- max(filter_years)
+
+button_list  <- lapply(1:length(filter_years),
+                       function(x){
+                                  list(method = "restyle",
+                                       args = list("transforms[0].value", filter_years[x]),
+                                       label = filter_years[x])
+                                  }
+                      )
+
 button_type_list <-  list( buttons   = button_list, 
                            type      = 'buttons', 
                            bgcolor   = '#c3c1e8', 
@@ -1345,7 +1394,7 @@ PDDLY_MM %>%
           transforms = list(list(type      = 'filter',
                                  target    = "customdata",
                                  operation = '=',
-                                 value     = "2020")
+                                 value     = max_year)
                            )
          ) %>%
   layout( barmode     = "stack",
@@ -1412,6 +1461,19 @@ if (params$apdf == 'Y')
 predepdly_pm <- params$pddly_avg %>%
                   select(YEAR, MONTH_NUM, AVG_PREDEP_DLY) 
 
+filter_years <- predepdly_pm %>% 
+                  pull(YEAR) %>% unique()
+
+max_year <- max(filter_years)
+
+button_list  <- lapply(1:length(filter_years),
+                       function(x){
+                                  list(method = "restyle",
+                                       args = list("transforms[0].value", filter_years[x]),
+                                       label = filter_years[x])
+                                  }
+                      )
+
 button_type_list <-  list(buttons = button_list, 
                           type = 'buttons', 
                           bgcolor = '#c3c1e8', 
@@ -1432,7 +1494,7 @@ predepdly_pm %>%
           transforms = list(list(type = 'filter',
                                  target = "customdata",
                                  operation = '=',
-                                 value = "2020")
+                                 value = max_year)
                            )
          ) %>%
   layout( barmode = "stack",
@@ -1510,6 +1572,19 @@ TURN_MM <- params$turn_mm %>%
             mutate( LBL_ACTUAL = paste0("Actual Turnaround ", AC_CLASS),
                     LBL_SCHED  = paste0("Scheduled Turnaround ",AC_CLASS))
 
+filter_years <- TURN_MM %>% 
+                  pull(YEAR) %>% unique()
+
+max_year <- max(filter_years)
+
+button_list  <- lapply(1:length(filter_years),
+                       function(x){
+                                  list(method = "restyle",
+                                       args = list("transforms[0].value", filter_years[x]),
+                                       label = filter_years[x])
+                                  }
+                      )
+
 button_type_list <-  list( buttons   = button_list, 
                            type      = 'buttons', 
                            bgcolor   = '#c3c1e8', 
@@ -1533,7 +1608,7 @@ TURN_MM %>%  plot_ly() %>%
                          transforms    = list(list(type      = 'filter',
                                                    target    = "customdata",
                                                    operation = '=',
-                                                   value     = "2020")),
+                                                   value     = max_year)),
                          text          = ~AC_CLASS, 
                          hovertemplate = paste0( "Class: %{text}",
                                                  "<br>Month: %{x}",
@@ -1549,7 +1624,7 @@ TURN_MM %>%  plot_ly() %>%
                          transforms    = list(list(type      = 'filter',
                                                    target    = "customdata",
                                                    operation = '=',
-                                                   value     = "2020")),
+                                                   value     = max_year)),
                          text          = ~AC_CLASS, 
                          hovertemplate = paste0( "Class: %{text}",
                                                  "<br>Month: %{x}",

@@ -54,6 +54,51 @@ THRU_DF <- read_csv2(here("data", "APT_DSHBD_THROUGHPUT.csv")) %>%
   mutate(APT_ICAO = AIRPORT)
 
 
+# ATFM ----
+
+ATFM_DF <- read_csv2(here("data", "APT_DSHBD_ATFM.csv")) %>%
+      mutate(AIRPORT  = APT_ICAO,
+             FLT_DATE = lubridate::date(FLT_DATE),
+      #   
+         across(starts_with("DLY_APT_ARR_"),
+                ~ tidyr::replace_na(.x, 0)),
+      #
+      AD_DISRUPTION = DLY_APT_ARR_A_1 +
+         DLY_APT_ARR_E_1 +
+         DLY_APT_ARR_N_1 +
+         DLY_APT_ARR_O_1 +
+         DLY_APT_ARR_NA_1,
+       #
+       AD_CAPACITY = DLY_APT_ARR_G_1 +
+         DLY_APT_ARR_M_1 +
+         DLY_APT_ARR_R_1 +
+         DLY_APT_ARR_V_1,
+       #
+       AD_WEATHER = DLY_APT_ARR_D_1 +
+         DLY_APT_ARR_W_1,
+       #
+       AD_DISRUPTION_ATC = DLY_APT_ARR_I_1 +
+         DLY_APT_ARR_T_1,
+       #
+       AD_CAPACITY_ATC = DLY_APT_ARR_C_1,
+       #
+       AD_STAFFING_ATC = DLY_APT_ARR_S_1,
+       #
+       AD_EVENTS = DLY_APT_ARR_P_1
+) %>%
+  select(
+    AIRPORT,
+    YEAR,
+    MONTH_NUM,
+    FLT_DATE,
+    FLT_ARR_1,
+    DLY_APT_ARR_1,
+    starts_with("AD_"),
+    FLT_ARR_1_DLY,
+    FLT_ARR_1_DLY_15
+  )
+
+
 # ****************************----
 # APDF MONTLHY DATA ----
 # ****************************----
@@ -387,50 +432,6 @@ TURN_MM_DF <- APDF_TURN_DF %>%
 # ****************************----
 # PIP FILES  ----
 # ****************************----
-
-# ..PIP ATFM DELAY ----
-
-ATFM_DF <- readxl::read_excel(
-  here("data","APT_DSHBD_ATFM.xlsx"),sheet = "DATA") %>%
-  mutate(AIRPORT = APT_ICAO,
-         FLT_DATE = lubridate::date(FLT_DATE),
-         across(starts_with("DLY_APT_ARR_"),
-                ~ tidyr::replace_na(.x, 0)),
-         AD_DISRUPTION = DLY_APT_ARR_A_1 +
-           DLY_APT_ARR_E_1 +
-           DLY_APT_ARR_N_1 +
-           DLY_APT_ARR_O_1 +
-           DLY_APT_ARR_NA_1,
-         #
-         AD_CAPACITY = DLY_APT_ARR_G_1 +
-           DLY_APT_ARR_M_1 +
-           DLY_APT_ARR_R_1 +
-           DLY_APT_ARR_V_1,
-         #
-         AD_WEATHER = DLY_APT_ARR_D_1 +
-           DLY_APT_ARR_W_1,
-         #
-         AD_DISRUPTION_ATC = DLY_APT_ARR_I_1 +
-           DLY_APT_ARR_T_1,
-         #
-         AD_CAPACITY_ATC = DLY_APT_ARR_C_1,
-         #
-         AD_STAFFING_ATC = DLY_APT_ARR_S_1,
-         #
-         AD_EVENTS = DLY_APT_ARR_P_1
-  ) %>%
-  select(
-    AIRPORT,
-    YEAR,
-    MONTH_NUM,
-    FLT_DATE,
-    FLT_ARR_1,
-    DLY_APT_ARR_1,
-    starts_with("AD_"),
-    FLT_ARR_1_DLY,
-    FLT_ARR_1_DLY_15
-  )
-
 
 # ..PIP SLOT ADHERENCE ----
 
