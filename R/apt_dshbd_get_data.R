@@ -108,6 +108,18 @@ EXPORT_APT_DSHBD_ATFM() %>%
   readr::write_csv2(here::here("data", "APT_DSHBD_ATFM.csv"))
 
 
+#***************************************************
+# ---- APT PUNCTUALITY ----
+#***************************************************
+EXPORT_APT_DSHBD_PUNCTUALITY <- function() {
+  QUERY <- "SELECT * FROM PRU_AIRPORT.V_APT_DSHBD_PUNCTUALITY"
+  EXPORT_QUERY("PRU_AIRPORT", QUERY)
+}
+
+EXPORT_APT_DSHBD_PUNCTUALITY() %>%
+  readr::write_csv2(here::here("data", "APT_DSHBD_PUNCTUALITY.csv"))
+
+
 #***********************************************************************
 # ---- APT APDF DATA (ASMA / TAXI OUT / TAXI IN / PREDEP DLY)  ----
 #***********************************************************************

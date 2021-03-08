@@ -100,10 +100,182 @@ ATFM_DF <- read_csv2(here("data", "APT_DSHBD_ATFM.csv")) %>%
 
 
 # ****************************----
+# SLOT ADHERENCE ----
+# ****************************----
+
+SLOT_DF <- read_xlsx(
+  here("data","APT_DSHBD_SLOT_AD.xlsx"),
+  sheet = "DATA")
+
+SLOT_DF <- SLOT_DF %>%
+  select(YEAR, MONTH_NUM, MONTH_MON, FLT_DATE,
+         APT_ICAO, APT_NAME, STATE_NAME, FLT_DEP_1, FLT_DEP_REG_1,
+         FLT_DEP_OUT_EARLY_1,	FLT_DEP_IN_1,	FLT_DEP_OUT_LATE_1) %>%
+  mutate(AIRPORT = APT_ICAO)
+
+
+# ..SLOT YEARLY DATA ----
+SLOT_YY_DF <- SLOT_DF %>%
+  select( # ..........
+    AIRPORT,
+    APT_ICAO,
+    YEAR,
+    # ..........
+    FLT_DEP_1,
+    FLT_DEP_REG_1,
+    FLT_DEP_OUT_EARLY_1,	
+    FLT_DEP_IN_1,	
+    FLT_DEP_OUT_LATE_1
+    # ..........
+  ) %>%
+  group_by(AIRPORT, APT_ICAO, YEAR) %>%
+  summarise(
+    TOT_FLT_DEP_1           = sum(FLT_DEP_1,           na.rm = TRUE),
+    TOT_FLT_DEP_REG_1       = sum(FLT_DEP_REG_1,       na.rm = TRUE),
+    TOT_FLT_DEP_OUT_EARLY_1 = sum(FLT_DEP_OUT_EARLY_1, na.rm = TRUE),
+    TOT_FLT_DEP_IN_1        = sum(FLT_DEP_IN_1,        na.rm = TRUE),
+    TOT_FLT_DEP_OUT_LATE_1  = sum(FLT_DEP_OUT_LATE_1,  na.rm = TRUE)
+  ) %>%
+  ungroup() %>%
+  select(AIRPORT, APT_ICAO, YEAR, TOT_FLT_DEP_1,TOT_FLT_DEP_REG_1,TOT_FLT_DEP_OUT_EARLY_1,TOT_FLT_DEP_IN_1,TOT_FLT_DEP_OUT_LATE_1)
+
+# ..SLOT MONTLY DATA ----
+SLOT_MM_DF <- SLOT_DF %>%
+  select( # ..........
+    AIRPORT,
+    APT_ICAO,
+    YEAR,
+    MONTH_NUM,
+    # ..........
+    FLT_DEP_1,
+    FLT_DEP_REG_1,
+    FLT_DEP_OUT_EARLY_1,	
+    FLT_DEP_IN_1,	
+    FLT_DEP_OUT_LATE_1
+    # ..........
+  ) %>%
+  group_by(AIRPORT, APT_ICAO, YEAR, MONTH_NUM) %>%
+  summarise(
+    TOT_FLT_DEP_1           = sum(FLT_DEP_1,           na.rm = TRUE),
+    TOT_FLT_DEP_REG_1       = sum(FLT_DEP_REG_1,       na.rm = TRUE),
+    TOT_FLT_DEP_OUT_EARLY_1 = sum(FLT_DEP_OUT_EARLY_1, na.rm = TRUE),
+    TOT_FLT_DEP_IN_1        = sum(FLT_DEP_IN_1,        na.rm = TRUE),
+    TOT_FLT_DEP_OUT_LATE_1  = sum(FLT_DEP_OUT_LATE_1,  na.rm = TRUE)
+  ) %>%
+  ungroup() %>%
+  select(AIRPORT, APT_ICAO, YEAR, MONTH_NUM, TOT_FLT_DEP_1,TOT_FLT_DEP_REG_1,TOT_FLT_DEP_OUT_EARLY_1,TOT_FLT_DEP_IN_1,TOT_FLT_DEP_OUT_LATE_1)
+
+
+# ****************************----
+# APDF PUNCTUALITY DATA ----
+# ****************************----
+PUNC_DF <- read_csv2(here("data","APT_DSHBD_PUNCTUALITY.csv"))
+
+# ..PUNC DEP YEARLY DATA ----
+PUNC_DEP_YY_DF <- PUNC_DF %>%
+  select( # ..........
+    AIRPORT,
+    APT_ICAO,
+    PHASE,
+    YEAR,
+    PUNCT_CAT,	
+    # ..........
+    NB_FLT,	
+    MONTHLY_TRAFIC
+    # ..........
+  ) %>%
+  filter(PHASE == "DEP") %>%
+  group_by(AIRPORT, APT_ICAO, PHASE, YEAR, PUNCT_CAT) %>%
+  summarise(
+    TOT_FLT    = sum(NB_FLT,         na.rm = TRUE),
+    TOT_TRAFIC = sum(MONTHLY_TRAFIC, na.rm = TRUE)
+  ) %>%
+  ungroup() %>%
+  mutate(
+    AVG_PER_CATEG = (TOT_FLT / TOT_TRAFIC)*100
+  )
+
+
+# ..PUNC DEP MONTHLY DATA ----
+PUNC_DEP_MM_DF <- PUNC_DF %>%
+  select( # ..........
+    AIRPORT,
+    APT_ICAO,
+    PHASE,
+    YEAR,
+    MONTH_NUM,
+    PUNCT_CAT,	
+    # ..........
+    NB_FLT,	
+    MONTHLY_TRAFIC
+    # ..........
+  ) %>%
+  filter(PHASE == "DEP") %>%
+  group_by(AIRPORT, APT_ICAO, PHASE, YEAR, MONTH_NUM,PUNCT_CAT) %>%
+  summarise(
+    TOT_FLT    = sum(NB_FLT,         na.rm = TRUE),
+    TOT_TRAFIC = sum(MONTHLY_TRAFIC, na.rm = TRUE)
+  ) %>%
+  ungroup() %>%
+  mutate(
+    AVG_PER_CATEG = (TOT_FLT / TOT_TRAFIC)*100
+  )
+
+# ..PUNC ARR YEARLY DATA ----
+PUNC_ARR_YY_DF <- PUNC_DF %>%
+  select( # ..........
+    AIRPORT,
+    APT_ICAO,
+    PHASE,
+    YEAR,
+    PUNCT_CAT,	
+    # ..........
+    NB_FLT,	
+    MONTHLY_TRAFIC
+    # ..........
+  ) %>%
+  filter(PHASE == "ARR") %>%
+  group_by(AIRPORT, APT_ICAO, PHASE, YEAR, PUNCT_CAT) %>%
+  summarise(
+    TOT_FLT    = sum(NB_FLT,         na.rm = TRUE),
+    TOT_TRAFIC = sum(MONTHLY_TRAFIC, na.rm = TRUE)
+  ) %>%
+  ungroup() %>%
+  mutate(
+    AVG_PER_CATEG = (TOT_FLT / TOT_TRAFIC)*100
+  )
+
+
+# ..PUNC ARR MONTHLY DATA ----
+PUNC_ARR_MM_DF <- PUNC_DF %>%
+  select( # ..........
+    AIRPORT,
+    APT_ICAO,
+    PHASE,
+    YEAR,
+    MONTH_NUM,
+    PUNCT_CAT,	
+    # ..........
+    NB_FLT,	
+    MONTHLY_TRAFIC
+    # ..........
+  ) %>%
+  filter(PHASE == "ARR") %>%
+  group_by(AIRPORT, APT_ICAO, PHASE, YEAR, MONTH_NUM,PUNCT_CAT) %>%
+  summarise(
+    TOT_FLT    = sum(NB_FLT,         na.rm = TRUE),
+    TOT_TRAFIC = sum(MONTHLY_TRAFIC, na.rm = TRUE)
+  ) %>%
+  ungroup() %>%
+  mutate(
+    AVG_PER_CATEG = (TOT_FLT / TOT_TRAFIC)*100
+  )
+
+
+# ****************************----
 # APDF MONTLHY DATA ----
 # ****************************----
 APDF_MM_DF <- read_csv2(here("data","APT_DSHBD_APDF_DATA.csv"))
-
 
 # ..ASMA YEARLY DATA ----
 ASMA_YY_DF <- APDF_MM_DF %>%
@@ -323,6 +495,42 @@ PDDLY_MM_DF <- APDF_MM_DF %>%
   ) %>%
   select(AIRPORT, APT_ICAO, YEAR, MONTH_NUM, TOT_DLY_89, TOT_DLY_OTHER, TOT_DLY_UNID, AVG_PREDEP_DLY)
 
+
+
+# ..PDDLY YEARLY AVERAGE  ----
+PDDLY_YY_AVG_DF <- APDF_MM_DF %>%
+  select( # ..........
+    AIRPORT,
+    APT_ICAO,
+    YEAR,
+    # ..........
+    NB_DLY_DEP_FL,
+    DLY_89_MIN,
+    DLY_999_MIN,
+    DLY_ZZZ_MIN,
+    DLY_OTHER_MIN,
+    UN_RPTED_DLY_MIN,
+    OV_RPTED_DLY_MIN
+    # ..........
+  ) %>%
+  group_by(AIRPORT, APT_ICAO, YEAR) %>%
+  summarise(
+    TOT_FLT_DEP = sum(NB_DLY_DEP_FL, na.rm = TRUE),
+    TOT_DLY_89 = sum(DLY_89_MIN, na.rm = TRUE),
+    TOT_DLY_999 = sum(DLY_999_MIN, na.rm = TRUE),
+    TOT_DLY_ZZZ = sum(DLY_ZZZ_MIN, na.rm = TRUE),
+    TOT_DLY_OTHER = sum(DLY_OTHER_MIN, na.rm = TRUE),
+    TOT_DLY_UNREPORTED = sum(UN_RPTED_DLY_MIN, na.rm = TRUE),
+    TOT_DLY_OVREPORTED = sum(OV_RPTED_DLY_MIN, na.rm = TRUE)
+  ) %>%
+  ungroup() %>%
+  mutate(
+    TOT_DLY_UNID = TOT_DLY_999 + TOT_DLY_ZZZ + TOT_DLY_UNREPORTED,
+    AVG_PREDEP_DLY = TOT_DLY_89 / TOT_FLT_DEP
+  ) %>%
+  select(AIRPORT, APT_ICAO, YEAR, AVG_PREDEP_DLY)
+
+
 # ..PDDLY MONTLHY AVERAGE  ----
 PDDLY_AVG_DF <- APDF_MM_DF %>%
   select( # ..........
@@ -429,13 +637,6 @@ TURN_MM_DF <- APDF_TURN_DF %>%
   select(AIRPORT, APT_ICAO, YEAR, MONTH_NUM, AC_CLASS, TOT_TURN, AVG_SDTT, AVG_ACTT, AVG_ADTT)
 
 
-# ****************************----
-# PIP FILES  ----
-# ****************************----
 
-# ..PIP SLOT ADHERENCE ----
 
-SLOT_DF <- read_xlsx(
-  here("data","APT_DSHBD_SLOT_AD.xlsx"),
-  sheet = "DATA")
 

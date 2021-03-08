@@ -232,6 +232,13 @@ prepare_params <- function(apt_icao)
                 tfc       = filter_df_by_apt(TFC_DF,      .apt = apt_icao),
                 thru      = pack_thru(       THRU_DF,     .apt = apt_icao),
                 atfm      = filter_df_by_apt(ATFM_DF,     .apt = apt_icao),
+                slot_yy   = filter_df_by_apt(SLOT_YY_DF,  .apt = apt_icao),
+                slot_mm   = filter_df_by_apt(SLOT_MM_DF,  .apt = apt_icao),
+                #
+                punc_dep_yy   = filter_df_by_apt(PUNC_DEP_YY_DF,  .apt = apt_icao),
+                punc_dep_mm   = filter_df_by_apt(PUNC_DEP_MM_DF,  .apt = apt_icao),
+                punc_arr_yy   = filter_df_by_apt(PUNC_ARR_YY_DF,  .apt = apt_icao),
+                punc_arr_mm   = filter_df_by_apt(PUNC_ARR_MM_DF,  .apt = apt_icao),
                 #
                 asma_yy   = filter_df_by_apt(ASMA_YY_DF,  .apt = apt_icao),
                 asma_mm   = filter_df_by_apt(ASMA_MM_DF,  .apt = apt_icao),
@@ -245,11 +252,11 @@ prepare_params <- function(apt_icao)
                 pddly_yy  = filter_df_by_apt(PDDLY_YY_DF, .apt = apt_icao),
                 pddly_mm  = filter_df_by_apt(PDDLY_MM_DF, .apt = apt_icao),
                 pddly_avg = filter_df_by_apt(PDDLY_AVG_DF,.apt = apt_icao),
+                pddly_yy_avg = filter_df_by_apt(PDDLY_YY_AVG_DF,.apt = apt_icao),
                 #
                 turn_yy   = filter_df_by_apt(TURN_YY_DF,  .apt = apt_icao),
                 turn_mm   = filter_df_by_apt(TURN_MM_DF,  .apt = apt_icao)
                 #
-                #slot   = filter_df_by_apt(SLOT_DF,  .apt = apt_icao)
         ) 
 }
 
