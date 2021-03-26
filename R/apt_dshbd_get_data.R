@@ -2,9 +2,8 @@
 # --- SET UP ----
 # ---
 
-cat("\014")        # Clear Environment           ----
-rm(list = ls())    # Clear Console               ----
-
+cat("\014")        # Clear Console               ----
+rm(list = ls())    # Clear Environment           ----
 
 library(dplyr)
 library(readxl)
@@ -109,6 +108,18 @@ EXPORT_APT_DSHBD_ATFM() %>%
 
 
 #***************************************************
+# ---- APT SLOT ----
+#***************************************************
+EXPORT_APT_DSHBD_SLOT <- function() {
+  QUERY <- "SELECT * FROM PRUDEV.V_APT_DSHBD_SLOT_AD"
+  EXPORT_QUERY("PRU_DEV", QUERY)
+}
+
+EXPORT_APT_DSHBD_SLOT() %>%
+  readr::write_csv2(here::here("data", "APT_DSHBD_SLOT_AD.csv"))
+
+
+#***************************************************
 # ---- APT PUNCTUALITY ----
 #***************************************************
 EXPORT_APT_DSHBD_PUNCTUALITY <- function() {
@@ -142,26 +153,4 @@ EXPORT_APT_DSHBD_TURNAROUND <- function() {
 
 EXPORT_APT_DSHBD_TURNAROUND() %>%
   readr::write_csv2(here::here("data", "APT_DSHBD_TURNAROUND.csv"))
-
-
-
-
-# ..........................................................................----
-# 2 - DOWNLOAD PIP EXCEL FILES FROM AIU PORTAL ----
-# ..........................................................................----
-
-#************************************
-# ---- SETTING DATA SOURCE (URL) ----
-#************************************
-BASEDIR <- "https://coll.eurocontrol.int/sites/pru/dashboard/Data"
-# .----
-
-#*********************************************
-# ---- DOWNLOAD ATFM_Slot_Adherence.xlsx" ----
-#*********************************************
-FILENAME <- c("ATFM_Slot_Adherence.xlsx")
-FILE_IN  <- paste(BASEDIR, FILENAME, sep = "/")
-FILE_OUT <- fs::path_abs("APT_DSHBD_SLOT_AD.xlsx", start = here::here("data"))
-download.file(FILE_IN, FILE_OUT, mode = "wb")
-# .----
 

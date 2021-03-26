@@ -103,9 +103,7 @@ ATFM_DF <- read_csv2(here("data", "APT_DSHBD_ATFM.csv")) %>%
 # SLOT ADHERENCE ----
 # ****************************----
 
-SLOT_DF <- read_xlsx(
-  here("data","APT_DSHBD_SLOT_AD.xlsx"),
-  sheet = "DATA")
+SLOT_DF <- read_csv2(here("data", "APT_DSHBD_SLOT_AD.csv")) 
 
 SLOT_DF <- SLOT_DF %>%
   select(YEAR, MONTH_NUM, MONTH_MON, FLT_DATE,
@@ -327,6 +325,12 @@ ASMA_MM_DF <- APDF_MM_DF %>%
     AVG_UNIMP_TIME = TOT_UNIMP_TIME / TOT_FLT,
     AVG_ADD_TIME = TOT_ADD_TIME / TOT_FLT
   )
+
+
+
+
+
+
 
 # ..TAXI-OUT YEARLY DATA ----
 TXOT_YY_DF <- APDF_MM_DF %>%
