@@ -22,7 +22,7 @@ APT_DF %>%
     .f = function(icao) {
       cat(paste0("==>", icao, "...\n"))
       rmarkdown::render(
-      input       = here("APT_DSHBD_RENDER.Rmd"),
+      input       = here("apt_dshbd_render.Rmd"),
       params      = prepare_params(icao), 
       output_file = here("docs", paste0(icao, ".html")))
       cat(paste0("==>", icao, "...end\n"))
