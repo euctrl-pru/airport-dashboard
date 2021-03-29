@@ -61,6 +61,7 @@ library(tidyr)
 library(plotly)
 library(magick)
 library(here)
+library(stringr)
 ```
 
 
@@ -334,25 +335,22 @@ cum_mvts <- cum_mvts %>%
   mutate(CHANGE = ( FLT_TOT - lag(FLT_TOT))/lag(FLT_TOT) )
 
 msg_tmpl <- "<b>Change Jan-{mnt}<br>{yr2} vs {yr1}:<br>{pct}% </b>"
+
 msg <- str_glue(msg_tmpl,
                 mnt = pick_mth[this_year_max_month],
                 yr1 = cum_mvts$YEAR[1],
                 yr2 = cum_mvts$YEAR[2],
                 pct = round(100* cum_mvts[2,"CHANGE"], 2))
-# msg <- paste0("<b>Change Jan-", 
-#               pick_mth[this_year_max_month],
-#               "<br>", 
-#               cum_mvts$YEAR[2],
-#               " vs ", 
-#               cum_mvts$YEAR[1],
-#               ":<br>", 
-#               round(100* cum_mvts[2,"CHANGE"], 2),"% </b>")
+
+ALL_YEAR <- mvts_pa %>% 
+  pull(YEAR)%>% 
+  unique()
 
 msg_y   <- mvts_pa %>% 
             filter(YEAR == as.integer(max(YEAR)) - 1) %>% 
             mutate(FLT_TOT = 0.7 * FLT_TOT) %>% pull(FLT_TOT)
 
-key_msg <- list(x = unique(max(mvts_pa$YEAR)),
+key_msg <- list(x = length(ALL_YEAR)-1,
                 y = msg_y,
                 text = msg,
                 size = 14,
@@ -1660,15 +1658,10 @@ msg <- str_glue(msg_tmpl,
                 yr2 = CUM_ASMA$YEAR[2],
                 pct = round(100* CUM_ASMA[2,"CHANGE"], 2))
 
-#msg <- paste0("<b>Change Jan-", 
-#               pick_mth[YEAR_MAX_MONTH],
-#               "<br>", 
-#               CUM_ASMA$YEAR[2],
-#               " vs ", 
-#               CUM_ASMA$YEAR[1],
-#               ":<br>", 
-#               round(100* CUM_ASMA[2,"CHANGE"], 2),"% </b>")
-
+ALL_YEAR <- ASMA_YY %>% 
+            filter(TIME != "NaN") %>%
+            pull(YEAR)%>% 
+            unique()
 
 msg_y   <- params$asma_yy %>% 
   filter(AVG_ADD_TIME != "NaN") %>%
@@ -1676,7 +1669,7 @@ msg_y   <- params$asma_yy %>%
   mutate(TOT_ASMA = 1.1 * (AVG_UNIMP_TIME+AVG_ADD_TIME) )%>% 
   pull(TOT_ASMA)
 
-key_msg <- list(x         = unique(max(ASMA_VAR$YEAR)),
+key_msg <- list(x         = length(ALL_YEAR)-1,
                 y         = msg_y,
                 text      = msg,
                 size      = 14,
@@ -1844,7 +1837,7 @@ TMP %>%
 -->
 
 
-# Taxi-Out Times
+# Taxi-Out Time
 
 ## Row -----------------------------------------------------------
 ### Annual Taxi-Out Time
@@ -1913,6 +1906,10 @@ msg <- str_glue(msg_tmpl,
 #               ":<br>", 
 #               round(100* CUM_TXOT[2,"CHANGE"], 2),"% </b>")
 
+ALL_YEAR <- TXOT_YY %>%
+            filter(TIME != "NaN") %>%
+            pull(YEAR)%>% 
+            unique()
 
 msg_y   <- params$txot_yy %>%
   filter(AVG_ADD_TIME != "NaN") %>%
@@ -1920,7 +1917,7 @@ msg_y   <- params$txot_yy %>%
   mutate(TOT_TXOT = 1.1 * (AVG_UNIMP_TIME+AVG_ADD_TIME) )%>% 
   pull(TOT_TXOT)
 
-key_msg <- list(x         = unique(max(TXOT_VAR$YEAR)),
+key_msg <- list(x         = length(ALL_YEAR)-1,
                 y         = msg_y,
                 text      = msg,
                 size      = 14,
@@ -2041,7 +2038,7 @@ TXOT_MM %>%
 
 
 ## Row -----------------------------------------------------------
-# Taxi-In Times
+# Taxi-In Time
 
 ## Row -----------------------------------------------------------
 ### Annual Taxi-In Time
@@ -2110,6 +2107,10 @@ msg <- str_glue(msg_tmpl,
 #               ":<br>", 
 #               round(100* CUM_TXIN[2,"CHANGE"], 2),"% </b>")
 
+ALL_YEAR <- TXIN_YY %>% 
+            filter(TIME != "NaN") %>%
+            pull(YEAR)%>% 
+            unique()
 
 msg_y   <- params$txin_yy %>%
   filter(AVG_ADD_TIME != "NaN") %>%
@@ -2117,7 +2118,7 @@ msg_y   <- params$txin_yy %>%
   mutate(TOT_TXIN = 1.1 * (AVG_UNIMP_TIME+AVG_ADD_TIME) )%>% 
   pull(TOT_TXIN)
 
-key_msg <- list(x         = unique(max(TXIN_VAR$YEAR)),
+key_msg <- list(x         = length(ALL_YEAR)-1,
                 y         = msg_y,
                 text      = msg,
                 size      = 14,
