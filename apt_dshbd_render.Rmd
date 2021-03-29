@@ -37,15 +37,15 @@ author        : "AIU Home"
 output: 
   flexdashboard ::flex_dashboard:
     orientation : rows
-    logo        : 'docs/images/euctrl-logo-noname_48x48.png'
-    favicon     : 'docs/images/favicon.png'
+    logo        : '/images/euctrl-logo-noname_48x48.png'
+    favicon     : 'favicon.png'
     lib_dir     : 'docs/libs'
     self_contained: FALSE
 ---
 
 <script>
-$('.navbar-logo').wrap('<a href="http://www.eurocontrol.int">');
-$('.navbar-author').wrap('<a href="http://ansperformance.eu">');
+$('.navbar-logo').wrap('<a href="https://www.eurocontrol.int">');
+$('.navbar-author').wrap('<a href="https://ansperformance.eu">');
 </script>
 
 <style>
@@ -2769,11 +2769,7 @@ TURN_MM %>%
 
 ### Powered by
 
-```{r, out.width="40%", fig.pos="float"}
-
-#knitr::include_graphics("../images/euctrl-logo-noname_48x48.png")
-
-```
+![](https://ansperformance.eu/images/eurocontrol-logo.png){width=30%}
 
 
 ### About this Dashboard
