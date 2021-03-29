@@ -154,3 +154,14 @@ EXPORT_APT_DSHBD_TURNAROUND <- function() {
 EXPORT_APT_DSHBD_TURNAROUND() %>%
   readr::write_csv2(here::here("data", "APT_DSHBD_TURNAROUND.csv"))
 
+
+#***********************************************************************
+# ---- CDO/CCO  ----
+#***********************************************************************
+EXPORT_APT_DSHBD_CDO_CCO <- function() {
+  QUERY <- "SELECT * FROM PRUTEST.CDO_CCO_MONTH_AIRPORT"
+  EXPORT_QUERY("PRUTEST", QUERY)
+}
+
+EXPORT_APT_DSHBD_CDO_CCO() %>%
+  readr::write_csv2(here::here("data", "APT_DSHBD_CDO_CCO.csv"))
