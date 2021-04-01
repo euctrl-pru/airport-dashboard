@@ -28,6 +28,19 @@ save_osm_apt <- function(.gg,
 }
 
 
+#' Extract airport feature from OSM
+#'
+#' @param .bb_lonlat for example "-0.496445,51.454114,-0.413361,51.481062" 
+#'                   for London Heathrow
+#' @param .title     Title of the plot
+#' @param .add_north add North arrow?
+#'
+#' @return A ggplot object
+#'
+#' @examples
+#' \donotrun{
+#' osm_apt("-0.496445,51.454114,-0.413361,51.481062")
+#' }
 osm_apt <- function(.bb_lonlat,
                     .title = NULL,
                     .add_north = TRUE) {
@@ -224,8 +237,13 @@ problematic_ones <- c("EDDT")
 # No runway info in the map layout ? (=> aeroway == "runway")
 
 
+aaa <- aaa %>%
+  select(APT_ICAO, APT_NAME, BBOX,
+         le_longitude_deg, le_latitude_deg, le_ident, le_heading_degT,
+         he_longitude_deg, he_latitude_deg, he_ident, he_heading_degT) %>%
+  group_by(APT_ICAO)
+
 aaa %>%
-  group_by(APT_ICAO) %>%
   mutate(icao = APT_ICAO) %>%
   filter(!icao %in% problematic_ones) %>%
   #filter(icao == "EBBR") %>%
