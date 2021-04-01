@@ -1287,12 +1287,14 @@ SLOT_MM_PLOT2 %>%
 
 # CDO/CCO
 
+
 ## Row -----------------------------------------------------------
 
 ### Average time flown level per flight
 
 ```{r Avg-time-lvl}
-
+if (nrow(params$cdo_cco)>0)
+{
   
   AVG_TIME_LVL_PLOT <- params$cdo_cco %>% 
     select(YEAR, MONTH_NUM, AVG_TIME_LVL_DESCENT, AVG_TIME_LVL_CLIMB)
@@ -1363,7 +1365,13 @@ SLOT_MM_PLOT2 %>%
     ) %>% 
     config( displaylogo = FALSE,
             modeBarButtonsToRemove = config_bar_remove_buttons)
+} else {
   
+  cat("Analysis on vertical flight efficiency during climb and descent is not available. Please contact pru-support@eurocontrol.int for further information.")
+  
+  # To add clickable link to mail address: add mail address in params in yaml header and use it in cat("Analysis on vertical flight efficiency during climb and descent is not available. Please contact [", pru-support@eurocontrol.int, "](", mailto:pru-support@eurocontrol.int, ") for further information.") - See also https://stackoverflow.com/questions/52745926/r-markdown-hyperlink-outside-rmd-file
+  
+}
 
 
 ```
@@ -1371,51 +1379,55 @@ SLOT_MM_PLOT2 %>%
 ### Median CDO/CCO altitudes
 
 ```{r Med-CDO-CCO-alt}
-
-MED_CDO_CCO_ALT_PLOT <- params$cdo_cco %>% 
-  select(YEAR, MONTH_NUM, MEDIAN_CDO_ALT, MEDIAN_CCO_ALT)
-
-plot_ly(MED_CDO_CCO_ALT_PLOT, 
-        x = ~MONTH_NUM, 
-        y = ~MEDIAN_CDO_ALT, 
-        customdata = ~YEAR, 
-        marker = list(color = 'rgb(40, 120, 181)'),
-        hovertemplate = "%{y:.0f}",
-        type = 'bar', 
-        name = 'Descent',
-        transforms = list(list(type      = 'filter',
-                               target    = "customdata",
-                               operation = '=',
-                               value     = max_year)
-        )) %>% 
-  add_trace(y = ~MEDIAN_CCO_ALT, 
-            marker = list(color = 'rgb(106, 168, 82)'),
-            name = 'Climb') %>%
-  layout(barmode = 'group',
-         hovermode   = "x unified",
-         xaxis       = tick_yr_no_title,
-         yaxis       = list( title="Median CDO/CCO altitude (feet)",
-                             titlefont = list(size = 11)),
-         showlegend  = TRUE,
-         updatemenus = list( button_type_list )
-         ##############################################################################
-         ,annotations = list(
-           x         = 1, 
-           y         = -0.1, 
-           text      = "Source: AIU analysis", 
-           showarrow = F, 
-           xref      = 'paper', 
-           yref      = 'paper', 
-           xanchor   = 'right', 
-           yanchor   = 'auto', 
-           xshift    = 0, 
-           yshift    = -10,
-           font      =list(size=12)
-         )          
-         ##############################################################################
-  ) %>% 
-  config( displaylogo = FALSE,
-          modeBarButtonsToRemove = config_bar_remove_buttons)
+if (nrow(params$cdo_cco)>0)
+{
+  
+  MED_CDO_CCO_ALT_PLOT <- params$cdo_cco %>% 
+    select(YEAR, MONTH_NUM, MEDIAN_CDO_ALT, MEDIAN_CCO_ALT)
+  
+  plot_ly(MED_CDO_CCO_ALT_PLOT, 
+          x = ~MONTH_NUM, 
+          y = ~MEDIAN_CDO_ALT, 
+          customdata = ~YEAR, 
+          marker = list(color = 'rgb(40, 120, 181)'),
+          hovertemplate = "%{y:.0f}",
+          type = 'bar', 
+          name = 'Descent',
+          transforms = list(list(type      = 'filter',
+                                 target    = "customdata",
+                                 operation = '=',
+                                 value     = max_year)
+          )) %>% 
+    add_trace(y = ~MEDIAN_CCO_ALT, 
+              marker = list(color = 'rgb(106, 168, 82)'),
+              name = 'Climb') %>%
+    layout(barmode = 'group',
+           hovermode   = "x unified",
+           xaxis       = tick_yr_no_title,
+           yaxis       = list( title="Median CDO/CCO altitude (feet)",
+                               titlefont = list(size = 11)),
+           showlegend  = TRUE,
+           updatemenus = list( button_type_list )
+           ##############################################################################
+           ,annotations = list(
+             x         = 1, 
+             y         = -0.1, 
+             text      = "Source: AIU analysis", 
+             showarrow = F, 
+             xref      = 'paper', 
+             yref      = 'paper', 
+             xanchor   = 'right', 
+             yanchor   = 'auto', 
+             xshift    = 0, 
+             yshift    = -10,
+             font      =list(size=12)
+           )          
+           ##############################################################################
+    ) %>% 
+    config( displaylogo = FALSE,
+            modeBarButtonsToRemove = config_bar_remove_buttons)
+  
+}
 
 ```
 
@@ -1424,106 +1436,114 @@ plot_ly(MED_CDO_CCO_ALT_PLOT,
 ### Share of CDO/CCO flights
 
 ```{r Share-unimpeded}
-
-SHARE_CDO_CCO_FLIGHTS_PLOT <- params$cdo_cco %>% 
-  select(YEAR, MONTH_NUM, SHARE_CDO_FLIGHTS, SHARE_CCO_FLIGHTS)
-
-plot_ly(SHARE_CDO_CCO_FLIGHTS_PLOT, 
-        x = ~MONTH_NUM, 
-        y = ~SHARE_CDO_FLIGHTS*100, 
-        customdata = ~YEAR, 
-        marker = list(color = 'rgb(40, 120, 181)'),
-        hovertemplate = "%{y:.1f}%",
-        type = 'bar', 
-        name = 'Descent',
-        transforms = list(list(type      = 'filter',
-                               target    = "customdata",
-                               operation = '=',
-                               value     = max_year)
-        )) %>% 
-  add_trace(y = ~SHARE_CCO_FLIGHTS*100, 
-            marker = list(color = 'rgb(106, 168, 82)'),
-            name = 'Climb') %>%
-  layout(barmode = 'group',
-         hovermode   = "x unified",
-         xaxis       = tick_yr_no_title,
-         yaxis       = list( title="Share of CDO/CCO flights (%)",
-                             titlefont = list(size = 11),
-                             ticksuffix = "%",  
-                             range = c(0, 100)),
-         showlegend  = TRUE,
-         updatemenus = list( button_type_list )
-         ##############################################################################
-         ,annotations = list(
-           x         = 1, 
-           y         = -0.1, 
-           text      = "Source: AIU analysis", 
-           showarrow = F, 
-           xref      = 'paper', 
-           yref      = 'paper', 
-           xanchor   = 'right', 
-           yanchor   = 'auto', 
-           xshift    = 0, 
-           yshift    = -10,
-           font      =list(size=12)
-         )          
-         ##############################################################################
-  ) %>% 
-  config( displaylogo = FALSE,
-          modeBarButtonsToRemove = config_bar_remove_buttons)
+if (nrow(params$cdo_cco)>0)
+{
+  
+  SHARE_CDO_CCO_FLIGHTS_PLOT <- params$cdo_cco %>% 
+    select(YEAR, MONTH_NUM, SHARE_CDO_FLIGHTS, SHARE_CCO_FLIGHTS)
+  
+  plot_ly(SHARE_CDO_CCO_FLIGHTS_PLOT, 
+          x = ~MONTH_NUM, 
+          y = ~SHARE_CDO_FLIGHTS*100, 
+          customdata = ~YEAR, 
+          marker = list(color = 'rgb(40, 120, 181)'),
+          hovertemplate = "%{y:.1f}%",
+          type = 'bar', 
+          name = 'Descent',
+          transforms = list(list(type      = 'filter',
+                                 target    = "customdata",
+                                 operation = '=',
+                                 value     = max_year)
+          )) %>% 
+    add_trace(y = ~SHARE_CCO_FLIGHTS*100, 
+              marker = list(color = 'rgb(106, 168, 82)'),
+              name = 'Climb') %>%
+    layout(barmode = 'group',
+           hovermode   = "x unified",
+           xaxis       = tick_yr_no_title,
+           yaxis       = list( title="Share of CDO/CCO flights (%)",
+                               titlefont = list(size = 11),
+                               ticksuffix = "%",  
+                               range = c(0, 100)),
+           showlegend  = TRUE,
+           updatemenus = list( button_type_list )
+           ##############################################################################
+           ,annotations = list(
+             x         = 1, 
+             y         = -0.1, 
+             text      = "Source: AIU analysis", 
+             showarrow = F, 
+             xref      = 'paper', 
+             yref      = 'paper', 
+             xanchor   = 'right', 
+             yanchor   = 'auto', 
+             xshift    = 0, 
+             yshift    = -10,
+             font      =list(size=12)
+           )          
+           ##############################################################################
+    ) %>% 
+    config( displaylogo = FALSE,
+            modeBarButtonsToRemove = config_bar_remove_buttons)
+  
+}
 
 ```
 
 ### Median CDO/CCO altitudes vs. Average time flown level per flight
 
 ```{r Med-CDO-CCO-alt-avg-time-lvl}
-
-MED_CDO_CCO_ALT_AVG_TIME_LVL_PLOT <- params$cdo_cco %>% 
-  select(YEAR, MONTH_NUM, AVG_TIME_LVL_DESCENT, AVG_TIME_LVL_CLIMB, MEDIAN_CDO_ALT, MEDIAN_CCO_ALT) %>% 
-  mutate(Date=as.factor(as.POSIXct(paste0(YEAR, "-", MONTH_NUM, "-01"), "%d/%m/%Y")))
-
-plot_ly(MED_CDO_CCO_ALT_AVG_TIME_LVL_PLOT,
-  x = ~AVG_TIME_LVL_DESCENT/60,
-  y = ~MEDIAN_CDO_ALT,
-  marker = list(color = 'rgb(40, 120, 181)'),
-  hovertemplate = "%{x:.1f} min/flight <br>%{y:.0f} feet",
-  frame = ~Date,
-  name = 'Descent',
-  type = 'scatter',
-  mode = 'markers',
-  showlegend = T
-) %>% 
-  add_trace(x = ~AVG_TIME_LVL_CLIMB/60, 
-            y = ~MEDIAN_CCO_ALT,
-            marker = list(color = 'rgb(106, 168, 82)'),
-            name = 'Climb') %>%
-  layout(xaxis       = list( title="Average time flown level per flight (min.)",
-                             titlefont = list(size = 11),
-                             range = c(0, max(max(MED_CDO_CCO_ALT_AVG_TIME_LVL_PLOT$AVG_TIME_LVL_DESCENT),
-                                              max(res$AVG_TIME_LVL_CLIMB)))/60),
-         yaxis       = list( title="Median CDO/CCO altitude (feet)",
-                             titlefont = list(size = 11),
-                             range = c(0, max(max(MED_CDO_CCO_ALT_AVG_TIME_LVL_PLOT$MEDIAN_CDO_ALT),
-                                              max(MED_CDO_CCO_ALT_AVG_TIME_LVL_PLOT$MEDIAN_CCO_ALT)))),
-         showlegend  = TRUE
-         ##############################################################################
-         ,annotations = list(
-           x         = 1, 
-           y         = -0.1, 
-           text      = "Source: AIU analysis", 
-           showarrow = F, 
-           xref      = 'paper', 
-           yref      = 'paper', 
-           xanchor   = 'right', 
-           yanchor   = 'auto', 
-           xshift    = 0, 
-           yshift    = -10,
-           font      =list(size=12)
-         )          
-         ##############################################################################
+if (nrow(params$cdo_cco)>0)
+{
+  
+  MED_CDO_CCO_ALT_AVG_TIME_LVL_PLOT <- params$cdo_cco %>% 
+    select(YEAR, MONTH_NUM, AVG_TIME_LVL_DESCENT, AVG_TIME_LVL_CLIMB, MEDIAN_CDO_ALT, MEDIAN_CCO_ALT) %>% 
+    mutate(Date=as.factor(as.POSIXct(paste0(YEAR, "-", MONTH_NUM, "-01"), "%d/%m/%Y")))
+  
+  plot_ly(MED_CDO_CCO_ALT_AVG_TIME_LVL_PLOT,
+          x = ~AVG_TIME_LVL_DESCENT/60,
+          y = ~MEDIAN_CDO_ALT,
+          marker = list(color = 'rgb(40, 120, 181)'),
+          hovertemplate = "%{x:.1f} min/flight <br>%{y:.0f} feet",
+          frame = ~Date,
+          name = 'Descent',
+          type = 'scatter',
+          mode = 'markers',
+          showlegend = T
   ) %>% 
-  config( displaylogo = FALSE,
-          modeBarButtonsToRemove = config_bar_remove_buttons)
+    add_trace(x = ~AVG_TIME_LVL_CLIMB/60, 
+              y = ~MEDIAN_CCO_ALT,
+              marker = list(color = 'rgb(106, 168, 82)'),
+              name = 'Climb') %>%
+    layout(xaxis       = list( title="Average time flown level per flight (min.)",
+                               titlefont = list(size = 11),
+                               range = c(0, max(max(MED_CDO_CCO_ALT_AVG_TIME_LVL_PLOT$AVG_TIME_LVL_DESCENT),
+                                                max(MED_CDO_CCO_ALT_AVG_TIME_LVL_PLOT$AVG_TIME_LVL_CLIMB)))/60),
+           yaxis       = list( title="Median CDO/CCO altitude (feet)",
+                               titlefont = list(size = 11),
+                               range = c(0, max(max(MED_CDO_CCO_ALT_AVG_TIME_LVL_PLOT$MEDIAN_CDO_ALT),
+                                                max(MED_CDO_CCO_ALT_AVG_TIME_LVL_PLOT$MEDIAN_CCO_ALT)))),
+           showlegend  = TRUE
+           ##############################################################################
+           ,annotations = list(
+             x         = 1, 
+             y         = -0.1, 
+             text      = "Source: AIU analysis", 
+             showarrow = F, 
+             xref      = 'paper', 
+             yref      = 'paper', 
+             xanchor   = 'right', 
+             yanchor   = 'auto', 
+             xshift    = 0, 
+             yshift    = -10,
+             font      =list(size=12)
+           )          
+           ##############################################################################
+    ) %>% 
+    config( displaylogo = FALSE,
+            modeBarButtonsToRemove = config_bar_remove_buttons)
+  
+}
 
 ```
 
