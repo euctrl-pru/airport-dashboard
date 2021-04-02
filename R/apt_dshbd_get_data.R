@@ -2,9 +2,6 @@
 # --- SET UP ----
 # ---
 
-cat("\014")        # Clear Console               ----
-rm(list = ls())    # Clear Environment           ----
-
 library(dplyr)
 library(readxl)
 library(readr)
@@ -160,7 +157,7 @@ EXPORT_APT_DSHBD_TURNAROUND() %>%
 #***********************************************************************
 EXPORT_APT_DSHBD_CDO_CCO <- function() {
   QUERY <- "SELECT * FROM PRUTEST.CDO_CCO_MONTH_AIRPORT"
-  EXPORT_QUERY("PRUTEST", QUERY)
+  EXPORT_QUERY("PRU_TEST", QUERY)
 }
 
 EXPORT_APT_DSHBD_CDO_CCO() %>%
