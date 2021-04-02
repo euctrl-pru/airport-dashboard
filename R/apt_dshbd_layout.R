@@ -2,10 +2,6 @@
 # --- SET UP ----
 # ---
 
-cat("\014")        # Clear Environment           ----
-rm(list = ls())    # Clear Console               ----
-
-
 library(readr)
 library(dplyr)
 library(osmdata)
