@@ -16,7 +16,7 @@ source(here("R","apt_dshbd_utils.R"), encoding = "UTF8")
 APT_DF <- APT_DF %>% arrange(AIRPORT) %>% mutate(idx = row_number())
 
 APT_DF %>%
-  # filter( AIRPORT == "EBBR") %>%   # for debug
+  # filter( AIRPORT == "GCLP") %>%   # for debug
   pull(AIRPORT) %>%
   purrr::walk(
     .f = function(icao) {

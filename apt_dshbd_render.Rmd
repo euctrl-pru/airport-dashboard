@@ -1287,12 +1287,30 @@ SLOT_MM_PLOT2 %>%
 
 # CDO/CCO
 
+```{r cdo-cco-data-check, eval=nrow(params$cdo_cco)==0}
+cat("Analysis on vertical flight efficiency during climb and descent is not available. Please contact pru-support@eurocontrol.int for further information.")
+  
+  # To add clickable link to mail address: add mail address in params in yaml header and use it in cat("Analysis on vertical flight efficiency during climb and descent is not available. Please contact [", pru-support@eurocontrol.int, "](", mailto:pru-support@eurocontrol.int, ") for further information.") - See also https://stackoverflow.com/questions/52745926/r-markdown-hyperlink-outside-rmd-file
+  
+```
 
-## Row -----------------------------------------------------------
+  
+```{r cdo-cco-row1, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE}
 
-### Average time flown level per flight
+cat("## Row -----------------------------------------------------------")
 
-```{r Avg-time-lvl}
+```
+
+  
+```{r cdo-cco-title1, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE}
+
+cat("### Average time flown level per flight")
+
+```
+
+  
+```{r Avg-time-lvl, eval=nrow(params$cdo_cco)>0, echo = FALSE}
+
 if (nrow(params$cdo_cco)>0)
 {
   
@@ -1365,20 +1383,20 @@ if (nrow(params$cdo_cco)>0)
     ) %>% 
     config( displaylogo = FALSE,
             modeBarButtonsToRemove = config_bar_remove_buttons)
-} else {
-  
-  cat("Analysis on vertical flight efficiency during climb and descent is not available. Please contact pru-support@eurocontrol.int for further information.")
-  
-  # To add clickable link to mail address: add mail address in params in yaml header and use it in cat("Analysis on vertical flight efficiency during climb and descent is not available. Please contact [", pru-support@eurocontrol.int, "](", mailto:pru-support@eurocontrol.int, ") for further information.") - See also https://stackoverflow.com/questions/52745926/r-markdown-hyperlink-outside-rmd-file
-  
 }
-
 
 ```
 
-### Median CDO/CCO altitudes
 
-```{r Med-CDO-CCO-alt}
+```{r cdo-cco-title2, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE}
+
+cat("### Median CDO/CCO altitudes")
+
+```
+
+
+```{r Med-CDO-CCO-alt, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE}
+
 if (nrow(params$cdo_cco)>0)
 {
   
@@ -1431,11 +1449,23 @@ if (nrow(params$cdo_cco)>0)
 
 ```
 
-## Row -----------------------------------------------------------
 
-### Share of CDO/CCO flights
+```{r cdo-cco-row2, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE}
 
-```{r Share-unimpeded}
+cat("## Row -----------------------------------------------------------")
+
+```
+
+  
+```{r cdo-cco-title3, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE}
+
+cat("### Share of CDO/CCO flights")
+
+```
+
+
+```{r Share-unimpeded, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE}
+
 if (nrow(params$cdo_cco)>0)
 {
   
@@ -1490,9 +1520,16 @@ if (nrow(params$cdo_cco)>0)
 
 ```
 
-### Median CDO/CCO altitudes vs. Average time flown level per flight
 
-```{r Med-CDO-CCO-alt-avg-time-lvl}
+```{r cdo-cco-title4, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE}
+
+cat("### Median CDO/CCO altitudes vs. Average time flown level per flight")
+
+```
+
+
+```{r Med-CDO-CCO-alt-avg-time-lvl, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE}
+
 if (nrow(params$cdo_cco)>0)
 {
   
