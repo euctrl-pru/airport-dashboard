@@ -1311,10 +1311,7 @@ cat("### Average time flown level per flight")
   
 ```{r Avg-time-lvl, eval=nrow(params$cdo_cco)>0, echo = FALSE}
 
-if (nrow(params$cdo_cco)>0)
-{
-  
-  AVG_TIME_LVL_PLOT <- params$cdo_cco %>% 
+AVG_TIME_LVL_PLOT <- params$cdo_cco %>% 
     select(YEAR, MONTH_NUM, AVG_TIME_LVL_DESCENT, AVG_TIME_LVL_CLIMB)
   
   filter_years <- AVG_TIME_LVL_PLOT %>% 
@@ -1383,7 +1380,6 @@ if (nrow(params$cdo_cco)>0)
     ) %>% 
     config( displaylogo = FALSE,
             modeBarButtonsToRemove = config_bar_remove_buttons)
-}
 
 ```
 
@@ -1397,10 +1393,7 @@ cat("### Median CDO/CCO altitudes")
 
 ```{r Med-CDO-CCO-alt, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE}
 
-if (nrow(params$cdo_cco)>0)
-{
-  
-  MED_CDO_CCO_ALT_PLOT <- params$cdo_cco %>% 
+MED_CDO_CCO_ALT_PLOT <- params$cdo_cco %>% 
     select(YEAR, MONTH_NUM, MEDIAN_CDO_ALT, MEDIAN_CCO_ALT)
   
   plot_ly(MED_CDO_CCO_ALT_PLOT, 
@@ -1444,8 +1437,6 @@ if (nrow(params$cdo_cco)>0)
     ) %>% 
     config( displaylogo = FALSE,
             modeBarButtonsToRemove = config_bar_remove_buttons)
-  
-}
 
 ```
 
@@ -1466,10 +1457,7 @@ cat("### Share of CDO/CCO flights")
 
 ```{r Share-unimpeded, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE}
 
-if (nrow(params$cdo_cco)>0)
-{
-  
-  SHARE_CDO_CCO_FLIGHTS_PLOT <- params$cdo_cco %>% 
+SHARE_CDO_CCO_FLIGHTS_PLOT <- params$cdo_cco %>% 
     select(YEAR, MONTH_NUM, SHARE_CDO_FLIGHTS, SHARE_CCO_FLIGHTS)
   
   plot_ly(SHARE_CDO_CCO_FLIGHTS_PLOT, 
@@ -1515,8 +1503,6 @@ if (nrow(params$cdo_cco)>0)
     ) %>% 
     config( displaylogo = FALSE,
             modeBarButtonsToRemove = config_bar_remove_buttons)
-  
-}
 
 ```
 
@@ -1530,10 +1516,7 @@ cat("### Median CDO/CCO altitudes vs. Average time flown level per flight")
 
 ```{r Med-CDO-CCO-alt-avg-time-lvl, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE}
 
-if (nrow(params$cdo_cco)>0)
-{
-  
-  MED_CDO_CCO_ALT_AVG_TIME_LVL_PLOT <- params$cdo_cco %>% 
+MED_CDO_CCO_ALT_AVG_TIME_LVL_PLOT <- params$cdo_cco %>% 
     select(YEAR, MONTH_NUM, AVG_TIME_LVL_DESCENT, AVG_TIME_LVL_CLIMB, MEDIAN_CDO_ALT, MEDIAN_CCO_ALT) %>% 
     mutate(Date=as.factor(as.POSIXct(paste0(YEAR, "-", MONTH_NUM, "-01"), "%d/%m/%Y")))
   
@@ -1579,8 +1562,6 @@ if (nrow(params$cdo_cco)>0)
     ) %>% 
     config( displaylogo = FALSE,
             modeBarButtonsToRemove = config_bar_remove_buttons)
-  
-}
 
 ```
 
