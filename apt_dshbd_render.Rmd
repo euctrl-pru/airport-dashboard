@@ -1513,165 +1513,99 @@ cat("### Average time flown level per flight")
 
 ```
 
-<<<<<<< HEAD
   
 ```{r Avg-time-lvl, eval=nrow(params$cdo_cco)>0, echo = FALSE}
 
-AVG_TIME_LVL_PLOT <- params$cdo_cco %>% 
-=======
-```{r Avg-time-lvl}
-if (nrow(params$cdo_cco) > 0) {
-  AVG_TIME_LVL_PLOT <- params$cdo_cco %>%
->>>>>>> 6af1c2616aea2741f31282d9915a5144a21732f5
-    select(YEAR, MONTH_NUM, AVG_TIME_LVL_DESCENT, AVG_TIME_LVL_CLIMB)
+AVG_TIME_LVL_PLOT <- params$cdo_cco %>%
+  select(YEAR, MONTH_NUM, AVG_TIME_LVL_DESCENT, AVG_TIME_LVL_CLIMB)
 
-  filter_years <- AVG_TIME_LVL_PLOT %>%
-    pull(YEAR) %>%
-    unique()
+filter_years <- AVG_TIME_LVL_PLOT %>%
+  pull(YEAR) %>%
+  unique()
 
-  max_year <- max(filter_years)
+max_year <- max(filter_years)
 
-  button_list <- lapply(
-    1:length(filter_years),
-    function(x) {
-      list(
-        method = "restyle",
-        args = list("transforms[0].value", filter_years[x]),
-        label = filter_years[x]
-      )
-    }
-  )
+button_list <- lapply(
+  1:length(filter_years),
+  function(x) {
+    list(
+      method = "restyle",
+      args = list("transforms[0].value", filter_years[x]),
+      label = filter_years[x]
+    )
+  }
+)
 
-  button_type_list <- list(
-    buttons   = button_list,
-    type      = "buttons",
-    bgcolor   = "#c3c1e8",
-    active    = length(filter_years) - 1,
-    direction = "right",
-    xref      = "paper",
-    x         = 0.3,
-    xanchor   = "left",
-    yref      = "paper",
-    y         = 1.2,
-    yanchor   = "bottom"
-  )
-<<<<<<< HEAD
-  
-  button_type_list <-  list( buttons   = button_list, 
-                             type      = 'buttons', 
-                             bgcolor   = '#c3c1e8', 
-                             active    = length(filter_years)-1,
-                             direction = 'right', 
-                             xref      = "paper",
-                             x         = 0.3,
-                             xanchor   = 'left', 
-                             yref      = "paper",
-                             y         = 1.2, 
-                             yanchor   = "bottom")
-  
-  plot_ly(AVG_TIME_LVL_PLOT, 
-          x = ~MONTH_NUM, 
-          y = ~AVG_TIME_LVL_DESCENT/60, 
-          customdata = ~YEAR, 
-          marker = list(color = 'rgb(40, 120, 181)'),
-          hovertemplate = "%{y:.1f}",
-          type = 'bar', 
-          name = 'Descent',
-          transforms = list(list(type      = 'filter',
-                                 target    = "customdata",
-                                 operation = '=',
-                                 value     = max_year)
-          )) %>% 
-    add_trace(y = ~AVG_TIME_LVL_CLIMB/60, 
-              marker = list(color = 'rgb(106, 168, 82)'),
-              name = 'Climb') %>%
-    layout(barmode = 'group',
-           hovermode   = "x unified",
-           xaxis       = tick_yr_no_title,
-           yaxis       = list( title="Average time flown level per flight (min.)",
-                               titlefont = list(size = 11)),
-           showlegend  = TRUE,
-           updatemenus = list( button_type_list )
-           ##############################################################################
-           ,annotations = list(
-             x         = 1, 
-             y         = -0.1, 
-             text      = "Source: AIU analysis", 
-             showarrow = F, 
-             xref      = 'paper', 
-             yref      = 'paper', 
-             xanchor   = 'right', 
-             yanchor   = 'auto', 
-             xshift    = 0, 
-             yshift    = -10,
-             font      =list(size=12)
-           )          
-           ##############################################################################
-    ) %>% 
-    config( displaylogo = FALSE,
-            modeBarButtonsToRemove = config_bar_remove_buttons)
+button_type_list <- list(
+  buttons   = button_list,
+  type      = "buttons",
+  bgcolor   = "#c3c1e8",
+  active    = length(filter_years) - 1,
+  direction = "right",
+  xref      = "paper",
+  x         = 0.3,
+  xanchor   = "left",
+  yref      = "paper",
+  y         = 1.2,
+  yanchor   = "bottom"
+)
+
+
+button_type_list <-  list( buttons   = button_list, 
+                           type      = 'buttons', 
+                           bgcolor   = '#c3c1e8', 
+                           active    = length(filter_years)-1,
+                           direction = 'right', 
+                           xref      = "paper",
+                           x         = 0.3,
+                           xanchor   = 'left', 
+                           yref      = "paper",
+                           y         = 1.2, 
+                           yanchor   = "bottom")
+
+plot_ly(AVG_TIME_LVL_PLOT, 
+        x = ~MONTH_NUM, 
+        y = ~AVG_TIME_LVL_DESCENT/60, 
+        customdata = ~YEAR, 
+        marker = list(color = 'rgb(40, 120, 181)'),
+        hovertemplate = "%{y:.1f}",
+        type = 'bar', 
+        name = 'Descent',
+        transforms = list(list(type      = 'filter',
+                               target    = "customdata",
+                               operation = '=',
+                               value     = max_year)
+        )) %>% 
+  add_trace(y = ~AVG_TIME_LVL_CLIMB/60, 
+            marker = list(color = 'rgb(106, 168, 82)'),
+            name = 'Climb') %>%
+  layout(barmode = 'group',
+         hovermode   = "x unified",
+         xaxis       = tick_yr_no_title,
+         yaxis       = list( title="Average time flown level per flight (min.)",
+                             titlefont = list(size = 11)),
+         showlegend  = TRUE,
+         updatemenus = list( button_type_list )
+         ##############################################################################
+         ,annotations = list(
+           x         = 1, 
+           y         = -0.1, 
+           text      = "Source: AIU analysis", 
+           showarrow = F, 
+           xref      = 'paper', 
+           yref      = 'paper', 
+           xanchor   = 'right', 
+           yanchor   = 'auto', 
+           xshift    = 0, 
+           yshift    = -10,
+           font      =list(size=12)
+         )          
+         ##############################################################################
+  ) %>% 
+  config( displaylogo = FALSE,
+          modeBarButtonsToRemove = config_bar_remove_buttons)
 
 ```
-=======
-
-  plot_ly(AVG_TIME_LVL_PLOT,
-    x             = ~MONTH_NUM,
-    y             = ~ AVG_TIME_LVL_DESCENT / 60,
-    customdata    = ~YEAR,
-    marker        = list(color = "rgb(40, 120, 181)"),
-    hovertemplate = "%{y:.1f}",
-    type          = "bar",
-    name          = "Descent",
-    transforms    = list(
-      list(
-        type      = "filter",
-        target    = "customdata",
-        operation = "=",
-        value     = max_year
-      )
-    )
-  ) %>%
-    add_trace(
-      y      = ~ AVG_TIME_LVL_CLIMB / 60,
-      marker = list(color = "rgb(106, 168, 82)"),
-      name   = "Climb"
-    ) %>%
-    layout(
-      barmode   = "group",
-      hovermode = "x unified",
-      xaxis     = tick_yr_no_title,
-      yaxis     = list(
-        title     = "Average time flown level per flight (min.)",
-        titlefont = list(size = 11)
-      ),
-      showlegend = TRUE,
-      updatemenus = list(button_type_list),
-      ##############################################################################
-      annotations = list(
-        x         = 1,
-        y         = -0.1,
-        text      = "Source: AIU analysis",
-        showarrow = FALSE,
-        xref      = "paper",
-        yref      = "paper",
-        xanchor   = "right",
-        yanchor   = "auto",
-        xshift    = 0,
-        yshift    = -10,
-        font      = list(size = 12)
-      )
-      ##############################################################################
-    ) %>%
-    config(
-      displaylogo = FALSE,
-      modeBarButtonsToRemove = config_bar_remove_buttons
-    )
-} else {
-  cat("Analysis on vertical flight efficiency during climb and descent is not available. Please contact pru-support@eurocontrol.int for further information.")
-
-  # To add clickable link to mail address: add mail address in params in yaml header and use it in cat("Analysis on vertical flight efficiency during climb and descent is not available. Please contact [", pru-support@eurocontrol.int, "](", mailto:pru-support@eurocontrol.int, ") for further information.") - See also https://stackoverflow.com/questions/52745926/r-markdown-hyperlink-outside-rmd-file
-}
->>>>>>> 6af1c2616aea2741f31282d9915a5144a21732f5
 
 
 ```{r cdo-cco-title2, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE}
@@ -1681,7 +1615,6 @@ cat("### Median CDO/CCO altitudes")
 ```
 
 
-<<<<<<< HEAD
 ```{r Med-CDO-CCO-alt, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE}
 
 MED_CDO_CCO_ALT_PLOT <- params$cdo_cco %>% 
@@ -1728,66 +1661,7 @@ MED_CDO_CCO_ALT_PLOT <- params$cdo_cco %>%
     ) %>% 
     config( displaylogo = FALSE,
             modeBarButtonsToRemove = config_bar_remove_buttons)
-=======
-```{r Med-CDO-CCO-alt}
-if (nrow(params$cdo_cco) > 0) {
-  MED_CDO_CCO_ALT_PLOT <- params$cdo_cco %>%
-    select(YEAR, MONTH_NUM, MEDIAN_CDO_ALT, MEDIAN_CCO_ALT)
->>>>>>> 6af1c2616aea2741f31282d9915a5144a21732f5
 
-  plot_ly(MED_CDO_CCO_ALT_PLOT,
-    x             = ~MONTH_NUM,
-    y             = ~MEDIAN_CDO_ALT,
-    customdata    = ~YEAR,
-    marker        = list(color = "rgb(40, 120, 181)"),
-    hovertemplate = "%{y:.0f}",
-    type          = "bar",
-    name          = "Descent",
-    transforms    = list(
-      list(
-        type      = "filter",
-        target    = "customdata",
-        operation = "=",
-        value     = max_year
-      )
-    )
-  ) %>%
-    add_trace(
-      y      = ~MEDIAN_CCO_ALT,
-      marker = list(color = "rgb(106, 168, 82)"),
-      name   = "Climb"
-    ) %>%
-    layout(
-      barmode     = "group",
-      hovermode   = "x unified",
-      xaxis       = tick_yr_no_title,
-      yaxis       = list(
-        title     = "Median CDO/CCO altitude (feet)",
-        titlefont = list(size = 11)
-      ),
-      showlegend  = TRUE,
-      updatemenus = list(button_type_list),
-      ##############################################################################
-      annotations = list(
-        x         = 1,
-        y         = -0.1,
-        text      = "Source: AIU analysis",
-        showarrow = FALSE,
-        xref      = "paper",
-        yref      = "paper",
-        xanchor   = "right",
-        yanchor   = "auto",
-        xshift    = 0,
-        yshift    = -10,
-        font      = list(size = 12)
-      )
-      ##############################################################################
-    ) %>%
-    config(
-      displaylogo = FALSE,
-      modeBarButtonsToRemove = config_bar_remove_buttons
-    )
-}
 ```
 
 
@@ -1797,7 +1671,6 @@ cat("## Row -----------------------------------------------------------")
 
 ```
 
-<<<<<<< HEAD
   
 ```{r cdo-cco-title3, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE}
 
@@ -1854,72 +1727,11 @@ SHARE_CDO_CCO_FLIGHTS_PLOT <- params$cdo_cco %>%
     ) %>% 
     config( displaylogo = FALSE,
             modeBarButtonsToRemove = config_bar_remove_buttons)
-=======
-```{r Share-unimpeded}
-if (nrow(params$cdo_cco) > 0) {
-  SHARE_CDO_CCO_FLIGHTS_PLOT <- params$cdo_cco %>%
-    select(YEAR, MONTH_NUM, SHARE_CDO_FLIGHTS, SHARE_CCO_FLIGHTS)
->>>>>>> 6af1c2616aea2741f31282d9915a5144a21732f5
 
-  plot_ly(SHARE_CDO_CCO_FLIGHTS_PLOT,
-    x             = ~MONTH_NUM,
-    y             = ~ SHARE_CDO_FLIGHTS * 100,
-    customdata    = ~YEAR,
-    marker        = list(color = "rgb(40, 120, 181)"),
-    hovertemplate = "%{y:.1f}%",
-    type          = "bar",
-    name          = "Descent",
-    transforms    = list(
-      list(
-        type      = "filter",
-        target    = "customdata",
-        operation = "=",
-        value     = max_year
-      )
-    )
-  ) %>%
-    add_trace(
-      y      = ~ SHARE_CCO_FLIGHTS * 100,
-      marker = list(color = "rgb(106, 168, 82)"),
-      name   = "Climb"
-    ) %>%
-    layout(
-      barmode   = "group",
-      hovermode = "x unified",
-      xaxis     = tick_yr_no_title,
-      yaxis     = list(
-        title      = "Share of CDO/CCO flights (%)",
-        titlefont  = list(size = 11),
-        ticksuffix = "%",
-        range      = c(0, 100)
-      ),
-      showlegend = TRUE,
-      updatemenus = list(button_type_list),
-      ##############################################################################
-      annotations = list(
-        x         = 1,
-        y         = -0.1,
-        text      = "Source: AIU analysis",
-        showarrow = FALSE,
-        xref      = "paper",
-        yref      = "paper",
-        xanchor   = "right",
-        yanchor   = "auto",
-        xshift    = 0,
-        yshift    = -10,
-        font      = list(size = 12)
-      )
-      ##############################################################################
-    ) %>%
-    config(
-      displaylogo = FALSE,
-      modeBarButtonsToRemove = config_bar_remove_buttons
-    )
-}
 ```
 
 
-<<<<<<< HEAD
+
 ```{r cdo-cco-title4, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE}
 
 cat("### Median CDO/CCO altitudes vs. Average time flown level per flight")
@@ -1976,75 +1788,6 @@ MED_CDO_CCO_ALT_AVG_TIME_LVL_PLOT <- params$cdo_cco %>%
     config( displaylogo = FALSE,
             modeBarButtonsToRemove = config_bar_remove_buttons)
 
-=======
-```{r Med-CDO-CCO-alt-avg-time-lvl}
-if (nrow(params$cdo_cco) > 0) {
-  MED_CDO_CCO_ALT_AVG_TIME_LVL_PLOT <- params$cdo_cco %>%
-    select(YEAR,
-           MONTH_NUM,
-           AVG_TIME_LVL_DESCENT,
-           AVG_TIME_LVL_CLIMB,
-           MEDIAN_CDO_ALT,
-           MEDIAN_CCO_ALT) %>%
-    mutate(Date = as.factor(as.POSIXct(paste0(YEAR, "-", MONTH_NUM, "-01"), "%d/%m/%Y")))
-
-  plot_ly(MED_CDO_CCO_ALT_AVG_TIME_LVL_PLOT,
-    x             = ~ AVG_TIME_LVL_DESCENT / 60,
-    y             = ~MEDIAN_CDO_ALT,
-    marker        = list(color = "rgb(40, 120, 181)"),
-    hovertemplate = "%{x:.1f} min/flight <br>%{y:.0f} feet",
-    frame         = ~Date,
-    name          = "Descent",
-    type          = "scatter",
-    mode          = "markers",
-    showlegend    = TRUE
-  ) %>%
-    add_trace(
-      x      = ~ AVG_TIME_LVL_CLIMB / 60,
-      y      = ~MEDIAN_CCO_ALT,
-      marker = list(color = "rgb(106, 168, 82)"),
-      name   = "Climb"
-    ) %>%
-    layout(
-      xaxis = list(
-        title     = "Average time flown level per flight (min.)",
-        titlefont = list(size = 11),
-        range     = c(0, max(
-          max(MED_CDO_CCO_ALT_AVG_TIME_LVL_PLOT$AVG_TIME_LVL_DESCENT),
-          max(MED_CDO_CCO_ALT_AVG_TIME_LVL_PLOT$AVG_TIME_LVL_CLIMB)
-        )) / 60
-      ),
-      yaxis = list(
-        title     = "Median CDO/CCO altitude (feet)",
-        titlefont = list(size = 11),
-        range     = c(0, max(
-          max(MED_CDO_CCO_ALT_AVG_TIME_LVL_PLOT$MEDIAN_CDO_ALT),
-          max(MED_CDO_CCO_ALT_AVG_TIME_LVL_PLOT$MEDIAN_CCO_ALT)
-        ))
-      ),
-      showlegend = TRUE,
-      ##############################################################################
-      annotations = list(
-        x         = 1,
-        y         = -0.1,
-        text      = "Source: AIU analysis",
-        showarrow = FALSE,
-        xref      = "paper",
-        yref      = "paper",
-        xanchor   = "right",
-        yanchor   = "auto",
-        xshift    = 0,
-        yshift    = -10,
-        font      = list(size = 12)
-      )
-      ##############################################################################
-    ) %>%
-    config(
-      displaylogo = FALSE,
-      modeBarButtonsToRemove = config_bar_remove_buttons
-    )
-}
->>>>>>> 6af1c2616aea2741f31282d9915a5144a21732f5
 ```
 
 
