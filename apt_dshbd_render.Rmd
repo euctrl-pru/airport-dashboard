@@ -1789,7 +1789,7 @@ MED_CDO_CCO_ALT_AVG_TIME_LVL_PLOT <- params$cdo_cco %>%
 
 ```
 
-<!--
+
 # Punctuality
 
 ```{r punctuality-data-check, results='asis', eval=params$apdf != "Y"}
@@ -2173,7 +2173,7 @@ punc_arr_mm_plot %>%
   )
 
 ```
--->
+
 
 # ASMA Time
 
