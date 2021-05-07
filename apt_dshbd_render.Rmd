@@ -1528,37 +1528,35 @@ AVG_TIME_LVL_min=group_by(AVG_TIME_LVL_PLOT, YEAR) %>%
   filter(AVG_TIME_LVL_DESCENT==min(AVG_TIME_LVL_DESCENT)) %>% 
   arrange(YEAR)
 
-# msg <- paste0(
-#   "<b>Lowest value (descent):<br>",
-#   AVG_TIME_LVL_min$MONTH_NUM, "-",
-#   AVG_TIME_LVL_min$YEAR,
-#   "<br>", round(AVG_TIME_LVL_min$AVG_TIME_LVL_DESCENT/60, 1), " min.</b>"
-# )
-# 
-# annotations = list()
-# for (i in 1:nrow(AVG_TIME_LVL_min)) {
-#   annotation <- list(x = AVG_TIME_LVL_min$MONTH_NUM[i],
-#                       y = AVG_TIME_LVL_min$AVG_TIME_LVL_DESCENT[i]/60,
-#                      text = paste0(
-#                        "<b>Lowest value (descent):<br>",
-#                        AVG_TIME_LVL_min$MONTH_NUM[i], "-",
-#                        AVG_TIME_LVL_min$YEAR[i],
-#                        "<br>", round(AVG_TIME_LVL_min$AVG_TIME_LVL_DESCENT[i]/60, 1), " min.</b>"),
-#                      showarrow = TRUE)
-#   annotations[[i]] <- annotation
-# }
+annotations = list()
+for (i in 1:nrow(AVG_TIME_LVL_min)) {
+  annotation <- list(x = AVG_TIME_LVL_min$MONTH_NUM[i],
+                     y = AVG_TIME_LVL_min$AVG_TIME_LVL_DESCENT[i]/60,
+                     xref='x',
+                     yref='y',
+                     text = paste0(
+                       "<b>Lowest value<br>(descent):<br>",
+                       AVG_TIME_LVL_min$MONTH_NUM[i], "-",
+                       AVG_TIME_LVL_min$YEAR[i],
+                       "<br>", round(AVG_TIME_LVL_min$AVG_TIME_LVL_DESCENT[i]/60, 1), " min.</b>"),
+                     yshift=40,
+                     showarrow = FALSE)
+  annotations[[i]] <- annotation
+}
 
-button_list <- lapply(
-  1:length(filter_years),
-  function(x) {
-    list(
-      method = "restyle",
-      args = list("transforms[0].value", 
-                  filter_years[x]),
-      label = filter_years[x]
-    )
-  }
-)
+button_list=list()
+annot_list=vector(mode = "list", length = length(filter_years))
+for(x in 1:length(filter_years)){
+  annot_list_temp=annot_list
+  annot_list_temp[[x]]=annotations[[x]]
+  bl=list(
+    label  = filter_years[x],
+    method = "update",
+    args   = list(list("transforms[0].value"=filter_years[x]),
+                  list(annotations=list(annot_list_temp[[x]], source_annotation)))
+  )
+  button_list[[x]]=bl
+}
 
 button_type_list <- list(
   buttons   = button_list,
@@ -1605,18 +1603,23 @@ plot_ly(AVG_TIME_LVL_PLOT,
                   yshift    = -10,
                   font      = list(size=12)
   ) %>%
+  add_annotations(x         = annotations[[length(filter_years)]]$x,
+                  y         = annotations[[length(filter_years)]]$y,
+                  text      = annotations[[length(filter_years)]]$text,
+                  showarrow = annotations[[length(filter_years)]]$showarrow,
+                  xref      = annotations[[length(filter_years)]]$xref,
+                  yref      = annotations[[length(filter_years)]]$yref,
+                  yshift    = annotations[[length(filter_years)]]$yshift
+  ) %>%
   layout(barmode = 'group',
          hovermode   = "x unified",
          xaxis       = tick_yr_no_title,
          yaxis       = list( title="Average time flown level per flight (min.)",
                              titlefont = list(size = 11)),
          showlegend  = TRUE,
-         ##############################################################################
-         # annotations = annotations,
-         ##############################################################################
          updatemenus = list( button_type_list )
-         
-  ) %>% 
+
+  ) %>%
   config( displaylogo = FALSE,
           modeBarButtonsToRemove = config_bar_remove_buttons)
 
