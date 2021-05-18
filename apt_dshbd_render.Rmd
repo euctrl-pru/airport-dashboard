@@ -409,6 +409,18 @@ mvts_pa %>%
     yaxis = yax,
     annotations = key_msg
   ) %>%
+  add_annotations(x         = 1, 
+                  y         = -0.1, 
+                  text      = "Source: Network Manager", 
+                  showarrow = F, 
+                  xref      = 'paper', 
+                  yref      = 'paper', 
+                  xanchor   = 'right', 
+                  yanchor   = 'auto', 
+                  xshift    = 0, 
+                  yshift    = -10,
+                  font      = list(size=12)
+  ) %>%
   config(
     displaylogo = FALSE,
     modeBarButtonsToRemove = config_bar_remove_buttons
@@ -2319,6 +2331,18 @@ ASMA_YY %>%
     ),
     annotations = key_msg
   ) %>%
+  add_annotations(x         = 1, 
+                  y         = -0.1, 
+                  text      = "Source: APDF", 
+                  showarrow = F, 
+                  xref      = 'paper', 
+                  yref      = 'paper', 
+                  xanchor   = 'right', 
+                  yanchor   = 'auto', 
+                  xshift    = 0, 
+                  yshift    = -10,
+                  font      = list(size=12)
+  ) %>%
   config(
     displaylogo = FALSE,
     modeBarButtonsToRemove = config_bar_remove_buttons
@@ -2629,6 +2653,18 @@ TXOT_YY %>%
     ),
     annotations = key_msg
   ) %>%
+  add_annotations(x         = 1, 
+                  y         = -0.1, 
+                  text      = "Source: APDF", 
+                  showarrow = F, 
+                  xref      = 'paper', 
+                  yref      = 'paper', 
+                  xanchor   = 'right', 
+                  yanchor   = 'auto', 
+                  xshift    = 0, 
+                  yshift    = -10,
+                  font      = list(size=12)
+  ) %>%
   config(
     displaylogo = FALSE,
     modeBarButtonsToRemove = config_bar_remove_buttons
@@ -2887,7 +2923,19 @@ cat("### Annual Taxi-In Time")
       ),
       annotations = key_msg
     ) %>%
-    config(
+    add_annotations(x         = 1, 
+                  y         = -0.1, 
+                  text      = "Source: APDF", 
+                  showarrow = F, 
+                  xref      = 'paper', 
+                  yref      = 'paper', 
+                  xanchor   = 'right', 
+                  yanchor   = 'auto', 
+                  xshift    = 0, 
+                  yshift    = -10,
+                  font      = list(size=12)
+  ) %>%
+  config(
       displaylogo = FALSE,
       modeBarButtonsToRemove = config_bar_remove_buttons
     )
