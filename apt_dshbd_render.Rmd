@@ -1592,7 +1592,7 @@ AVG_TIME_LVL_min=group_by(AVG_TIME_LVL_PLOT, YEAR) %>%
   filter(AVG_TIME_LVL_DESCENT==min(AVG_TIME_LVL_DESCENT)) %>% 
   arrange(YEAR)
 
-annotations = list()
+annotations = vector(mode = "list", length = length(filter_years))
 for (i in 1:nrow(AVG_TIME_LVL_min)) {
   annotation <- list(x = AVG_TIME_LVL_min$MONTH_NUM[i],
                      y = AVG_TIME_LVL_min$AVG_TIME_LVL_DESCENT[i]/60,
@@ -1600,9 +1600,7 @@ for (i in 1:nrow(AVG_TIME_LVL_min)) {
                      yref='y',
                      text = paste0(
                        "<b>Lowest value<br>(descent):<br>",
-                       AVG_TIME_LVL_min$MONTH_NUM[i], "-",
-                       AVG_TIME_LVL_min$YEAR[i],
-                       "<br>", round(AVG_TIME_LVL_min$AVG_TIME_LVL_DESCENT[i]/60, 1), " min.</b>"),
+                       round(AVG_TIME_LVL_min$AVG_TIME_LVL_DESCENT[i]/60, 1), " min.</b>"),
                      yshift=40,
                      showarrow = FALSE)
   annotations[[i]] <- annotation
@@ -1620,17 +1618,26 @@ source_annotation=list(x         = 1,
                        yshift    = -10,
                        font      = list(size=12))
 
-button_list=list()
+button_list=vector(mode = "list", length = length(filter_years))
 annot_list=vector(mode = "list", length = length(filter_years))
 for(x in 1:length(filter_years)){
   annot_list_temp=annot_list
   annot_list_temp[[x]]=annotations[[x]]
-  bl=list(
-    label  = filter_years[x],
-    method = "update",
-    args   = list(list("transforms[0].value"=filter_years[x]),
-                  list(annotations=list(annot_list_temp[[x]], source_annotation)))
-  )
+  if (!is.null(annotations[[x]])) {
+      bl=list(
+        label  = filter_years[x],
+        method = "update",
+        args   = list(list("transforms[0].value"=filter_years[x]),
+                      list(annotations=list(annot_list_temp[[x]], source_annotation)))
+      )
+    } else {
+      bl=list(
+        label  = filter_years[x],
+        method = "update",
+        args   = list(list("transforms[0].value"=filter_years[x]),
+                      list(annotations=list(source_annotation)))
+      )
+    }
   button_list[[x]]=bl
 }
 
