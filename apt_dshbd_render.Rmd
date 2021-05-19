@@ -2830,16 +2830,63 @@ filter_years <- TXOT_MM %>%
 
 max_year <- max(filter_years)
 
-button_list <- lapply(
-  1:length(filter_years),
-  function(x) {
-    list(
-      method = "restyle",
-      args = list("transforms[0].value", filter_years[x]),
-      label = filter_years[x]
+MONTHLY_HIGH_TXOT = TXOT_MM %>% 
+  filter(TYPE=="Avg. Additional time") %>% 
+  mutate(AVG_TIME=(TOT_UNIMP_TIME + TOT_ADD_TIME)/TOT_FLT) %>% 
+  select(YEAR, MONTH_NUM, TIME, AVG_TIME) %>% 
+  group_by(YEAR) %>% 
+  filter(TIME !=0) %>% 
+  filter(TIME==max(TIME)) %>% 
+  arrange(YEAR)
+
+annotations = vector(mode = "list", length = length(filter_years))
+for (i in 1:nrow(MONTHLY_HIGH_TXOT)) {
+  annotation <- list(x = MONTHLY_HIGH_TXOT$MONTH_NUM[i],
+                     y = MONTHLY_HIGH_TXOT$AVG_TIME[i],
+                     xref='x',
+                     yref='y',
+                     text = paste0(
+                       "<b>Highest average<br>additional Taxi-Out time:<br>",
+                       round(MONTHLY_HIGH_TXOT$TIME[i], 2), " min/arr</b>"),
+                     yshift=40,
+                     showarrow = FALSE)
+  annotations[[i]] <- annotation
+}
+
+source_annotation=list(x         = 1, 
+                       y         = -0.1, 
+                       text      = "Source: APDF", 
+                       showarrow = F, 
+                       xref      = 'paper', 
+                       yref      = 'paper', 
+                       xanchor   = 'right', 
+                       yanchor   = 'auto', 
+                       xshift    = 0, 
+                       yshift    = -10,
+                       font      = list(size=12))
+
+button_list=vector(mode = "list", length = length(filter_years))
+annot_list=vector(mode = "list", length = length(filter_years))
+for(x in 1:length(filter_years)){
+  annot_list_temp=annot_list
+  annot_list_temp[[x]]=annotations[[x]]
+  if (!is.null(annotations[[x]])) {
+    bl=list(
+      label  = filter_years[x],
+      method = "update",
+      args   = list(list("transforms[0].value"=filter_years[x]),
+                    list(annotations=list(annot_list_temp[[x]], source_annotation)))
+    )
+  } else {
+    bl=list(
+      label  = filter_years[x],
+      method = "update",
+      args   = list(list("transforms[0].value"=filter_years[x]),
+                    list(annotations=list(source_annotation)))
     )
   }
-)
+  button_list[[x]]=bl
+}
 
 button_type_list <- list(
   type      = "buttons",
@@ -2855,7 +2902,7 @@ button_type_list <- list(
   buttons   = button_list
 )
 
-TXOT_MM %>%
+txot_mm_fig = TXOT_MM %>%
   plot_ly(
     x          = ~MONTH_NUM,
     y          = ~TIME,
@@ -2870,6 +2917,18 @@ TXOT_MM %>%
         value     = max_year
       ))
   ) %>%
+  add_annotations(x         = 1, 
+                  y         = -0.1, 
+                  text      = "Source: APDF", 
+                  showarrow = F, 
+                  xref      = 'paper', 
+                  yref      = 'paper', 
+                  xanchor   = 'right', 
+                  yanchor   = 'auto', 
+                  xshift    = 0, 
+                  yshift    = -10,
+                  font      = list(size=12)
+  ) %>%
   layout(
     barmode   = "stack",
     hovermode = "x unified",
@@ -2880,27 +2939,25 @@ TXOT_MM %>%
       hoverformat = ".2f"
     ),
     showlegend = TRUE,
-    updatemenus = list(button_type_list),
-    ##############################################################################
-    annotations = list(
-      x         = 1,
-      y         = -0.1,
-      text      = "Source: APDF",
-      showarrow = FALSE,
-      xref      = "paper",
-      yref      = "paper",
-      xanchor   = "right",
-      yanchor   = "auto",
-      xshift    = 0,
-      yshift    = -10,
-      font      = list(size = 12)
-    )
-    ##############################################################################
+    updatemenus = list(button_type_list)
   ) %>%
   config(
     displaylogo = FALSE,
     modeBarButtonsToRemove = config_bar_remove_buttons
   )
+if (!is.null(annotations[[length(filter_years)]])) {
+    txot_mm_fig=txot_mm_fig %>% 
+      add_annotations(x         = annotations[[length(filter_years)]]$x,
+                      y         = annotations[[length(filter_years)]]$y,
+                      text      = annotations[[length(filter_years)]]$text,
+                      showarrow = annotations[[length(filter_years)]]$showarrow,
+                      xref      = annotations[[length(filter_years)]]$xref,
+                      yref      = annotations[[length(filter_years)]]$yref,
+                      yshift    = annotations[[length(filter_years)]]$yshift
+      )
+  }
+  
+txot_mm_fig
 
 ```
 
