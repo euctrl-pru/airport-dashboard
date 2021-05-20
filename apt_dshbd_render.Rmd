@@ -1615,6 +1615,12 @@ for (i in 1:nrow(AVG_TIME_LVL_min)) {
                        "<b>Lowest value<br>(descent):<br>",
                        round(AVG_TIME_LVL_min$AVG_TIME_LVL_DESCENT[i]/60, 1), " min.</b>"),
                      yshift=40,
+                     xshift = ifelse(AVG_TIME_LVL_min$MONTH_NUM[i]==1,
+                                     20,
+                                     ifelse(AVG_TIME_LVL_min$MONTH_NUM[i]==12, -20, 0)),
+                     align = ifelse(AVG_TIME_LVL_min$MONTH_NUM[i]==1,
+                                    "left",
+                                    ifelse(AVG_TIME_LVL_min$MONTH_NUM[i]==12, "right", "center")),
                      showarrow = FALSE)
   annotations[[i]] <- annotation
 }
@@ -1671,19 +1677,19 @@ button_type_list <- list(
 
 AVG_TIME_LVL_PLOT=mutate(AVG_TIME_LVL_PLOT, YEAR = as.character(YEAR))
 
-plot_ly(AVG_TIME_LVL_PLOT, 
-        x = ~MONTH_NUM, 
-        y = ~AVG_TIME_LVL_DESCENT/60, 
-        customdata = ~YEAR, 
-        marker = list(color = 'rgb(40, 120, 181)'),
-        hovertemplate = "%{y:.1f}",
-        type = 'bar', 
-        name = 'Descent',
-        transforms = list(list(type      = 'filter',
-                               target    = "customdata",
-                               operation = '=',
-                               value     = max_year)
-        )) %>% 
+avg_time_lvl_fig=plot_ly(AVG_TIME_LVL_PLOT, 
+                         x = ~MONTH_NUM, 
+                         y = ~AVG_TIME_LVL_DESCENT/60, 
+                         customdata = ~YEAR, 
+                         marker = list(color = 'rgb(40, 120, 181)'),
+                         hovertemplate = "%{y:.1f}",
+                         type = 'bar', 
+                         name = 'Descent',
+                         transforms = list(list(type      = 'filter',
+                                                target    = "customdata",
+                                                operation = '=',
+                                                value     = max_year)
+                         )) %>% 
   add_trace(y = ~AVG_TIME_LVL_CLIMB/60, 
             marker = list(color = 'rgb(106, 168, 82)'),
             name = 'Climb') %>%
@@ -1699,14 +1705,6 @@ plot_ly(AVG_TIME_LVL_PLOT,
                   yshift    = -10,
                   font      = list(size=12)
   ) %>%
-  add_annotations(x         = annotations[[length(filter_years)]]$x,
-                  y         = annotations[[length(filter_years)]]$y,
-                  text      = annotations[[length(filter_years)]]$text,
-                  showarrow = annotations[[length(filter_years)]]$showarrow,
-                  xref      = annotations[[length(filter_years)]]$xref,
-                  yref      = annotations[[length(filter_years)]]$yref,
-                  yshift    = annotations[[length(filter_years)]]$yshift
-  ) %>%
   layout(barmode = 'group',
          hovermode   = "x unified",
          xaxis       = tick_yr_no_title,
@@ -1718,6 +1716,22 @@ plot_ly(AVG_TIME_LVL_PLOT,
   ) %>%
   config( displaylogo = FALSE,
           modeBarButtonsToRemove = config_bar_remove_buttons)
+
+if (!is.null(annotations[[length(filter_years)]])) {
+    avg_time_lvl_fig=avg_time_lvl_fig %>% 
+      add_annotations(x         = annotations[[length(filter_years)]]$x,
+                      y         = annotations[[length(filter_years)]]$y,
+                      text      = annotations[[length(filter_years)]]$text,
+                      showarrow = annotations[[length(filter_years)]]$showarrow,
+                      xref      = annotations[[length(filter_years)]]$xref,
+                      yref      = annotations[[length(filter_years)]]$yref,
+                      yshift    = annotations[[length(filter_years)]]$yshift,
+                      xshift    = annotations[[length(filter_years)]]$xshift,
+                      align     = annotations[[length(filter_years)]]$align
+      )
+  }
+  
+avg_time_lvl_fig
 
 ```
 
