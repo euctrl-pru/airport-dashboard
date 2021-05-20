@@ -871,6 +871,12 @@ if (nrow(params$atfm) > 0) {
                          round(MONTHLY_HIGH_ATFM$AVG_ARR_ATFM_REG[i]/MONTHLY_HIGH_ATFM$AVG_ARR_ATFM_DLY[i]*100, 0),
                          "% ", MONTHLY_HIGH_ATFM$REG_REASON[i], ")</b>"),
                        yshift=40,
+                       xshift = ifelse(MONTHLY_HIGH_ATFM$MONTH_NUM[i]==1,
+                                       40,
+                                       ifelse(MONTHLY_HIGH_ATFM$MONTH_NUM[i]==12, -40, 0)),
+                       align = ifelse(MONTHLY_HIGH_ATFM$MONTH_NUM[i]==1,
+                                      "left",
+                                      ifelse(MONTHLY_HIGH_ATFM$MONTH_NUM[i]==12, "right", "center")),
                        showarrow = FALSE)
     annotations[[i]] <- annotation
   }
@@ -974,6 +980,11 @@ if (nrow(params$atfm) > 0) {
         rangemode   = "tozero"
       ),
       showlegend = TRUE,
+      legend = list(
+        orientation = "h",
+        xanchor="center",
+        x = 0.5
+      ),
       updatemenus = list(button_type_list)
     ) %>%
     config(
@@ -988,7 +999,9 @@ if (nrow(params$atfm) > 0) {
                       showarrow = annotations[[length(filter_years)]]$showarrow,
                       xref      = annotations[[length(filter_years)]]$xref,
                       yref      = annotations[[length(filter_years)]]$yref,
-                      yshift    = annotations[[length(filter_years)]]$yshift
+                      yshift    = annotations[[length(filter_years)]]$yshift,
+                      xshift    = annotations[[length(filter_years)]]$xshift,
+                      align     = annotations[[length(filter_years)]]$align
       )
   }
   
@@ -2520,6 +2533,12 @@ for (i in 1:nrow(MONTHLY_HIGH_ASMA)) {
                        "<b>Highest average<br>additional ASMA time:<br>",
                        round(MONTHLY_HIGH_ASMA$TIME[i], 2), " min/arr</b>"),
                      yshift=40,
+                     xshift = ifelse(MONTHLY_HIGH_ASMA$MONTH_NUM[i]==1,
+                                    45,
+                                    ifelse(MONTHLY_HIGH_ASMA$MONTH_NUM[i]==12, -45, 0)),
+                     align = ifelse(MONTHLY_HIGH_ASMA$MONTH_NUM[i]==1,
+                                    "left",
+                                    ifelse(MONTHLY_HIGH_ASMA$MONTH_NUM[i]==12, "right", "center")),
                      showarrow = FALSE)
   annotations[[i]] <- annotation
 }
@@ -2611,6 +2630,11 @@ asma_mm_fig = ASMA_MM %>%
       hoverformat = ".2f"
     ),
     showlegend = TRUE,
+    legend = list(
+      orientation = "h",
+      xanchor="center",
+      x = 0.5
+    ),
     updatemenus = list(button_type_list)
   ) %>%
   config(
@@ -2625,7 +2649,9 @@ if (!is.null(annotations[[length(filter_years)]])) {
                       showarrow = annotations[[length(filter_years)]]$showarrow,
                       xref      = annotations[[length(filter_years)]]$xref,
                       yref      = annotations[[length(filter_years)]]$yref,
-                      yshift    = annotations[[length(filter_years)]]$yshift
+                      yshift    = annotations[[length(filter_years)]]$yshift,
+                      xshift    = annotations[[length(filter_years)]]$xshift,
+                      align     = annotations[[length(filter_years)]]$align
       )
   }
   
@@ -2899,6 +2925,12 @@ for (i in 1:nrow(MONTHLY_HIGH_TXOT)) {
                        "<b>Highest average<br>additional Taxi-Out time:<br>",
                        round(MONTHLY_HIGH_TXOT$TIME[i], 2), " min/arr</b>"),
                      yshift=40,
+                     xshift = ifelse(MONTHLY_HIGH_TXOT$MONTH_NUM[i]==1,
+                                     55,
+                                     ifelse(MONTHLY_HIGH_TXOT$MONTH_NUM[i]==12, -55, 0)),
+                     align = ifelse(MONTHLY_HIGH_TXOT$MONTH_NUM[i]==1,
+                                    "left",
+                                    ifelse(MONTHLY_HIGH_TXOT$MONTH_NUM[i]==12, "right", "center")),
                      showarrow = FALSE)
   annotations[[i]] <- annotation
 }
@@ -2989,6 +3021,11 @@ txot_mm_fig = TXOT_MM %>%
       hoverformat = ".2f"
     ),
     showlegend = TRUE,
+    legend = list(
+      orientation = "h",
+      xanchor="center",
+      x = 0.5
+    ),
     updatemenus = list(button_type_list)
   ) %>%
   config(
@@ -3003,7 +3040,9 @@ if (!is.null(annotations[[length(filter_years)]])) {
                       showarrow = annotations[[length(filter_years)]]$showarrow,
                       xref      = annotations[[length(filter_years)]]$xref,
                       yref      = annotations[[length(filter_years)]]$yref,
-                      yshift    = annotations[[length(filter_years)]]$yshift
+                      yshift    = annotations[[length(filter_years)]]$yshift,
+                      xshift    = annotations[[length(filter_years)]]$xshift,
+                      align     = annotations[[length(filter_years)]]$align
       )
   }
   
@@ -3225,6 +3264,12 @@ cat("### Monthly Taxi-In Time")
                          "<b>Highest average<br>additional Taxi-In time:<br>",
                          round(MONTHLY_HIGH_TXIN$TIME[i], 2), " min/arr</b>"),
                        yshift=40,
+                       xshift = ifelse(MONTHLY_HIGH_TXIN$MONTH_NUM[i]==1,
+                                       55,
+                                       ifelse(MONTHLY_HIGH_TXIN$MONTH_NUM[i]==12, -55, 0)),
+                       align = ifelse(MONTHLY_HIGH_TXIN$MONTH_NUM[i]==1,
+                                      "left",
+                                      ifelse(MONTHLY_HIGH_TXIN$MONTH_NUM[i]==12, "right", "center")),
                        showarrow = FALSE)
     annotations[[i]] <- annotation
   }
@@ -3316,7 +3361,12 @@ cat("### Monthly Taxi-In Time")
         hoverformat = ".2f"
       ),
       showlegend  = TRUE,
-      updatemenus = list(button_type_list)
+      legend = list(
+      orientation = "h",
+      xanchor="center",
+      x = 0.5
+    ),
+    updatemenus = list(button_type_list)
     ) %>%
     config(
       displaylogo = FALSE,
@@ -3330,7 +3380,9 @@ cat("### Monthly Taxi-In Time")
                       showarrow = annotations[[length(filter_years)]]$showarrow,
                       xref      = annotations[[length(filter_years)]]$xref,
                       yref      = annotations[[length(filter_years)]]$yref,
-                      yshift    = annotations[[length(filter_years)]]$yshift
+                      yshift    = annotations[[length(filter_years)]]$yshift,
+                      xshift    = annotations[[length(filter_years)]]$xshift,
+                      align     = annotations[[length(filter_years)]]$align
       )
   }
   
