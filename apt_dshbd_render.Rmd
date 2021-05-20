@@ -1718,6 +1718,31 @@ cat("### Median CDO/CCO altitudes")
 
 ```{r Med-CDO-CCO-alt, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE}
 
+button_list <- lapply(
+  1:length(filter_years),
+  function(x) {
+    list(
+      method = "restyle",
+      args = list("transforms[0].value", filter_years[x]),
+      label = filter_years[x]
+    )
+  }
+)
+
+button_type_list <- list(
+  buttons   = button_list,
+  type      = "buttons",
+  bgcolor   = "#c3c1e8",
+  active    = length(filter_years) - 1,
+  direction = "right",
+  xref      = "paper",
+  x         = 0.3,
+  xanchor   = "left",
+  yref      = "paper",
+  y         = 1.2,
+  yanchor   = "bottom"
+)
+
 MED_CDO_CCO_ALT_PLOT <- params$cdo_cco %>% 
     select(YEAR, MONTH_NUM, MEDIAN_CDO_ALT, MEDIAN_CCO_ALT)
   
@@ -1781,6 +1806,31 @@ cat("### Share of CDO/CCO flights")
 
 
 ```{r Share-unimpeded, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE}
+
+button_list <- lapply(
+  1:length(filter_years),
+  function(x) {
+    list(
+      method = "restyle",
+      args = list("transforms[0].value", filter_years[x]),
+      label = filter_years[x]
+    )
+  }
+)
+
+button_type_list <- list(
+  buttons   = button_list,
+  type      = "buttons",
+  bgcolor   = "#c3c1e8",
+  active    = length(filter_years) - 1,
+  direction = "right",
+  xref      = "paper",
+  x         = 0.3,
+  xanchor   = "left",
+  yref      = "paper",
+  y         = 1.2,
+  yanchor   = "bottom"
+)
 
 SHARE_CDO_CCO_FLIGHTS_PLOT <- params$cdo_cco %>% 
     select(YEAR, MONTH_NUM, SHARE_CDO_FLIGHTS, SHARE_CCO_FLIGHTS)
