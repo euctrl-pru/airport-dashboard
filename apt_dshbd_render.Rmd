@@ -1601,17 +1601,65 @@ filter_years <- AVG_TIME_LVL_PLOT %>%
 
 max_year <- max(filter_years)
 
-button_list <- lapply(
-  1:length(filter_years),
-  function(x) {
-    list(
-      method = "restyle",
-      args = list("transforms[0].value", filter_years[x]),
-      label = filter_years[x]
-    )
-  }
-)
+AVG_TIME_LVL_min=group_by(AVG_TIME_LVL_PLOT, YEAR) %>% 
+  filter(AVG_TIME_LVL_DESCENT==min(AVG_TIME_LVL_DESCENT)) %>% 
+  arrange(YEAR)
 
+annotations = vector(mode = "list", length = length(filter_years))
+for (i in 1:nrow(AVG_TIME_LVL_min)) {
+  annotation <- list(x = AVG_TIME_LVL_min$MONTH_NUM[i],
+                     y = AVG_TIME_LVL_min$AVG_TIME_LVL_DESCENT[i]/60,
+                     xref='x',
+                     yref='y',
+                     text = paste0(
+                       "<b>Lowest value<br>(descent):<br>",
+                       round(AVG_TIME_LVL_min$AVG_TIME_LVL_DESCENT[i]/60, 1), " min.</b>"),
+                     yshift=40,
+                     xshift = ifelse(AVG_TIME_LVL_min$MONTH_NUM[i]==1,
+                                     20,
+                                     ifelse(AVG_TIME_LVL_min$MONTH_NUM[i]==12, -20, 0)),
+                     align = ifelse(AVG_TIME_LVL_min$MONTH_NUM[i]==1,
+                                    "left",
+                                    ifelse(AVG_TIME_LVL_min$MONTH_NUM[i]==12, "right", "center")),
+                     showarrow = FALSE)
+  annotations[[i]] <- annotation
+}
+
+source_annotation=list(x         = 1, 
+                       y         = -0.1, 
+                       text      = "Source: AIU analysis", 
+                       showarrow = F, 
+                       xref      = 'paper', 
+                       yref      = 'paper', 
+                       xanchor   = 'right', 
+                       yanchor   = 'auto', 
+                       xshift    = 0, 
+                       yshift    = -10,
+                       font      = list(size=12))
+
+button_list=vector(mode = "list", length = length(filter_years))
+annot_list=vector(mode = "list", length = length(filter_years))
+for(x in 1:length(filter_years)){
+  annot_list_temp=annot_list
+  annot_list_temp[[x]]=annotations[[x]]
+  if (!is.null(annotations[[x]])) {
+      bl=list(
+        label  = filter_years[x],
+        method = "update",
+        args   = list(list("transforms[0].value"=filter_years[x]),
+                      list(annotations=list(annot_list_temp[[x]], source_annotation)))
+      )
+  } else {
+      bl=list(
+        label  = filter_years[x],
+        method = "update",
+        args   = list(list("transforms[0].value"=filter_years[x]),
+                      list(annotations=list(source_annotation)))
+      )
+    }
+    button_list[[x]]=bl
+}
+   
 button_type_list <- list(
   buttons   = button_list,
   type      = "buttons",
@@ -1627,19 +1675,9 @@ button_type_list <- list(
 )
 
 
-button_type_list <-  list( buttons   = button_list, 
-                           type      = 'buttons', 
-                           bgcolor   = '#c3c1e8', 
-                           active    = length(filter_years)-1,
-                           direction = 'right', 
-                           xref      = "paper",
-                           x         = 0.3,
-                           xanchor   = 'left', 
-                           yref      = "paper",
-                           y         = 1.2, 
-                           yanchor   = "bottom")
+# AVG_TIME_LVL_PLOT=mutate(AVG_TIME_LVL_PLOT, YEAR = as.character(YEAR))
 
-plot_ly(AVG_TIME_LVL_PLOT, 
+avg_time_lvl_fig=plot_ly(AVG_TIME_LVL_PLOT, 
         x = ~MONTH_NUM, 
         y = ~AVG_TIME_LVL_DESCENT/60, 
         customdata = ~YEAR, 
@@ -1655,6 +1693,18 @@ plot_ly(AVG_TIME_LVL_PLOT,
   add_trace(y = ~AVG_TIME_LVL_CLIMB/60, 
             marker = list(color = 'rgb(106, 168, 82)'),
             name = 'Climb') %>%
+  add_annotations(x         = 1, 
+                  y         = -0.1, 
+                  text      = "Source: AIU analysis", 
+                  showarrow = F, 
+                  xref      = 'paper', 
+                  yref      = 'paper', 
+                  xanchor   = 'right', 
+                  yanchor   = 'auto', 
+                  xshift    = 0, 
+                  yshift    = -10,
+                  font      = list(size=12)
+  ) %>%
   layout(barmode = 'group',
          hovermode   = "x unified",
          xaxis       = tick_yr_no_title,
@@ -1662,24 +1712,26 @@ plot_ly(AVG_TIME_LVL_PLOT,
                              titlefont = list(size = 11)),
          showlegend  = TRUE,
          updatemenus = list( button_type_list )
-         ##############################################################################
-         ,annotations = list(
-           x         = 1, 
-           y         = -0.1, 
-           text      = "Source: AIU analysis", 
-           showarrow = F, 
-           xref      = 'paper', 
-           yref      = 'paper', 
-           xanchor   = 'right', 
-           yanchor   = 'auto', 
-           xshift    = 0, 
-           yshift    = -10,
-           font      =list(size=12)
-         )          
-         ##############################################################################
+         
   ) %>% 
   config( displaylogo = FALSE,
           modeBarButtonsToRemove = config_bar_remove_buttons)
+
+if (!is.null(annotations[[length(filter_years)]])) {
+    avg_time_lvl_fig=avg_time_lvl_fig %>% 
+      add_annotations(x         = annotations[[length(filter_years)]]$x,
+                      y         = annotations[[length(filter_years)]]$y,
+                      text      = annotations[[length(filter_years)]]$text,
+                      showarrow = annotations[[length(filter_years)]]$showarrow,
+                      xref      = annotations[[length(filter_years)]]$xref,
+                      yref      = annotations[[length(filter_years)]]$yref,
+                      yshift    = annotations[[length(filter_years)]]$yshift,
+                      xshift    = annotations[[length(filter_years)]]$xshift,
+                      align     = annotations[[length(filter_years)]]$align
+      )
+}
+
+avg_time_lvl_fig
 
 ```
 
