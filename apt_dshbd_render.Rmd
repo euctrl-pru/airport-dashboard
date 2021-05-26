@@ -3077,11 +3077,11 @@ cat("## Row -----------------------------------------------------------")
 
 ```{r Taxi-in-time-data-check, results='asis', eval=params$apdf != "Y"}
 
-cat("
+cat("<center> 
 Analyses on taxi-in times are only available for airports providing the required data 
 using the Airport Operator Data Flow (APDF).
 
-If you belong to the airport and would like to implement such data flow, please contact DANSAP@eurocontrol.int")
+If you belong to the airport and would like to implement such data flow, please contact DANSAP@eurocontrol.int </center>")
   
 ```
 
@@ -3210,6 +3210,18 @@ cat("### Annual Taxi-In Time")
         hoverformat = ".2f"
       ),
       annotations = key_msg
+    ) %>%
+    add_annotations(x         = 1, 
+                    y         = -0.1, 
+                    text      = "Source: APDF", 
+                    showarrow = F, 
+                    xref      = 'paper', 
+                    yref      = 'paper', 
+                    xanchor   = 'right', 
+                    yanchor   = 'auto', 
+                    xshift    = 0, 
+                    yshift    = -10,
+                    font      = list(size=12)
     ) %>%
     config(
       displaylogo = FALSE,
