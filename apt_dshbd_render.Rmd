@@ -3820,11 +3820,11 @@ predepdly_pm %>%
 
 ```{r Turnaround-times-data-check, results='asis', eval=params$apdf != "Y"}
 
-cat("
+cat("<center> 
 Analyses on turnaround times are only available for airports providing the required data 
 using the Airport Operator Data Flow (APDF).
 
-If you belong to the airport and would like to implement such data flow, please contact DANSAP@eurocontrol.int")
+If you belong to the airport and would like to implement such data flow, please contact DANSAP@eurocontrol.int </center>")
   
 ```
 
