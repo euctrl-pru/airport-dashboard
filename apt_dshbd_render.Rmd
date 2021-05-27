@@ -860,25 +860,29 @@ if (nrow(params$atfm) > 0) {
   ###########################################################################
   
   annotations = vector(mode = "list", length = length(filter_years))
-  for (i in 1:nrow(MONTHLY_HIGH_ATFM)) {
-    annotation <- list(x = MONTHLY_HIGH_ATFM$MONTH_NUM[i],
-                       y = MONTHLY_HIGH_ATFM$AVG_ARR_ATFM_DLY[i],
-                       xref='x',
-                       yref='y',
-                       text = paste0(
-                         "<b>Highest ATFM delay:<br>",
-                         round(MONTHLY_HIGH_ATFM$AVG_ARR_ATFM_DLY[i], 2), " min/arr<br>(",
-                         round(MONTHLY_HIGH_ATFM$AVG_ARR_ATFM_REG[i]/MONTHLY_HIGH_ATFM$AVG_ARR_ATFM_DLY[i]*100, 0),
-                         "% ", MONTHLY_HIGH_ATFM$REG_REASON[i], ")</b>"),
-                       yshift=40,
-                       xshift = ifelse(MONTHLY_HIGH_ATFM$MONTH_NUM[i]==1,
-                                       40,
-                                       ifelse(MONTHLY_HIGH_ATFM$MONTH_NUM[i]==12, -40, 0)),
-                       align = ifelse(MONTHLY_HIGH_ATFM$MONTH_NUM[i]==1,
-                                      "left",
-                                      ifelse(MONTHLY_HIGH_ATFM$MONTH_NUM[i]==12, "right", "center")),
-                       showarrow = FALSE)
-    annotations[[i]] <- annotation
+  for (i in 1:length(filter_years)) {
+    MONTHLY_HIGH_ATFM_temp=filter(MONTHLY_HIGH_ATFM, YEAR==filter_years[i])
+    if (nrow(MONTHLY_HIGH_ATFM_temp)>0) {
+      annotation <- list(x = MONTHLY_HIGH_ATFM_temp$MONTH_NUM,
+                         y = MONTHLY_HIGH_ATFM_temp$AVG_ARR_ATFM_DLY,
+                         xref='x',
+                         yref='y',
+                         text = paste0(
+                           "<b>Highest ATFM delay:<br>",
+                           round(MONTHLY_HIGH_ATFM_temp$AVG_ARR_ATFM_DLY, 2), " min/arr<br>(",
+                           round(MONTHLY_HIGH_ATFM_temp$AVG_ARR_ATFM_REG/
+                                   MONTHLY_HIGH_ATFM_temp$AVG_ARR_ATFM_DLY*100, 0),
+                           "% ", MONTHLY_HIGH_ATFM_temp$REG_REASON, ")</b>"),
+                         yshift=40,
+                         xshift = ifelse(MONTHLY_HIGH_ATFM_temp$MONTH_NUM==1,
+                                         40,
+                                         ifelse(MONTHLY_HIGH_ATFM_temp$MONTH_NUM==12, -40, 0)),
+                         align = ifelse(MONTHLY_HIGH_ATFM_temp$MONTH_NUM==1,
+                                        "left",
+                                        ifelse(MONTHLY_HIGH_ATFM_temp$MONTH_NUM==12, "right", "center")),
+                         showarrow = FALSE)
+      annotations[[i]] <- annotation
+    }
   }
   
   source_annotation=list(x         = 1, 
