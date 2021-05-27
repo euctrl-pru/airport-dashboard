@@ -2545,23 +2545,26 @@ MONTHLY_HIGH_ASMA = ASMA_MM %>%
   arrange(YEAR)
 
 annotations = vector(mode = "list", length = length(filter_years))
-for (i in 1:nrow(MONTHLY_HIGH_ASMA)) {
-  annotation <- list(x = MONTHLY_HIGH_ASMA$MONTH_NUM[i],
-                     y = MONTHLY_HIGH_ASMA$AVG_TIME[i],
-                     xref='x',
-                     yref='y',
-                     text = paste0(
-                       "<b>Highest average<br>additional ASMA time:<br>",
-                       round(MONTHLY_HIGH_ASMA$TIME[i], 2), " min/arr</b>"),
-                     yshift=40,
-                     xshift = ifelse(MONTHLY_HIGH_ASMA$MONTH_NUM[i]==1,
-                                    45,
-                                    ifelse(MONTHLY_HIGH_ASMA$MONTH_NUM[i]==12, -45, 0)),
-                     align = ifelse(MONTHLY_HIGH_ASMA$MONTH_NUM[i]==1,
-                                    "left",
-                                    ifelse(MONTHLY_HIGH_ASMA$MONTH_NUM[i]==12, "right", "center")),
-                     showarrow = FALSE)
-  annotations[[i]] <- annotation
+for (i in 1:length(filter_years)) {
+  MONTHLY_HIGH_ASMA_temp=filter(MONTHLY_HIGH_ASMA, YEAR==filter_years[i])
+  if (nrow(MONTHLY_HIGH_ASMA_temp)>0) {
+    annotation <- list(x = MONTHLY_HIGH_ASMA_temp$MONTH_NUM,
+                       y = MONTHLY_HIGH_ASMA_temp$AVG_TIME,
+                       xref='x',
+                       yref='y',
+                       text = paste0(
+                         "<b>Highest average<br>additional ASMA time:<br>",
+                         round(MONTHLY_HIGH_ASMA_temp$TIME, 2), " min/arr</b>"),
+                       yshift=40,
+                       xshift = ifelse(MONTHLY_HIGH_ASMA_temp$MONTH_NUM==1,
+                                       45,
+                                       ifelse(MONTHLY_HIGH_ASMA_temp$MONTH_NUM==12, -45, 0)),
+                       align = ifelse(MONTHLY_HIGH_ASMA_temp$MONTH_NUM==1,
+                                      "left",
+                                      ifelse(MONTHLY_HIGH_ASMA_temp$MONTH_NUM==12, "right", "center")),
+                       showarrow = FALSE)
+    annotations[[i]] <- annotation
+  }
 }
 
 source_annotation=list(x         = 1, 
@@ -2937,23 +2940,26 @@ MONTHLY_HIGH_TXOT = TXOT_MM %>%
   arrange(YEAR)
 
 annotations = vector(mode = "list", length = length(filter_years))
-for (i in 1:nrow(MONTHLY_HIGH_TXOT)) {
-  annotation <- list(x = MONTHLY_HIGH_TXOT$MONTH_NUM[i],
-                     y = MONTHLY_HIGH_TXOT$AVG_TIME[i],
-                     xref='x',
-                     yref='y',
-                     text = paste0(
-                       "<b>Highest average<br>additional Taxi-Out time:<br>",
-                       round(MONTHLY_HIGH_TXOT$TIME[i], 2), " min/arr</b>"),
-                     yshift=40,
-                     xshift = ifelse(MONTHLY_HIGH_TXOT$MONTH_NUM[i]==1,
-                                     55,
-                                     ifelse(MONTHLY_HIGH_TXOT$MONTH_NUM[i]==12, -55, 0)),
-                     align = ifelse(MONTHLY_HIGH_TXOT$MONTH_NUM[i]==1,
-                                    "left",
-                                    ifelse(MONTHLY_HIGH_TXOT$MONTH_NUM[i]==12, "right", "center")),
-                     showarrow = FALSE)
-  annotations[[i]] <- annotation
+for (i in 1:length(filter_years)) {
+  MONTHLY_HIGH_TXOT_temp=filter(MONTHLY_HIGH_TXOT, YEAR==filter_years[i])
+  if (nrow(MONTHLY_HIGH_TXOT_temp)>0) {
+    annotation <- list(x = MONTHLY_HIGH_TXOT_temp$MONTH_NUM,
+                       y = MONTHLY_HIGH_TXOT_temp$AVG_TIME,
+                       xref='x',
+                       yref='y',
+                       text = paste0(
+                         "<b>Highest average<br>additional Taxi-Out time:<br>",
+                         round(MONTHLY_HIGH_TXOT_temp$TIME, 2), " min/arr</b>"),
+                       yshift=40,
+                       xshift = ifelse(MONTHLY_HIGH_TXOT_temp$MONTH_NUM==1,
+                                       55,
+                                       ifelse(MONTHLY_HIGH_TXOT_temp$MONTH_NUM==12, -55, 0)),
+                       align = ifelse(MONTHLY_HIGH_TXOT_temp$MONTH_NUM==1,
+                                      "left",
+                                      ifelse(MONTHLY_HIGH_TXOT_temp$MONTH_NUM==12, "right", "center")),
+                       showarrow = FALSE)
+    annotations[[i]] <- annotation
+  }
 }
 
 source_annotation=list(x         = 1, 
