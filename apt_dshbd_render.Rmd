@@ -332,7 +332,7 @@ if (nrow(params$tfcvar) < 1) {
 
 ### Annual Traffic
 
-```{r annual traffic}
+```{r annual-traffic}
 mvts_pa <- params$tfc %>%
   select(YEAR, FLT_TOT) %>%
   group_by(YEAR) %>%
@@ -429,7 +429,7 @@ mvts_pa %>%
 
 ### Monthly Traffic
 
-```{r}
+```{r monthly-traffic}
 mvts_pm <- params$tfc %>%
   select(YEAR, MONTH_NUM, FLT_TOT) %>%
   group_by(YEAR, MONTH_NUM) %>%
@@ -507,7 +507,7 @@ mvts_pm %>%
 
 ### Annual Variation of Daily Movements 
 
-```{r daily movements}
+```{r daily-movements}
 tmp <- params$tfc %>%
   select(YEAR,
     DATE = FLT_DATE,
@@ -570,7 +570,7 @@ pbox_group
 
 ### Average Weekday Hourly Throughput
 
-```{r}
+```{r Avg-weekday-hourly-throughput}
 thru <- params$thru %>%
   filter(
     TIME >= hm("05:55"),
@@ -672,7 +672,7 @@ thru %>%
 ### Annual Arrival ATFM Delay
 
 
-```{r atfm_pa}
+```{r atfm-pa}
 if (nrow(params$atfm) > 0) {
   atfm_pa <- params$atfm %>%
     select(
@@ -791,7 +791,7 @@ if (nrow(params$atfm) > 0) {
 
 ### Monthly Arrival ATFM Delay
 
-```{r}
+```{r atfm-pm}
 # monthly trend
 
 if (nrow(params$atfm) > 0) {
@@ -1019,7 +1019,7 @@ if (nrow(params$atfm) > 0) {
 
 ### Daily Arrival ATFM Delay
 
-```{r}
+```{r Daily-arr-atfm-delay}
 if (nrow(params$atfm) > 0) {
   tmp <- params$atfm %>%
     group_by(FLT_DATE) %>%
@@ -1162,7 +1162,7 @@ if (nrow(params$atfm) > 0) {
 
 ### Annual Regulated Departures
 
-```{r ANNUAL ATFM REG}
+```{r ANNUAL-ATFM-REG}
 SLOT_YY_PLOT1 <- params$slot_yy %>%
   select(
     AIRPORT,
@@ -1235,7 +1235,7 @@ SLOT_YY_PLOT1 %>%
 ```
 
 ### Monthly Regulated Departures
-```{r MONTHLY ATFM REG}
+```{r MONTHLY-ATFM-REG}
 SLOT_MM_PLOT1 <- params$slot_mm %>%
   select(
     AIRPORT,
@@ -1384,7 +1384,7 @@ SLOT_MM_PLOT1 %>%
 
 ### Annual ATFM Slot Adherence
 
-```{r ANNUAL ATFM SLOT2}
+```{r ANNUAL-ATFM-SLOT2}
 SLOT_YY_PLOT2 <- params$slot_yy %>%
   select(YEAR, TOT_FLT_DEP_OUT_LATE_1, TOT_FLT_DEP_OUT_EARLY_1, TOT_FLT_DEP_IN_1) %>%
   tidyr::pivot_longer(
@@ -1458,7 +1458,7 @@ SLOT_YY_PLOT2 %>%
 
 ### Monthly ATFM Slot Adherence
 
-```{r MONTHLY ATFM SLOT2}
+```{r MONTHLY-ATFM-SLOT2}
 SLOT_MM_PLOT2 <- params$slot_mm %>%
   select(YEAR,
          MONTH_NUM,
@@ -2003,7 +2003,7 @@ cat("### Annual Departure Punctuality")
 ```
 
   
-```{r Punctuality DEP YEARLY LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
+```{r Punctuality-DEP-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
 pun_col <- c(
   "#1f4e79", # EARLY >30		#rgb 31,78,121
@@ -2079,7 +2079,7 @@ cat("### Monthly Departure Punctuality")
 ```
 
 
-```{r Punctuality DEP MONHTLY LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
+```{r Punctuality-DEP-MONHTLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
 punc_dep_mm_plot <- params$punc_dep_mm
 
@@ -2193,7 +2193,7 @@ cat("### Annual Arrival Punctuality")
 ```
 
 
-```{r Punctuality ARR YEARLY LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
+```{r Punctuality-ARR-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
 punc_arr_yy_plot <- params$punc_arr_yy
 
@@ -2260,7 +2260,7 @@ cat("### Monthly Arrival Punctuality")
 ```
 
 
-```{r Punctuality ARR MONHTLY LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
+```{r Punctuality-ARR-MONHTLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
 punc_arr_mm_plot <- params$punc_arr_mm
 
@@ -2388,7 +2388,7 @@ cat("### Annual ASMA Time")
 ```
 
 
-```{r ASMA YEARLY LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
+```{r ASMA-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
 ASMA_YY <- params$asma_yy %>%
   tidyr::pivot_longer(
@@ -2513,7 +2513,7 @@ cat("### Monthly ASMA Time")
 ```
 
 
-```{r ASMA MONTHLY LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
+```{r ASMA-MONTHLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
 ASMA_MM <- params$asma_mm %>%
   tidyr::pivot_longer(
@@ -2701,7 +2701,7 @@ cat("### Monthly ASMA Trend (current Year)")
 ```
 
 
-```{r ASMA TREND LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
+```{r ASMA-TREND-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
 TMP <- params$asma_mm %>% 
 mutate( DATE_YM = paste0(YEAR,"-",MONTH_NUM),
@@ -2771,7 +2771,7 @@ cat("### Annual Taxi-Out Time")
 ```
 
 
-```{r TXOT YEARLY LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
+```{r TXOT-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
 TXOT_YY <- params$txot_yy %>%
   tidyr::pivot_longer(
@@ -2908,7 +2908,7 @@ cat("### Monthly Taxi-Out Time")
 ```
 
 
-```{r TAXI-OUT MONTHLY LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
+```{r TAXI-OUT-MONTHLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
 TXOT_MM <- params$txot_mm %>%
   tidyr::pivot_longer(
@@ -3113,7 +3113,7 @@ cat("### Annual Taxi-In Time")
 ```
 
 
-```{r TXIN YEARLY LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
+```{r TXIN-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
   TXIN_YY <- params$txin_yy %>%
     tidyr::pivot_longer(
@@ -3251,7 +3251,7 @@ cat("### Monthly Taxi-In Time")
 ```
 
 
-```{r TAXI-IN MONTHLY LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
+```{r TAXI-IN-MONTHLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
   TXIN_MM <- params$txin_mm %>%
     tidyr::pivot_longer(
@@ -3645,7 +3645,7 @@ cat("## Row -----------------------------------------------------------")
 
 ### Monthly Pre-Departure Delay Trend
 
-```{r, results='asis', eval=params$apdf == "Y", echo = FALSE}
+```{r Monthly-pre-dep-delay, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
 
 TMP <- PDDLY_MM %>%
@@ -3859,7 +3859,7 @@ cat("### Annual Actual Turnaround Time")
 ```
 
 
-```{r annual_turn_time, results='asis', eval=params$apdf == "Y", echo = FALSE}
+```{r annual-turn-time, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
 TURN_YY <- params$turn_yy %>%
   select(YEAR, AC_CLASS, AVG_ACTT)
@@ -3927,7 +3927,7 @@ cat("### Monthly Turnaround Times")
 ```
 
 
-```{r monthly_turn_time, results='asis', eval=params$apdf == "Y", echo = FALSE}
+```{r monthly-turn-time, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
 TURN_MM <- params$turn_mm %>%
   select(YEAR, MONTH_NUM, TOT_TURN, AC_CLASS, AVG_ACTT, AVG_SDTT) %>%
