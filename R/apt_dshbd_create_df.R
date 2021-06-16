@@ -460,10 +460,9 @@ PDDLY_YY_DF <- APDF_MM_DF %>%
   ) %>%
   ungroup() %>%
   mutate(
-    TOT_DLY_UNID = TOT_DLY_999 + TOT_DLY_ZZZ + TOT_DLY_UNREPORTED,
-    AVG_PREDEP_DLY = TOT_DLY_89 / TOT_FLT_DEP
+    TOT_DLY_UNID = TOT_DLY_999 + TOT_DLY_ZZZ + TOT_DLY_UNREPORTED
   ) %>%
-  select(AIRPORT, APT_ICAO, YEAR, TOT_DLY_89, TOT_DLY_OTHER, TOT_DLY_UNID, AVG_PREDEP_DLY)
+  select(AIRPORT, APT_ICAO, YEAR, TOT_DLY_89, TOT_DLY_OTHER, TOT_DLY_UNID)
 
 # ..PDDLY MONTHLY DATA  ----
 PDDLY_MM_DF <- APDF_MM_DF %>%
@@ -494,81 +493,22 @@ PDDLY_MM_DF <- APDF_MM_DF %>%
   ) %>%
   ungroup() %>%
   mutate(
-    TOT_DLY_UNID = TOT_DLY_999 + TOT_DLY_ZZZ + TOT_DLY_UNREPORTED,
-    AVG_PREDEP_DLY = TOT_DLY_89 / TOT_FLT_DEP
+    TOT_DLY_UNID = TOT_DLY_999 + TOT_DLY_ZZZ + TOT_DLY_UNREPORTED
   ) %>%
-  select(AIRPORT, APT_ICAO, YEAR, MONTH_NUM, TOT_DLY_89, TOT_DLY_OTHER, TOT_DLY_UNID, AVG_PREDEP_DLY)
-
+  select(AIRPORT, APT_ICAO, YEAR, MONTH_NUM, TOT_DLY_89, TOT_DLY_OTHER, TOT_DLY_UNID)
 
 
 # ..PDDLY YEARLY AVERAGE  ----
 PDDLY_YY_AVG_DF <- APDF_MM_DF %>%
-  select( # ..........
-    AIRPORT,
-    APT_ICAO,
-    YEAR,
-    # ..........
-    NB_DLY_DEP_FL,
-    DLY_89_MIN,
-    DLY_999_MIN,
-    DLY_ZZZ_MIN,
-    DLY_OTHER_MIN,
-    UN_RPTED_DLY_MIN,
-    OV_RPTED_DLY_MIN
-    # ..........
-  ) %>%
+  select(AIRPORT, APT_ICAO, YEAR, DLY_89_PER_FL_YY) %>%
   group_by(AIRPORT, APT_ICAO, YEAR) %>%
-  summarise(
-    TOT_FLT_DEP = sum(NB_DLY_DEP_FL, na.rm = TRUE),
-    TOT_DLY_89 = sum(DLY_89_MIN, na.rm = TRUE),
-    TOT_DLY_999 = sum(DLY_999_MIN, na.rm = TRUE),
-    TOT_DLY_ZZZ = sum(DLY_ZZZ_MIN, na.rm = TRUE),
-    TOT_DLY_OTHER = sum(DLY_OTHER_MIN, na.rm = TRUE),
-    TOT_DLY_UNREPORTED = sum(UN_RPTED_DLY_MIN, na.rm = TRUE),
-    TOT_DLY_OVREPORTED = sum(OV_RPTED_DLY_MIN, na.rm = TRUE)
-  ) %>%
-  ungroup() %>%
-  mutate(
-    TOT_DLY_UNID = TOT_DLY_999 + TOT_DLY_ZZZ + TOT_DLY_UNREPORTED,
-    AVG_PREDEP_DLY = TOT_DLY_89 / TOT_FLT_DEP
-  ) %>%
-  select(AIRPORT, APT_ICAO, YEAR, AVG_PREDEP_DLY)
+  summarise( DLY_89_PER_FL_YY = mean(DLY_89_PER_FL_YY)) %>%
+  ungroup()
 
 
 # ..PDDLY MONTLHY AVERAGE  ----
-PDDLY_AVG_DF <- APDF_MM_DF %>%
-  select( # ..........
-    AIRPORT,
-    APT_ICAO,
-    YEAR,
-    MONTH_NUM,
-    # ..........
-    NB_DLY_DEP_FL,
-    DLY_89_MIN,
-    DLY_999_MIN,
-    DLY_ZZZ_MIN,
-    DLY_OTHER_MIN,
-    UN_RPTED_DLY_MIN,
-    OV_RPTED_DLY_MIN
-    # ..........
-  ) %>%
-  group_by(AIRPORT, APT_ICAO, YEAR, MONTH_NUM) %>%
-  summarise(
-    TOT_FLT_DEP = sum(NB_DLY_DEP_FL, na.rm = TRUE),
-    TOT_DLY_89 = sum(DLY_89_MIN, na.rm = TRUE),
-    TOT_DLY_999 = sum(DLY_999_MIN, na.rm = TRUE),
-    TOT_DLY_ZZZ = sum(DLY_ZZZ_MIN, na.rm = TRUE),
-    TOT_DLY_OTHER = sum(DLY_OTHER_MIN, na.rm = TRUE),
-    TOT_DLY_UNREPORTED = sum(UN_RPTED_DLY_MIN, na.rm = TRUE),
-    TOT_DLY_OVREPORTED = sum(OV_RPTED_DLY_MIN, na.rm = TRUE)
-  ) %>%
-  ungroup() %>%
-  mutate(
-    TOT_DLY_UNID = TOT_DLY_999 + TOT_DLY_ZZZ + TOT_DLY_UNREPORTED,
-    AVG_PREDEP_DLY = TOT_DLY_89 / TOT_FLT_DEP
-  ) %>%
-  select(AIRPORT, APT_ICAO, YEAR, MONTH_NUM, AVG_PREDEP_DLY)
-
+PDDLY_MM_AVG_DF <- APDF_MM_DF %>%
+  select(AIRPORT, APT_ICAO, YEAR, MONTH_NUM, DLY_89_PER_FL_MM) #%>%
 
 
 # ****************************----

@@ -26,8 +26,8 @@ params:
    txin_mm:      $txin_mm
    pddly_yy:     $pddly_yy
    pddly_mm:     $pddly_mm  
-   pddly_avg:    $pddly_avg
    pddly_yy_avg: $pddly_yy_avg
+   pddly_mm_avg: $pddly_avg
    turn_yy:      $turn_yy
    turn_mm:      $turn_mm
    cdo_cco:      $cdo_cco
@@ -3698,10 +3698,13 @@ cat("### Annual Average ATC Pre-Departure Delay")
 
 ```{r pre-dep-dly-year-atc, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-params$pddly_yy_avg %>%
+predepdly_py <- params$pddly_yy_avg %>%
+  mutate(YEAR = as.character(YEAR))
+
+predepdly_py %>%
   plot_ly(
     x     = ~YEAR,
-    y     = ~AVG_PREDEP_DLY,
+    y     = ~DLY_89_PER_FL_YY, #AVG_PREDEP_DLY,
     type  = "bar",
     color = I("steelblue")
   ) %>%
@@ -3745,8 +3748,8 @@ cat("### Monthly Average ATC Pre-Departure Delay")
 
 ```{r pre-dep-indicator, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-predepdly_pm <- params$pddly_avg %>%
-  select(YEAR, MONTH_NUM, AVG_PREDEP_DLY)
+predepdly_pm <- params$pddly_mm_avg %>%
+  select(YEAR, MONTH_NUM, DLY_89_PER_FL_MM)
 
 filter_years <- predepdly_pm %>%
   pull(YEAR) %>%
@@ -3783,7 +3786,7 @@ button_type_list <- list(
 predepdly_pm %>%
   plot_ly(
     x          = ~MONTH_NUM,
-    y          = ~AVG_PREDEP_DLY,
+    y          = ~DLY_89_PER_FL_MM,
     customdata = ~YEAR,
     color      = I("steelblue"),
     type       = "bar",
