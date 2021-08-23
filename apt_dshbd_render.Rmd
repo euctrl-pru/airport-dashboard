@@ -3940,7 +3940,7 @@ cat("## Row -----------------------------------------------------------")
   
 ```{r Turnaround-times-title1, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-cat("### Annual Actual Turnaround Time")
+cat("### Annual Actual Turnaround Time (Source: APDF)")
 
 ```
 
@@ -3981,21 +3981,21 @@ TURN_YY %>%
       title       = "Average Actual Turnaround time [min/flight]",
       titlefont   = list(size = 11),
       hoverformat = ".2f"
-    ),
-    ##############################################################################
-    annotations = list(
-      x         = 1,
-      y         = -0.1,
-      text      = "Source: APDF",
-      showarrow = FALSE,
-      xref      = "paper",
-      yref      = "paper",
-      xanchor   = "right",
-      yanchor   = "auto",
-      xshift    = 0,
-      yshift    = -5,
-      font      = list(size = 12)
     )
+    ##############################################################################
+    # ,annotations = list(
+    #   x         = 1,
+    #   y         = -0.1,
+    #   text      = "Source: APDF",
+    #   showarrow = FALSE,
+    #   xref      = "paper",
+    #   yref      = "paper",
+    #   xanchor   = "right",
+    #   yanchor   = "auto",
+    #   xshift    = 0,
+    #   yshift    = -5,
+    #   font      = list(size = 12)
+    # )
     ##############################################################################
   ) %>%
   config(
@@ -4008,7 +4008,7 @@ TURN_YY %>%
 
 ```{r Turnaround-times-title2, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-cat("### Monthly Turnaround Times")
+cat("### Monthly Turnaround Times (Source: APDF)")
 
 ```
 
@@ -4114,21 +4114,21 @@ TURN_MM %>%
     yaxis       = list(
       title     = "Average Turnaround times [min/flight]",
       titlefont = list(size = 11)
-    ),
-    ##############################################################################
-    annotations = list(
-      x         = 1,
-      y         = -0.1,
-      text      = "Source: APDF",
-      showarrow = FALSE,
-      xref      = "paper",
-      yref      = "paper",
-      xanchor   = "right",
-      yanchor   = "auto",
-      xshift    = 0,
-      yshift    = -10,
-      font      = list(size = 12)
     )
+    ##############################################################################
+    # ,annotations = list(
+    #   x         = 1,
+    #   y         = -0.1,
+    #   text      = "Source: APDF",
+    #   showarrow = FALSE,
+    #   xref      = "paper",
+    #   yref      = "paper",
+    #   xanchor   = "right",
+    #   yanchor   = "auto",
+    #   xshift    = 0,
+    #   yshift    = -10,
+    #   font      = list(size = 12)
+    # )
     ##############################################################################
   ) %>%
   config(
@@ -4148,7 +4148,7 @@ cat("## Row -----------------------------------------------------------")
   
 ```{r Turnaround-times-title3, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-cat("### Variation of Annual Actual Turnaround Times")
+cat("### Variation of Annual Actual Turnaround Times (Source: APDF)")
 
 ```
 
@@ -4177,21 +4177,21 @@ TURN_MM %>%
       title       = "Average Actual Turnaround time [min/flight]",
       titlefont   = list(size = 11),
       hoverformat = ".2f"
-    ),
-    ##############################################################################
-    annotations = list(
-      x         = 1,
-      y         = -0.1,
-      text      = "Source: APDF",
-      showarrow = FALSE,
-      xref      = "paper",
-      yref      = "paper",
-      xanchor   = "right",
-      yanchor   = "auto",
-      xshift    = 0,
-      yshift    = -5,
-      font      = list(size = 12)
     )
+    ##############################################################################
+    # ,annotations = list(
+    #   x         = 1,
+    #   y         = -0.1,
+    #   text      = "Source: APDF",
+    #   showarrow = FALSE,
+    #   xref      = "paper",
+    #   yref      = "paper",
+    #   xanchor   = "right",
+    #   yanchor   = "auto",
+    #   xshift    = 0,
+    #   yshift    = -5,
+    #   font      = list(size = 12)
+    # )
     ##############################################################################
   ) %>%
   config(
