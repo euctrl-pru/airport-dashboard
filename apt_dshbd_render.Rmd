@@ -1607,7 +1607,7 @@ cat("## Row -----------------------------------------------------------")
   
 ```{r cdo-cco-title1, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE}
 
-cat("### Average time flown level per flight")
+cat("### Average time flown level per flight (Source: AIU analysis)")
 
 ```
 
@@ -1646,21 +1646,32 @@ for (i in 1:length(filter_years)) {
                                       "left",
                                       ifelse(AVG_TIME_LVL_min_temp$MONTH_NUM==12, "right", "center")),
                        showarrow = FALSE)
-    annotations[[i]] <- annotation
+  } else {
+    annotation <- list(x = 6,
+                       y = 1,
+                       xref='x',
+                       yref='y',
+                       text = "",
+                       yshift=0,
+                       xshift = 0,
+                       align = "center",
+                       showarrow = FALSE)
   }
+  
+  annotations[[i]] <- annotation
 }
 
-source_annotation=list(x         = 1, 
-                       y         = -0.1, 
-                       text      = "Source: AIU analysis", 
-                       showarrow = F, 
-                       xref      = 'paper', 
-                       yref      = 'paper', 
-                       xanchor   = 'right', 
-                       yanchor   = 'auto', 
-                       xshift    = 0, 
-                       yshift    = -10,
-                       font      = list(size=12))
+# source_annotation=list(x         = 1, 
+#                        y         = -0.1, 
+#                        text      = "Source: AIU analysis", 
+#                        showarrow = F, 
+#                        xref      = 'paper', 
+#                        yref      = 'paper', 
+#                        xanchor   = 'right', 
+#                        yanchor   = 'auto', 
+#                        xshift    = 0, 
+#                        yshift    = -10,
+#                        font      = list(size=12))
 
 button_list=vector(mode = "list", length = length(filter_years))
 annot_list=vector(mode = "list", length = length(filter_years))
@@ -1672,14 +1683,19 @@ for(x in 1:length(filter_years)){
         label  = filter_years[x],
         method = "update",
         args   = list(list("transforms[0].value"=filter_years[x]),
-                      list(annotations=list(annot_list_temp[[x]], source_annotation)))
+                      list(annotations=list(annot_list_temp[[x]]
+                                            # , source_annotation
+                                            )))
       )
   } else {
       bl=list(
         label  = filter_years[x],
         method = "update",
-        args   = list(list("transforms[0].value"=filter_years[x]),
-                      list(annotations=list(source_annotation)))
+        args   = 
+          # list(
+            list("transforms[0].value"=filter_years[x])
+            # ,list(annotations=list(source_annotation))
+            # )
       )
     }
     button_list[[x]]=bl
@@ -1718,18 +1734,18 @@ avg_time_lvl_fig=plot_ly(AVG_TIME_LVL_PLOT,
   add_trace(y = ~AVG_TIME_LVL_CLIMB/60, 
             marker = list(color = 'rgb(106, 168, 82)'),
             name = 'Climb') %>%
-  add_annotations(x         = 1, 
-                  y         = -0.1, 
-                  text      = "Source: AIU analysis", 
-                  showarrow = F, 
-                  xref      = 'paper', 
-                  yref      = 'paper', 
-                  xanchor   = 'right', 
-                  yanchor   = 'auto', 
-                  xshift    = 0, 
-                  yshift    = -10,
-                  font      = list(size=12)
-  ) %>%
+  # add_annotations(x         = 1, 
+  #                 y         = -0.1, 
+  #                 text      = "Source: AIU analysis", 
+  #                 showarrow = F, 
+  #                 xref      = 'paper', 
+  #                 yref      = 'paper', 
+  #                 xanchor   = 'right', 
+  #                 yanchor   = 'auto', 
+  #                 xshift    = 0, 
+  #                 yshift    = -10,
+  #                 font      = list(size=12)
+  # ) %>%
   layout(barmode = 'group',
          hovermode   = "x unified",
          xaxis       = tick_yr_no_title,
@@ -1763,7 +1779,7 @@ avg_time_lvl_fig
 
 ```{r cdo-cco-title2, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE}
 
-cat("### Median CDO/CCO altitudes")
+cat("### Median CDO/CCO altitudes (Source: AIU analysis)")
 
 ```
 
@@ -1822,19 +1838,19 @@ plot_ly(MED_CDO_CCO_ALT_PLOT,
          showlegend  = TRUE,
          updatemenus = list( button_type_list )
          ##############################################################################
-         ,annotations = list(
-           x         = 1, 
-           y         = -0.1, 
-           text      = "Source: AIU analysis", 
-           showarrow = F, 
-           xref      = 'paper', 
-           yref      = 'paper', 
-           xanchor   = 'right', 
-           yanchor   = 'auto', 
-           xshift    = 0, 
-           yshift    = -10,
-           font      =list(size=12)
-         )          
+         # ,annotations = list(
+         #   x         = 1, 
+         #   y         = -0.1, 
+         #   text      = "Source: AIU analysis", 
+         #   showarrow = F, 
+         #   xref      = 'paper', 
+         #   yref      = 'paper', 
+         #   xanchor   = 'right', 
+         #   yanchor   = 'auto', 
+         #   xshift    = 0, 
+         #   yshift    = -10,
+         #   font      =list(size=12)
+         # )          
          ##############################################################################
   ) %>% 
   config( displaylogo = FALSE,
@@ -1852,7 +1868,7 @@ cat("## Row -----------------------------------------------------------")
   
 ```{r cdo-cco-title3, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE}
 
-cat("### Share of CDO/CCO flights")
+cat("### Share of CDO/CCO flights (Source: AIU analysis)")
 
 ```
 
@@ -1913,19 +1929,19 @@ plot_ly(SHARE_CDO_CCO_FLIGHTS_PLOT,
          showlegend  = TRUE,
          updatemenus = list( button_type_list )
          ##############################################################################
-         ,annotations = list(
-           x         = 1, 
-           y         = -0.1, 
-           text      = "Source: AIU analysis", 
-           showarrow = F, 
-           xref      = 'paper', 
-           yref      = 'paper', 
-           xanchor   = 'right', 
-           yanchor   = 'auto', 
-           xshift    = 0, 
-           yshift    = -10,
-           font      =list(size=12)
-         )          
+         # ,annotations = list(
+         #   x         = 1, 
+         #   y         = -0.1, 
+         #   text      = "Source: AIU analysis", 
+         #   showarrow = F, 
+         #   xref      = 'paper', 
+         #   yref      = 'paper', 
+         #   xanchor   = 'right', 
+         #   yanchor   = 'auto', 
+         #   xshift    = 0, 
+         #   yshift    = -10,
+         #   font      =list(size=12)
+         # )          
          ##############################################################################
   ) %>% 
   config( displaylogo = FALSE,
@@ -1937,7 +1953,7 @@ plot_ly(SHARE_CDO_CCO_FLIGHTS_PLOT,
 
 ```{r cdo-cco-title4, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE}
 
-cat("### Median CDO/CCO altitudes vs. Average time flown level per flight")
+cat("### Median CDO/CCO altitudes vs. Average time flown level per flight (Source: AIU analysis)")
 
 ```
 
@@ -1973,19 +1989,19 @@ plot_ly(MED_CDO_CCO_ALT_AVG_TIME_LVL_PLOT,
                                               max(MED_CDO_CCO_ALT_AVG_TIME_LVL_PLOT$MEDIAN_CCO_ALT)))),
          showlegend  = TRUE
          ##############################################################################
-         ,annotations = list(
-           x         = 1, 
-           y         = -0.1, 
-           text      = "Source: AIU analysis", 
-           showarrow = F, 
-           xref      = 'paper', 
-           yref      = 'paper', 
-           xanchor   = 'right', 
-           yanchor   = 'auto', 
-           xshift    = 0, 
-           yshift    = -10,
-           font      =list(size=12)
-         )          
+         # ,annotations = list(
+         #   x         = 1, 
+         #   y         = -0.1, 
+         #   text      = "Source: AIU analysis", 
+         #   showarrow = F, 
+         #   xref      = 'paper', 
+         #   yref      = 'paper', 
+         #   xanchor   = 'right', 
+         #   yanchor   = 'auto', 
+         #   xshift    = 0, 
+         #   yshift    = -10,
+         #   font      =list(size=12)
+         # )          
          ##############################################################################
   ) %>% 
   config( displaylogo = FALSE,
