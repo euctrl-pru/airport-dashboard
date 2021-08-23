@@ -1178,7 +1178,7 @@ if (nrow(params$atfm) > 0) {
 
 ## Row -----------------------------------------------------------
 
-### Annual Regulated Departures
+### Annual Regulated Departures (Source: Network Manager)
 
 ```{r ANNUAL-ATFM-REG}
 SLOT_YY_PLOT1 <- params$slot_yy %>%
@@ -1227,21 +1227,21 @@ SLOT_YY_PLOT1 %>%
       title       = "Percentage of departures",
       titlefont   = list(size = 11),
       hoverformat = ".2f"
-    ),
-    ##############################################################################
-    annotations = list(
-      x         = 1,
-      y         = -0.1,
-      text      = "Source: Network Manager",
-      showarrow = FALSE,
-      xref      = "paper",
-      yref      = "paper",
-      xanchor   = "right",
-      yanchor   = "auto",
-      xshift    = 0,
-      yshift    = -5,
-      font      = list(size = 12)
     )
+    ##############################################################################
+    # ,annotations = list(
+    #   x         = 1,
+    #   y         = -0.1,
+    #   text      = "Source: Network Manager",
+    #   showarrow = FALSE,
+    #   xref      = "paper",
+    #   yref      = "paper",
+    #   xanchor   = "right",
+    #   yanchor   = "auto",
+    #   xshift    = 0,
+    #   yshift    = -5,
+    #   font      = list(size = 12)
+    # )
     ##############################################################################
   ) %>%
   config(
@@ -1252,7 +1252,7 @@ SLOT_YY_PLOT1 %>%
 
 ```
 
-### Monthly Regulated Departures
+### Monthly Regulated Departures (Source: Network Manager)
 ```{r MONTHLY-ATFM-REG}
 SLOT_MM_PLOT1 <- params$slot_mm %>%
   select(
@@ -1373,21 +1373,21 @@ SLOT_MM_PLOT1 %>%
       hoverformat = ".2f"
     ),
     showlegend = TRUE,
-    updatemenus = list(button_type_list),
+    updatemenus = list(button_type_list)
     ##############################################################################
-    annotations = list(
-      x         = 1,
-      y         = -0.1,
-      text      = "Source: Network Manager",
-      showarrow = FALSE,
-      xref      = "paper",
-      yref      = "paper",
-      xanchor   = "right",
-      yanchor   = "auto",
-      xshift    = 0,
-      yshift    = -10,
-      font      = list(size = 12)
-    )
+    # ,annotations = list(
+    #   x         = 1,
+    #   y         = -0.1,
+    #   text      = "Source: Network Manager",
+    #   showarrow = FALSE,
+    #   xref      = "paper",
+    #   yref      = "paper",
+    #   xanchor   = "right",
+    #   yanchor   = "auto",
+    #   xshift    = 0,
+    #   yshift    = -10,
+    #   font      = list(size = 12)
+    # )
     ##############################################################################
   ) %>%
   config(
@@ -1400,7 +1400,7 @@ SLOT_MM_PLOT1 %>%
 
 ## Row -----------------------------------------------------------
 
-### Annual ATFM Slot Adherence
+### Annual ATFM Slot Adherence (Source: Network Manager)
 
 ```{r ANNUAL-ATFM-SLOT2}
 SLOT_YY_PLOT2 <- params$slot_yy %>%
@@ -1449,21 +1449,21 @@ SLOT_YY_PLOT2 %>%
     yaxis     = list(
       title     = "Number of Regulated departures",
       titlefont = list(size = 11)
-    ),
-    ##############################################################################
-    annotations = list(
-      x         = 1,
-      y         = -0.1,
-      text      = "Source: Network Manager",
-      showarrow = FALSE,
-      xref      = "paper",
-      yref      = "paper",
-      xanchor   = "right",
-      yanchor   = "auto",
-      xshift    = 0,
-      yshift    = -5,
-      font      = list(size = 12)
     )
+    ##############################################################################
+    # ,annotations = list(
+    #   x         = 1,
+    #   y         = -0.1,
+    #   text      = "Source: Network Manager",
+    #   showarrow = FALSE,
+    #   xref      = "paper",
+    #   yref      = "paper",
+    #   xanchor   = "right",
+    #   yanchor   = "auto",
+    #   xshift    = 0,
+    #   yshift    = -5,
+    #   font      = list(size = 12)
+    # )
     ##############################################################################
   ) %>%
   config(
@@ -1474,7 +1474,7 @@ SLOT_YY_PLOT2 %>%
 
 ```
 
-### Monthly ATFM Slot Adherence
+### Monthly ATFM Slot Adherence (Source: Network Manager)
 
 ```{r MONTHLY-ATFM-SLOT2}
 SLOT_MM_PLOT2 <- params$slot_mm %>%
@@ -1566,21 +1566,21 @@ SLOT_MM_PLOT2 %>%
       titlefont = list(size = 11)
     ),
     showlegend = TRUE,
-    updatemenus = list(button_type_list),
+    updatemenus = list(button_type_list)
     ##############################################################################
-    annotations = list(
-      x         = 1,
-      y         = -0.1,
-      text      = "Source: Network Manager",
-      showarrow = FALSE,
-      xref      = "paper",
-      yref      = "paper",
-      xanchor   = "right",
-      yanchor   = "auto",
-      xshift    = 0,
-      yshift    = -10,
-      font      = list(size = 12)
-    )
+    # ,annotations = list(
+    #   x         = 1,
+    #   y         = -0.1,
+    #   text      = "Source: Network Manager",
+    #   showarrow = FALSE,
+    #   xref      = "paper",
+    #   yref      = "paper",
+    #   xanchor   = "right",
+    #   yanchor   = "auto",
+    #   xshift    = 0,
+    #   yshift    = -10,
+    #   font      = list(size = 12)
+    # )
     ##############################################################################
   ) %>%
   config(
