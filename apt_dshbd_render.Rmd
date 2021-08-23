@@ -3533,7 +3533,7 @@ cat("## Row -----------------------------------------------------------")
   
 ```{r Pre-dep-delay-title1, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-cat("### Annual Pre-Departure Delay")
+cat("### Annual Pre-Departure Delay (Source: APDF)")
 
 ```
 
@@ -3580,21 +3580,21 @@ PDDLY_YY %>%
     yaxis     = list(
       title     = "Pre-Departure delay [min]",
       titlefont = list(size = 11)
-    ),
-    ##############################################################################
-    annotations = list(
-      x         = 1,
-      y         = -0.1,
-      text      = "Source: APDF",
-      showarrow = FALSE,
-      xref      = "paper",
-      yref      = "paper",
-      xanchor   = "right",
-      yanchor   = "auto",
-      xshift    = 0,
-      yshift    = -5,
-      font      = list(size = 12)
     )
+    ##############################################################################
+    # ,annotations = list(
+    #   x         = 1,
+    #   y         = -0.1,
+    #   text      = "Source: APDF",
+    #   showarrow = FALSE,
+    #   xref      = "paper",
+    #   yref      = "paper",
+    #   xanchor   = "right",
+    #   yanchor   = "auto",
+    #   xshift    = 0,
+    #   yshift    = -5,
+    #   font      = list(size = 12)
+    # )
     ##############################################################################
   ) %>%
   config(
@@ -3607,7 +3607,7 @@ PDDLY_YY %>%
 
 ```{r Pre-dep-delay-title2, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-cat("### Monthly Pre-Departure Delay")
+cat("### Monthly Pre-Departure Delay (Source: APDF)")
 
 ```
 
@@ -3693,21 +3693,21 @@ PDDLY_MM %>%
       titlefont = list(size = 11)
     ),
     showlegend = TRUE,
-    updatemenus = list(button_type_list),
+    updatemenus = list(button_type_list)
     ##############################################################################
-    annotations = list(
-      x         = 1,
-      y         = -0.1,
-      text      = "Source: APDF",
-      showarrow = FALSE,
-      xref      = "paper",
-      yref      = "paper",
-      xanchor   = "right",
-      yanchor   = "auto",
-      xshift    = 0,
-      yshift    = -10,
-      font      = list(size = 12)
-    )
+    # ,annotations = list(
+    #   x         = 1,
+    #   y         = -0.1,
+    #   text      = "Source: APDF",
+    #   showarrow = FALSE,
+    #   xref      = "paper",
+    #   yref      = "paper",
+    #   xanchor   = "right",
+    #   yanchor   = "auto",
+    #   xshift    = 0,
+    #   yshift    = -10,
+    #   font      = list(size = 12)
+    # )
     ##############################################################################
   ) %>%
   config(
@@ -3774,7 +3774,7 @@ modeBarButtonsToRemove = config_bar_remove_buttons)
 
 ```{r Pre-dep-delay-title3, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-cat("### Annual Average ATC Pre-Departure Delay")
+cat("### Annual Average ATC Pre-Departure Delay (Source: APDF)")
 
 ```
 
@@ -3797,21 +3797,21 @@ predepdly_py %>%
       title       = "Avg. ATC Pre-Departure delay [min/dep]",
       titlefont   = list(size = 11),
       hoverformat = ".2f"
-    ),
-    ##############################################################################
-    annotations = list(
-      x         = 1,
-      y         = -0.1,
-      text      = "Source: APDF",
-      showarrow = FALSE,
-      xref      = "paper",
-      yref      = "paper",
-      xanchor   = "right",
-      yanchor   = "auto",
-      xshift    = 0,
-      yshift    = -5,
-      font      = list(size = 12)
     )
+    ##############################################################################
+    # ,annotations = list(
+    #   x         = 1,
+    #   y         = -0.1,
+    #   text      = "Source: APDF",
+    #   showarrow = FALSE,
+    #   xref      = "paper",
+    #   yref      = "paper",
+    #   xanchor   = "right",
+    #   yanchor   = "auto",
+    #   xshift    = 0,
+    #   yshift    = -5,
+    #   font      = list(size = 12)
+    # )
     ##############################################################################
   ) %>%
   config(
@@ -3824,7 +3824,7 @@ predepdly_py %>%
 
 ```{r Pre-dep-delay-title4, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-cat("### Monthly Average ATC Pre-Departure Delay")
+cat("### Monthly Average ATC Pre-Departure Delay (Source: APDF)")
 
 ```
 
@@ -3891,21 +3891,21 @@ predepdly_pm %>%
       hoverformat = ".2f"
     ),
     showlegend  = FALSE,
-    updatemenus = list(button_type_list),
+    updatemenus = list(button_type_list)
     ##############################################################################
-    annotations = list(
-      x         = 1,
-      y         = -0.1,
-      text      = "Source: APDF",
-      showarrow = FALSE,
-      xref      = "paper",
-      yref      = "paper",
-      xanchor   = "right",
-      yanchor   = "auto",
-      xshift    = 0,
-      yshift    = -10,
-      font      = list(size = 12)
-    )
+    # ,annotations = list(
+    #   x         = 1,
+    #   y         = -0.1,
+    #   text      = "Source: APDF",
+    #   showarrow = FALSE,
+    #   xref      = "paper",
+    #   yref      = "paper",
+    #   xanchor   = "right",
+    #   yanchor   = "auto",
+    #   xshift    = 0,
+    #   yshift    = -10,
+    #   font      = list(size = 12)
+    # )
     ##############################################################################
   ) %>%
   config(
