@@ -3175,7 +3175,7 @@ cat("## Row -----------------------------------------------------------")
   
 ```{r Taxi-in-time-title1, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-cat("### Annual Taxi-In Time")
+cat("### Annual Taxi-In Time (Source: APDF)")
 
 ```
 
@@ -3291,18 +3291,18 @@ cat("### Annual Taxi-In Time")
       ),
       annotations = key_msg
     ) %>%
-    add_annotations(x         = 1, 
-                    y         = -0.1, 
-                    text      = "Source: APDF", 
-                    showarrow = F, 
-                    xref      = 'paper', 
-                    yref      = 'paper', 
-                    xanchor   = 'right', 
-                    yanchor   = 'auto', 
-                    xshift    = 0, 
-                    yshift    = -10,
-                    font      = list(size=12)
-    ) %>%
+    # add_annotations(x         = 1, 
+    #                 y         = -0.1, 
+    #                 text      = "Source: APDF", 
+    #                 showarrow = F, 
+    #                 xref      = 'paper', 
+    #                 yref      = 'paper', 
+    #                 xanchor   = 'right', 
+    #                 yanchor   = 'auto', 
+    #                 xshift    = 0, 
+    #                 yshift    = -10,
+    #                 font      = list(size=12)
+    # ) %>%
     config(
       displaylogo = FALSE,
       modeBarButtonsToRemove = config_bar_remove_buttons
@@ -3313,7 +3313,7 @@ cat("### Annual Taxi-In Time")
 
 ```{r Taxi-in-time-title2, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-cat("### Monthly Taxi-In Time")
+cat("### Monthly Taxi-In Time (Source: APDF)")
 
 ```
 
@@ -3367,21 +3367,32 @@ cat("### Monthly Taxi-In Time")
                                         "left",
                                         ifelse(MONTHLY_HIGH_TXIN_temp$MONTH_NUM==12, "right", "center")),
                          showarrow = FALSE)
-      annotations[[i]] <- annotation
+    }else {
+      annotation <- list(x = 6,
+                         y = 1,
+                         xref='x',
+                         yref='y',
+                         text = "",
+                         yshift=0,
+                         xshift = 0,
+                         align = "center",
+                         showarrow = FALSE)
     }
+    
+    annotations[[i]] <- annotation
   }
   
-  source_annotation=list(x         = 1, 
-                         y         = -0.1, 
-                         text      = "Source: APDF", 
-                         showarrow = F, 
-                         xref      = 'paper', 
-                         yref      = 'paper', 
-                         xanchor   = 'right', 
-                         yanchor   = 'auto', 
-                         xshift    = 0, 
-                         yshift    = -10,
-                         font      = list(size=12))
+  # source_annotation=list(x         = 1, 
+  #                        y         = -0.1, 
+  #                        text      = "Source: APDF", 
+  #                        showarrow = F, 
+  #                        xref      = 'paper', 
+  #                        yref      = 'paper', 
+  #                        xanchor   = 'right', 
+  #                        yanchor   = 'auto', 
+  #                        xshift    = 0, 
+  #                        yshift    = -10,
+  #                        font      = list(size=12))
   
   button_list=vector(mode = "list", length = length(filter_years))
   annot_list=vector(mode = "list", length = length(filter_years))
@@ -3393,14 +3404,19 @@ cat("### Monthly Taxi-In Time")
         label  = filter_years[x],
         method = "update",
         args   = list(list("transforms[0].value"=filter_years[x]),
-                      list(annotations=list(annot_list_temp[[x]], source_annotation)))
+                      list(annotations=list(annot_list_temp[[x]]
+                                            # , source_annotation
+                                            )))
       )
     } else {
       bl=list(
         label  = filter_years[x],
         method = "update",
-        args   = list(list("transforms[0].value"=filter_years[x]),
-                      list(annotations=list(source_annotation)))
+        args   = 
+          # list(
+            list("transforms[0].value"=filter_years[x])
+            # , list(annotations=list(source_annotation))
+            # )
       )
     }
     button_list[[x]]=bl
@@ -3436,18 +3452,18 @@ cat("### Monthly Taxi-In Time")
         )
       )
     ) %>%
-    add_annotations(x         = 1, 
-                    y         = -0.1, 
-                    text      = "Source: APDF", 
-                    showarrow = F, 
-                    xref      = 'paper', 
-                    yref      = 'paper', 
-                    xanchor   = 'right', 
-                    yanchor   = 'auto', 
-                    xshift    = 0, 
-                    yshift    = -10,
-                    font      = list(size=12)
-    ) %>%
+    # add_annotations(x         = 1, 
+    #                 y         = -0.1, 
+    #                 text      = "Source: APDF", 
+    #                 showarrow = F, 
+    #                 xref      = 'paper', 
+    #                 yref      = 'paper', 
+    #                 xanchor   = 'right', 
+    #                 yanchor   = 'auto', 
+    #                 xshift    = 0, 
+    #                 yshift    = -10,
+    #                 font      = list(size=12)
+    # ) %>%
     layout(
       barmode   = "stack",
       hovermode = "x unified",
