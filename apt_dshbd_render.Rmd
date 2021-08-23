@@ -2417,7 +2417,7 @@ cat("## Row -----------------------------------------------------------")
   
 ```{r ASMA-time-title1, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-cat("### Annual ASMA Time")
+cat("### Annual ASMA Time (Source: APDF)")
 
 ```
 
@@ -2520,18 +2520,18 @@ ASMA_YY %>%
     ),
     annotations = key_msg
   ) %>%
-  add_annotations(x         = 1, 
-                  y         = -0.1, 
-                  text      = "Source: APDF", 
-                  showarrow = F, 
-                  xref      = 'paper', 
-                  yref      = 'paper', 
-                  xanchor   = 'right', 
-                  yanchor   = 'auto', 
-                  xshift    = 0, 
-                  yshift    = -10,
-                  font      = list(size=12)
-  ) %>%
+  # add_annotations(x         = 1, 
+  #                 y         = -0.1, 
+  #                 text      = "Source: APDF", 
+  #                 showarrow = F, 
+  #                 xref      = 'paper', 
+  #                 yref      = 'paper', 
+  #                 xanchor   = 'right', 
+  #                 yanchor   = 'auto', 
+  #                 xshift    = 0, 
+  #                 yshift    = -10,
+  #                 font      = list(size=12)
+  # ) %>%
   config(
     displaylogo = FALSE,
     modeBarButtonsToRemove = config_bar_remove_buttons
@@ -2542,7 +2542,7 @@ ASMA_YY %>%
   
 ```{r ASMA-time-title2, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-cat("### Monthly ASMA Time")
+cat("### Monthly ASMA Time (Source: APDF)")
 
 ```
 
@@ -2597,21 +2597,32 @@ for (i in 1:length(filter_years)) {
                                       "left",
                                       ifelse(MONTHLY_HIGH_ASMA_temp$MONTH_NUM==12, "right", "center")),
                        showarrow = FALSE)
-    annotations[[i]] <- annotation
+  } else {
+    annotation <- list(x = 6,
+                       y = 1,
+                       xref='x',
+                       yref='y',
+                       text = "",
+                       yshift=0,
+                       xshift = 0,
+                       align = "center",
+                       showarrow = FALSE)
   }
+  
+  annotations[[i]] <- annotation
 }
 
-source_annotation=list(x         = 1, 
-                       y         = -0.1, 
-                       text      = "Source: APDF", 
-                       showarrow = F, 
-                       xref      = 'paper', 
-                       yref      = 'paper', 
-                       xanchor   = 'right', 
-                       yanchor   = 'auto', 
-                       xshift    = 0, 
-                       yshift    = -10,
-                       font      = list(size=12))
+# source_annotation=list(x         = 1, 
+#                        y         = -0.1, 
+#                        text      = "Source: APDF", 
+#                        showarrow = F, 
+#                        xref      = 'paper', 
+#                        yref      = 'paper', 
+#                        xanchor   = 'right', 
+#                        yanchor   = 'auto', 
+#                        xshift    = 0, 
+#                        yshift    = -10,
+#                        font      = list(size=12))
 
 button_list=vector(mode = "list", length = length(filter_years))
 annot_list=vector(mode = "list", length = length(filter_years))
@@ -2623,14 +2634,19 @@ for(x in 1:length(filter_years)){
       label  = filter_years[x],
       method = "update",
       args   = list(list("transforms[0].value"=filter_years[x]),
-                    list(annotations=list(annot_list_temp[[x]], source_annotation)))
+                    list(annotations=list(annot_list_temp[[x]]
+                                          # , source_annotation
+                                          )))
     )
   } else {
     bl=list(
       label  = filter_years[x],
       method = "update",
-      args   = list(list("transforms[0].value"=filter_years[x]),
-                    list(annotations=list(source_annotation)))
+      args   = 
+        # list(
+        list("transforms[0].value"=filter_years[x])
+        # ,list(annotations=list(source_annotation))
+        # )
     )
   }
   button_list[[x]]=bl
@@ -2666,18 +2682,18 @@ asma_mm_fig = ASMA_MM %>%
       )
     )
   ) %>%
-  add_annotations(x         = 1, 
-                  y         = -0.1, 
-                  text      = "Source: APDF", 
-                  showarrow = F, 
-                  xref      = 'paper', 
-                  yref      = 'paper', 
-                  xanchor   = 'right', 
-                  yanchor   = 'auto', 
-                  xshift    = 0, 
-                  yshift    = -10,
-                  font      = list(size=12)
-  ) %>%
+  # add_annotations(x         = 1, 
+  #                 y         = -0.1, 
+  #                 text      = "Source: APDF", 
+  #                 showarrow = F, 
+  #                 xref      = 'paper', 
+  #                 yref      = 'paper', 
+  #                 xanchor   = 'right', 
+  #                 yanchor   = 'auto', 
+  #                 xshift    = 0, 
+  #                 yshift    = -10,
+  #                 font      = list(size=12)
+  # ) %>%
   layout(
     barmode   = "stack",
     hovermode = "x unified",
