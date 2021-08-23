@@ -259,7 +259,7 @@ if (params$apdf == "Y") {
 }
 ```
 
-### Daily Traffic Variation snapshot
+### Daily Traffic Variation snapshot (Source: Network Manager)
 
 ```{r tfcvar-snapshot, results='asis'}
 if (nrow(params$tfcvar) < 1) {
@@ -298,19 +298,19 @@ if (nrow(params$tfcvar) < 1) {
         tickformat = "%"
       )
       ##############################################################################
-      , annotations = list(
-        x = 1,
-        y = -0.1,
-        text = "Source: Network Manager",
-        showarrow = FALSE,
-        xref = "paper",
-        yref = "paper",
-        xanchor = "right",
-        yanchor = "auto",
-        xshift = 0,
-        yshift = -20,
-        font = list(size = 12)
-      )
+      # , annotations = list(
+      #   x = 1,
+      #   y = -0.1,
+      #   text = "Source: Network Manager",
+      #   showarrow = FALSE,
+      #   xref = "paper",
+      #   yref = "paper",
+      #   xanchor = "right",
+      #   yanchor = "auto",
+      #   xshift = 0,
+      #   yshift = -20,
+      #   font = list(size = 12)
+      # )
       ##############################################################################
     )
 
@@ -330,7 +330,7 @@ if (nrow(params$tfcvar) < 1) {
 
 ## Row -----------------------------------------------------------
 
-### Annual Traffic
+### Annual Traffic (Source: Network Manager)
 
 ```{r annual-traffic}
 mvts_pa <- params$tfc %>%
@@ -409,25 +409,25 @@ mvts_pa %>%
     yaxis = yax,
     annotations = key_msg
   ) %>%
-  add_annotations(x         = 1, 
-                  y         = -0.1, 
-                  text      = "Source: Network Manager", 
-                  showarrow = F, 
-                  xref      = 'paper', 
-                  yref      = 'paper', 
-                  xanchor   = 'right', 
-                  yanchor   = 'auto', 
-                  xshift    = 0, 
-                  yshift    = -10,
-                  font      = list(size=12)
-  ) %>%
+  # add_annotations(x         = 1, 
+  #                 y         = -0.1, 
+  #                 text      = "Source: Network Manager", 
+  #                 showarrow = F, 
+  #                 xref      = 'paper', 
+  #                 yref      = 'paper', 
+  #                 xanchor   = 'right', 
+  #                 yanchor   = 'auto', 
+  #                 xshift    = 0, 
+  #                 yshift    = -10,
+  #                 font      = list(size=12)
+  # ) %>%
   config(
     displaylogo = FALSE,
     modeBarButtonsToRemove = config_bar_remove_buttons
   )
 ```
 
-### Monthly Traffic
+### Monthly Traffic (Source: Network Manager)
 
 ```{r monthly-traffic}
 mvts_pm <- params$tfc %>%
@@ -481,19 +481,19 @@ mvts_pm %>%
     yaxis = yax,
     hovermode = "x unified"
     ##############################################################################
-    , annotations = list(
-      x = 1,
-      y = -0.1,
-      text = "Source: Network Manager",
-      showarrow = FALSE,
-      xref = "paper",
-      yref = "paper",
-      xanchor = "right",
-      yanchor = "auto",
-      xshift = 0,
-      yshift = -5,
-      font = list(size = 12)
-    )
+    # , annotations = list(
+    #   x = 1,
+    #   y = -0.1,
+    #   text = "Source: Network Manager",
+    #   showarrow = FALSE,
+    #   xref = "paper",
+    #   yref = "paper",
+    #   xanchor = "right",
+    #   yanchor = "auto",
+    #   xshift = 0,
+    #   yshift = -5,
+    #   font = list(size = 12)
+    # )
     ##############################################################################
   ) %>%
   config(
@@ -505,7 +505,7 @@ mvts_pm %>%
 
 ## Row -----------------------------------------------------------
 
-### Annual Variation of Daily Movements 
+### Annual Variation of Daily Movements (Source: Network Manager)
 
 ```{r daily-movements}
 tmp <- params$tfc %>%
@@ -544,19 +544,19 @@ pbox_group <- tmp %>%
     xaxis = xax,
     yaxis = yax
     ##############################################################################
-    , annotations = list(
-      x = 1,
-      y = -0.1,
-      text = "Source: Network Manager",
-      showarrow = FALSE,
-      xref = "paper",
-      yref = "paper",
-      xanchor = "right",
-      yanchor = "auto",
-      xshift = 0,
-      yshift = -5,
-      font = list(size = 12)
-    )
+    # , annotations = list(
+    #   x = 1,
+    #   y = -0.1,
+    #   text = "Source: Network Manager",
+    #   showarrow = FALSE,
+    #   xref = "paper",
+    #   yref = "paper",
+    #   xanchor = "right",
+    #   yanchor = "auto",
+    #   xshift = 0,
+    #   yshift = -5,
+    #   font = list(size = 12)
+    # )
     ##############################################################################
   ) %>%
   config(
@@ -568,7 +568,7 @@ pbox_group
 ```
 
 
-### Average Weekday Hourly Throughput
+### Average Weekday Hourly Throughput (Source: Network Manager)
 
 ```{r Avg-weekday-hourly-throughput}
 thru <- params$thru %>%
@@ -642,21 +642,21 @@ thru %>%
   layout(
     xaxis       = xax,
     yaxis       = yax,
-    hovermode   = "x unified",
+    hovermode   = "x unified"
     ##############################################################################
-    annotations = list(
-      x         = 1,
-      y         = -0.1,
-      text      = "Source: Network Manager",
-      showarrow = FALSE,
-      xref      = "paper",
-      yref      = "paper",
-      xanchor   = "right",
-      yanchor   = "auto",
-      xshift    = 0,
-      yshift    = -35,
-      font      = list(size = 12)
-    )
+    # , annotations = list(
+    #   x         = 1,
+    #   y         = -0.1,
+    #   text      = "Source: Network Manager",
+    #   showarrow = FALSE,
+    #   xref      = "paper",
+    #   yref      = "paper",
+    #   xanchor   = "right",
+    #   yanchor   = "auto",
+    #   xshift    = 0,
+    #   yshift    = -35,
+    #   font      = list(size = 12)
+    # )
     ##############################################################################
   ) %>%
   config(
@@ -669,7 +669,7 @@ thru %>%
 # ATFM Delay
 
 ## Row -----------------------------------------------------------
-### Annual Arrival ATFM Delay
+### Annual Arrival ATFM Delay (Source: Network Manager)
 
 
 ```{r atfm-pa}
@@ -765,21 +765,21 @@ if (nrow(params$atfm) > 0) {
         title       = "Average Arrival ATFM delay [min/arr]",
         titlefont   = list(size = 11),
         hoverformat = ".2f"
-      ),
-      ##############################################################################
-      annotations = list(
-        x         = 1,
-        y         = -0.1,
-        text      = "Source: Network Manager",
-        showarrow = FALSE,
-        xref      = "paper",
-        yref      = "paper",
-        xanchor   = "right",
-        yanchor   = "auto",
-        xshift    = 0,
-        yshift    = -5,
-        font      = list(size = 12)
       )
+      ##############################################################################
+      # , annotations = list(
+      #   x         = 1,
+      #   y         = -0.1,
+      #   text      = "Source: Network Manager",
+      #   showarrow = FALSE,
+      #   xref      = "paper",
+      #   yref      = "paper",
+      #   xanchor   = "right",
+      #   yanchor   = "auto",
+      #   xshift    = 0,
+      #   yshift    = -5,
+      #   font      = list(size = 12)
+      # )
       ##############################################################################
     ) %>%
     config(
@@ -789,7 +789,7 @@ if (nrow(params$atfm) > 0) {
 }
 ```
 
-### Monthly Arrival ATFM Delay
+### Monthly Arrival ATFM Delay (Source: Network Manager)
 
 ```{r atfm-pm}
 # monthly trend
@@ -881,21 +881,33 @@ if (nrow(params$atfm) > 0) {
                                         "left",
                                         ifelse(MONTHLY_HIGH_ATFM_temp$MONTH_NUM==12, "right", "center")),
                          showarrow = FALSE)
-      annotations[[i]] <- annotation
+    } else {
+      annotation <- list(x = 6,
+                         y = 1,
+                         xref='x',
+                         yref='y',
+                         text = "", #paste0("<b>No ATFM delay in ", filter_years[i], "</b>"),
+                         yshift=0,
+                         xshift = 0,
+                         align = "center",
+                         showarrow = FALSE)
     }
+    
+    annotations[[i]] <- annotation
+    
   }
   
-  source_annotation=list(x         = 1, 
-                         y         = -0.1, 
-                         text      = "Source: Network Manager", 
-                         showarrow = F, 
-                         xref      = 'paper', 
-                         yref      = 'paper', 
-                         xanchor   = 'right', 
-                         yanchor   = 'auto', 
-                         xshift    = 0, 
-                         yshift    = -10,
-                         font      = list(size=12))
+  # source_annotation=list(x         = 1,
+  #                        y         = -0.1,
+  #                        text      = "Source: Network Manager",
+  #                        showarrow = F,
+  #                        xref      = 'paper',
+  #                        yref      = 'paper',
+  #                        xanchor   = 'right',
+  #                        yanchor   = 'auto',
+  #                        xshift    = 0,
+  #                        yshift    = -10,
+  #                        font      = list(size=12))
   
   button_list=vector(mode = "list", length = length(filter_years))
   annot_list=vector(mode = "list", length = length(filter_years))
@@ -907,14 +919,19 @@ if (nrow(params$atfm) > 0) {
         label  = filter_years[x],
         method = "update",
         args   = list(list("transforms[0].value"=filter_years[x]),
-                      list(annotations=list(annot_list_temp[[x]], source_annotation)))
+                      list(annotations=list(annot_list_temp[[x]]
+                                            # , source_annotation
+                                            )))
       )
     } else {
       bl=list(
         label  = filter_years[x],
         method = "update",
-        args   = list(list("transforms[0].value"=filter_years[x]),
-                      list(annotations=list(source_annotation)))
+        args   = 
+          # list(
+          list("transforms[0].value"=filter_years[x])
+        # , list(annotations=list(source_annotation))
+        # )
       )
     }
     button_list[[x]]=bl
@@ -961,18 +978,18 @@ if (nrow(params$atfm) > 0) {
         )
       )
     ) %>%
-    add_annotations(x         = 1, 
-                    y         = -0.1, 
-                    text      = "Source: Network Manager", 
-                    showarrow = F, 
-                    xref      = 'paper', 
-                    yref      = 'paper', 
-                    xanchor   = 'right', 
-                    yanchor   = 'auto', 
-                    xshift    = 0, 
-                    yshift    = -10,
-                    font      = list(size=12)
-    ) %>%
+    # add_annotations(x         = 1,
+    #                 y         = -0.1,
+    #                 text      = "Source: Network Manager",
+    #                 showarrow = F,
+    #                 xref      = 'paper',
+    #                 yref      = 'paper',
+    #                 xanchor   = 'right',
+    #                 yanchor   = 'auto',
+    #                 xshift    = 0,
+    #                 yshift    = -10,
+    #                 font      = list(size=12)
+    # ) %>%
     layout(
       barmode   = "stack",
       hovermode = "x unified",
@@ -1017,7 +1034,7 @@ if (nrow(params$atfm) > 0) {
 
 ## Row -----------------------------------------------------------
 
-### Daily Arrival ATFM Delay
+### Daily Arrival ATFM Delay (Source: Network Manager)
 
 ```{r Daily-arr-atfm-delay}
 if (nrow(params$atfm) > 0) {
@@ -1080,21 +1097,22 @@ if (nrow(params$atfm) > 0) {
       yaxis = list(
         title = "Arrival ATFM delay [min]",
         titlefont = list(size = 11)
-      ),
-      ##############################################################################
-      annotations = list(
-        x         = 1,
-        y         = -0.1,
-        text      = "Source: Network Manager",
-        showarrow = FALSE,
-        xref      = "paper",
-        yref      = "paper",
-        xanchor   = "right",
-        yanchor   = "auto",
-        xshift    = 0,
-        yshift    = -95,
-        font      = list(size = 12)
       )
+      ##############################################################################
+      # ,
+      # annotations = list(
+      #   x         = 1,
+      #   y         = -0.1,
+      #   text      = "Source: Network Manager",
+      #   showarrow = FALSE,
+      #   xref      = "paper",
+      #   yref      = "paper",
+      #   xanchor   = "right",
+      #   yanchor   = "auto",
+      #   xshift    = 0,
+      #   yshift    = -95,
+      #   font      = list(size = 12)
+      # )
       ##############################################################################
     ) %>%
     config(
@@ -1106,7 +1124,7 @@ if (nrow(params$atfm) > 0) {
 }
 ```
 
-### Share of ATFM Delay
+### Share of ATFM Delay (Source: Network Manager)
 
 ```{r atfm-ytd}
 if (nrow(params$atfm) > 0) {
