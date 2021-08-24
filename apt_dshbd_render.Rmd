@@ -3560,8 +3560,13 @@ PDDLY_YY$DLY_CAT <- factor(PDDLY_YY$DLY_CAT,
 )
 
 
-PDDLY_YY <- PDDLY_YY %>%
-  mutate(YEAR = as.character(YEAR))
+# PDDLY_YY <- PDDLY_YY %>%
+#   mutate(YEAR = as.character(YEAR))
+
+PDDLY_YY_annot=group_by(PDDLY_YY, YEAR) %>% 
+  summarise(DLY_DUR_TOT=sum(DLY_DUR, na.rm = TRUE))
+
+PDDLY_YY=left_join(PDDLY_YY, PDDLY_YY_annot)
 
 PDDLY_YY %>%
   plot_ly(
@@ -3573,6 +3578,13 @@ PDDLY_YY %>%
     # legendgroup = ~DLY_CAT,
     hovertemplate = "%{y:.r}"
   ) %>%
+  add_annotations(
+      data      = PDDLY_YY %>% select(YEAR, DLY_DUR_TOT) %>% unique(),
+      x         = ~ YEAR,
+      y         = ~ DLY_DUR_TOT + 100000,
+      text      = ~ paste0(round(DLY_DUR_TOT/1000000, 2), "M"),
+      showarrow = FALSE
+    ) %>%
   layout(
     barmode   = "stack",
     hovermode = "x unified",
