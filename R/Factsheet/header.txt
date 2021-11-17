@@ -1,0 +1,6 @@
+\usepackage{flafter}
+\usepackage{titlesec}
+\newcommand{\sectionbreak}{\clearpage}
+\makeatletter
+\def\fps@figure{hbp}
+\makeatother

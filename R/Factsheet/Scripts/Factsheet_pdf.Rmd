@@ -1,0 +1,314 @@
+---
+params:
+  icao:         $icao
+  iata:         $iata
+  name:         $name
+  state:        $state
+  apdf:         $apdf   
+  config:       $config
+  ldgsum:       $ldgsum
+  latest:       $latest
+  tfcvar:       $tfcvar
+  tfc:          $tfc
+  thru:         $thru
+  atfm:         $atfm   
+  slot_yy:      $slot_yy
+  slot_mm:      $slot_mm      
+  punc_dep_yy:  $punc_dep_yy
+  punc_dep_mm:  $punc_dep_mm
+  punc_arr_yy:  $punc_arr_yy
+  punc_arr_mm:  $punc_arr_mm
+  asma_yy:      $asma_yy
+  asma_mm:      $asma_mm
+  txot_yy:      $txot_yy
+  txot_mm:      $txot_mm
+  txin_yy:      $txin_yy
+  txin_mm:      $txin_mm
+  pddly_yy:     $pddly_yy
+  pddly_mm:     $pddly_mm  
+  pddly_yy_avg: $pddly_yy_avg
+  pddly_mm_avg: $pddly_avg
+  turn_yy:      $turn_yy
+  turn_mm:      $turn_mm
+  cdo_cco:      $cdo_cco
+title: "`r paste0('Factsheet for ', params$icao, ' (', params$name, ')')`"
+author: Aviation Intelligence Unit, EUROCONTROL
+date: "`r format(Sys.time(), '%d/%m/%Y')`" 
+output: 
+  bookdown::pdf_document2:
+    fig_width: 6.3
+    fig_height: 4.7
+    fig_caption: false
+    toc: false
+    keep_tex: false
+  # extra_dependencies: "subfig"
+    includes:
+      in_header: G:/HQ/dgof-pru/Project/Vertical_flight_efficiency/2015/airport-dashboard/R/Factsheet/header.txt
+editor_options: 
+  chunk_output_type: console
+header-includes: 
+  - \usepackage{float}
+  - \floatplacement{figure}{H} # make every figure with caption = h
+  - \usepackage{titling}
+  - \pretitle{\begin{center}
+  - \posttitle{\end{center}}
+    \includegraphics[width=2in,height=2in]{G:/HQ/dgof-pru/Project/Vertical_flight_efficiency/2015/airport-dashboard/R/factsheet/Figures/ECTL_logo.png}\LARGE\\}
+urlcolor: blue
+subparagraph: yes
+---
+
+```{r setup, include=FALSE}
+library("maptools")
+library("knitr")
+library("ROracle")
+library("dplyr")
+library("zoo")
+library("reshape2")
+library("ggplot2")
+library("scales")
+library("ggrepel")
+library("lubridate")
+library("bookdown")
+library("geosphere")
+library("openxlsx")
+library("here")
+library("DT")
+library("patchwork")
+
+knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE, error=FALSE, out.width = "\\textwidth")
+Sys.setenv(TZ = "UTC")
+Sys.setenv(ORA_SDTZ = "UTC")
+options(tinytex.verbose = TRUE)
+
+# set pander table-layout options
+library(pander)
+panderOptions('table.alignment.default', function(df)
+  ifelse(sapply(df, is.numeric), 'right', 'left'))
+panderOptions('table.split.table', Inf)
+panderOptions('big.mark', ",")
+panderOptions('keep.trailing.zeros', TRUE)
+
+append_date_suffix <- function(nbr){
+  suff <- case_when(nbr %in% c(11,12,13) ~ "th",
+                    nbr %% 10 == 1 ~ 'st',
+                    nbr %% 10 == 2 ~ 'nd',
+                    nbr %% 10 == 3 ~'rd',
+                    TRUE ~ "th")
+  paste0(nbr, suff)
+}
+
+```
+
+```{r Gen-info, include=FALSE}
+
+Last_complete_year=2020
+drv <- dbDriver("Oracle")
+con <- dbConnect(drv, "PRUTEST", "test", dbname='//porape5.ops.cfmu.eurocontrol.be:1521/pe5')
+TOP_APTs=dbGetQuery(con, "SELECT * FROM SP_TOP_APTS") %>%
+  filter(YEAR==Last_complete_year) %>%
+  arrange(-NBR_MVMTS) %>% 
+  mutate(Rank=rank(-NBR_MVMTS))
+dbDisconnect(con)
+
+Traffic_ranking_in_country=filter(TOP_APTs, substr(AIRPORT, 1, 2)==substr(params$icao, 1, 2)) %>% 
+  mutate(Rank=rank(-NBR_MVMTS)) %>% 
+  filter(AIRPORT==params$icao) %>% 
+  select(Rank) %>% 
+  as.numeric()
+Traffic_ranking_in_ECTL_area=filter(TOP_APTs, AIRPORT==params$icao) %>% 
+  select(Rank) %>% 
+  as.numeric()
+Traffic_share_in_country=filter(TOP_APTs, substr(AIRPORT, 1, 2)==substr(params$icao, 1, 2)) %>% 
+  mutate(Share_flights=NBR_MVMTS/sum(NBR_MVMTS)*100) %>% 
+  filter(AIRPORT==params$icao) %>% 
+  select(Share_flights) %>% 
+  as.numeric() %>% 
+  round()
+Arr_ATFM_dly_share_in_country=filter(ATFM_DF, substr(AIRPORT, 1, 2)==substr(params$icao, 1, 2) & YEAR==Last_complete_year) %>%
+  group_by(AIRPORT) %>%
+  summarise(
+    FLT_ARR_TOT       = sum(FLT_ARR_1, na.rm = TRUE),
+    DLY_APT_ARR_TOT   = sum(DLY_APT_ARR_1, na.rm = TRUE)) %>% 
+  mutate(Share_dly=DLY_APT_ARR_TOT/sum(DLY_APT_ARR_TOT)*100) %>% 
+  filter(AIRPORT==params$icao) %>% 
+  select(Share_dly) %>% 
+  as.numeric() %>% 
+  round()
+atfm_grps <- c(
+  "AD_EVENTS",
+  "AD_DISRUPTION",
+  "AD_CAPACITY",
+  "AD_WEATHER",
+  "AD_DISRUPTION_ATC",
+  "AD_STAFFING_ATC",
+  "AD_CAPACITY_ATC"
+)
+atfm_lbl <- c(
+  "Events",
+  "Disruption",
+  "Capacity",
+  "Weather",
+  "Disruption (ATC)",
+  "Staffing (ATC)",
+  "Capacity (ATC)"
+)
+Top_ATFM_dly_cause_airport=filter(params$atfm, YEAR==Last_complete_year) %>%
+  group_by(AIRPORT) %>%
+  summarise(
+    AD_DISRUPTION     = sum(AD_DISRUPTION, na.rm = TRUE),
+    AD_CAPACITY       = sum(AD_CAPACITY, na.rm = TRUE),
+    AD_WEATHER        = sum(AD_WEATHER, na.rm = TRUE),
+    AD_DISRUPTION_ATC = sum(AD_DISRUPTION_ATC, na.rm = TRUE),
+    AD_CAPACITY_ATC   = sum(AD_CAPACITY_ATC, na.rm = TRUE),
+    AD_STAFFING_ATC   = sum(AD_STAFFING_ATC, na.rm = TRUE),
+    AD_EVENTS         = sum(AD_EVENTS, na.rm = TRUE)) %>%
+  ungroup() %>%
+  tidyr::pivot_longer(
+    cols      = starts_with("AD_"),
+    names_to  = "REG_REASON",
+    values_to = "DLY"
+  ) %>%
+  mutate(REG_REASON = factor(REG_REASON,
+                             levels = atfm_grps,
+                             labels = atfm_lbl
+  )) %>% 
+  arrange(-DLY) %>% 
+  head(1) %>% 
+  select(REG_REASON) %>%
+  mutate(REG_REASON = as.character(REG_REASON)) %>% 
+  as.character()
+
+```
+
+
+
+# General
+`r params$name` is the `r ifelse(Traffic_ranking_in_country==1, "", append_date_suffix(Traffic_ranking_in_country))` busiest airport in `r params$state` and the `r ifelse(Traffic_ranking_in_ECTL_area==1, "", append_date_suffix(Traffic_ranking_in_ECTL_area))` in the EUROCONTROL area in terms of movements in the year `r Last_complete_year`.
+
+```{r, include=FALSE}
+# Next paragraph
+```
+
+In `r paste0(Last_complete_year, ", ", params$name)` managed `r Traffic_share_in_country`% of the traffic at airports in `r params$state`, and their arrival delays accounted for `r Arr_ATFM_dly_share_in_country`% of the arrival ATFM minutes of delay, mainly due to `r Top_ATFM_dly_cause_airport`.
+
+\begin{minipage}[t]{0.4\textwidth}
+```{r apt-info}
+
+ID_TBL <- tribble(
+  ~ITEM, ~TEXT1, ~TEXT2,
+  "Airport", params$name, "",
+  "ICAO/IATA", paste0(params$icao, "/", params$iata), "",
+  "State", params$state, "",
+  "", "", ""
+)
+
+RWY_CONFIG <- params$config %>%
+  mutate(ITEM = "") %>%
+  select(
+    ITEM,
+    TEXT1 = CONFIGURATION,
+    TEXT2 = SHARE_PCT
+  ) %>%
+  mutate(TEXT2 = paste0(round(100 * TEXT2), "%")) %>%
+  na.omit()
+
+RWY_CONFIG$ITEM[1] <- "Configurations in 2019"
+
+ID_TBL <- ID_TBL %>%
+  bind_rows(RWY_CONFIG)
+
+pander(ID_TBL, cols = NULL)
+
+```
+
+\end{minipage}
+\begin{minipage}[t]{0.3\textwidth}
+
+```{r APT-map, echo=FALSE, fig.align='center'}
+
+include_graphics(here("R", "Factsheet", "Figures", "Airport_maps", paste0("APT_map_", params$icao, ".png")))
+
+```
+
+\end{minipage}
+\begin{minipage}[t]{0.3\textwidth}
+
+```{r APT_layout, echo=FALSE, fig.align='center'}
+
+include_graphics(here("layouts", paste0(params$icao, ".png")))
+
+```
+
+\end{minipage}
+
+<!-- \renewcommand{\cleardoublepage}{} -->
+<!-- \renewcommand{\clearpage}{} -->
+
+
+
+# Traffic
+
+```{r traffic-setup}
+
+Page_width<<-150
+Traffic_layout1<<-c(0.2, 0.5, 0.3)
+Traffic_height1<<-100
+source(here("R", "Factsheet", "Scripts", "Fig_Total_mvmts_airport.R"), encoding = "UTF8")
+source(here("R", "Factsheet", "Scripts", "Fig_Monthly_mvmts_airport.R"), encoding = "UTF8")
+# source(here("R", "Factsheet", "Scripts", "Fig_Market_segments_airport.R"), encoding = "UTF8")
+Traffic_layout2<<-c(0.4, 0.6)
+Traffic_height2<<-100
+
+```
+
+\begin{minipage}[t]{`r Traffic_layout1[1]`\textwidth}
+```{r Tot-mvmts-yearly, echo=FALSE, fig.align='center', out.height=paste0(Traffic_height1, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Tot_mvmts_", params$icao, ".png")))
+
+```
+\end{minipage}
+\begin{minipage}[t]{`r Traffic_layout1[2]`\textwidth}
+```{r Tot-mvmts-monthly, echo=FALSE, fig.align='center', out.height=paste0(Traffic_height1, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Monthly_mvmts_", params$icao, ".png")))
+
+```
+\end{minipage}
+\begin{minipage}[t]{`r Traffic_layout1[3]`\textwidth}
+```{r Market-segments, echo=FALSE, fig.align='center', out.height=paste0(Traffic_height1, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Monthly_mvmts_", params$icao, ".png")))
+
+```
+\end{minipage}
+
+\begin{minipage}[t]{`r Traffic_layout2[1]`\textwidth}
+```{r Traffic-country-apts, echo=FALSE, fig.align='center', out.height=paste0(Traffic_height2, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Monthly_mvmts_", params$icao, ".png")))
+
+```
+\end{minipage}
+\begin{minipage}[t]{`r Traffic_layout2[2]`\textwidth}
+```{r Daily-flights, echo=FALSE, fig.align='center', out.height=paste0(Traffic_height2, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Monthly_mvmts_", params$icao, ".png")))
+
+```
+\end{minipage}
+
+<!-- \renewcommand{\cleardoublepage}{} -->
+<!-- \renewcommand{\clearpage}{} -->
+
+
+
+# Data exchange with EUROCONTROL
+
+```{r Tot-mvmts-yearly-test, echo=FALSE, fig.show='hold', fig.align='center', out.width="150px"}
+
+include_graphics(c(here("R", "Factsheet", "Figures", paste0("Tot_mvmts_", params$icao, ".png")),
+                   here("R", "Factsheet", "Figures", paste0("Monthly_mvmts_", params$icao, ".png")),
+                   here("R", "Factsheet", "Figures", paste0("Monthly_mvmts_", params$icao, ".png"))))
+
+```
