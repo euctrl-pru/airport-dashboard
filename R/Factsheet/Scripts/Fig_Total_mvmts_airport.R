@@ -13,11 +13,11 @@ mvts_pa_fig = ggplot(data=mvts_pa) +
         legend.title=element_blank(),
         legend.text=element_text(size=36),
         legend.position = "bottom",
-        axis.text=element_text(size=30),
-        axis.title=element_text(size=38),
+        axis.text=element_text(size=100),
+        axis.title=element_text(size=100),
         axis.title.x = element_blank(),
         plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
   labs(x="", y="Total movements (thousands)\n") +
   scale_y_continuous(labels = label_number(suffix = "k"))
-ggsave(here("R", "Factsheet", "Figures", paste0("Tot_mvmts_", Airport, ".png")), 
-       width = Traffic_layout1[1]*Page_width, height = Traffic_height1, units = "cm", dpi=200)
+ggsave(here("R", "Factsheet", "Figures", paste0("Tot_mvmts_", Airport, ".png")), plot=mvts_pa_fig, 
+       width = Traffic_layout1[1]*Page_width, height = Traffic_height1, units = "cm", dpi=100, limitsize = FALSE)

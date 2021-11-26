@@ -14,12 +14,6 @@ APTs=APT_DF %>%
   filter( AIRPORT %in% c("EBBR", "LATI")) %>%   # for debug
   pull(AIRPORT)
 
-# for (Airport in APTs) {
-#   
-#   source(here("R", "Factsheet", "Scripts", "Create_factsheet_figures.R"), encoding = "UTF8")
-#   
-# }
-
 APTs %>%
   purrr::walk(
     .f = function(icao) {

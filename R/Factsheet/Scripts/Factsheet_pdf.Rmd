@@ -74,6 +74,7 @@ library("openxlsx")
 library("here")
 library("DT")
 library("patchwork")
+library("treemapify")
 
 knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE, error=FALSE, out.width = "\\textwidth")
 Sys.setenv(TZ = "UTC")
@@ -101,10 +102,10 @@ append_date_suffix <- function(nbr){
 
 ```{r Gen-info, include=FALSE}
 
-Last_complete_year=2020
+Last_complete_year<<-2020
 drv <- dbDriver("Oracle")
 con <- dbConnect(drv, "PRUTEST", "test", dbname='//porape5.ops.cfmu.eurocontrol.be:1521/pe5')
-TOP_APTs=dbGetQuery(con, "SELECT * FROM SP_TOP_APTS") %>%
+TOP_APTs<<-dbGetQuery(con, "SELECT * FROM SP_TOP_APTS") %>%
   filter(YEAR==Last_complete_year) %>%
   arrange(-NBR_MVMTS) %>% 
   mutate(Rank=rank(-NBR_MVMTS))
@@ -250,14 +251,19 @@ include_graphics(here("layouts", paste0(params$icao, ".png")))
 
 ```{r traffic-setup}
 
-Page_width<<-150
+Airport<<-params$icao
+Page_width<<-450
 Traffic_layout1<<-c(0.2, 0.5, 0.3)
 Traffic_height1<<-100
 source(here("R", "Factsheet", "Scripts", "Fig_Total_mvmts_airport.R"), encoding = "UTF8")
 source(here("R", "Factsheet", "Scripts", "Fig_Monthly_mvmts_airport.R"), encoding = "UTF8")
-# source(here("R", "Factsheet", "Scripts", "Fig_Market_segments_airport.R"), encoding = "UTF8")
+source(here("R", "Factsheet", "Scripts", "Fig_Market_segments_airport.R"), encoding = "UTF8")
 Traffic_layout2<<-c(0.4, 0.6)
 Traffic_height2<<-100
+source(here("R", "Factsheet", "Scripts", "Fig_Mvmts_country_airports.R"), encoding = "UTF8")
+
+Traffic_layout3<<-1
+Traffic_height3<<-100
 
 ```
 
@@ -278,7 +284,7 @@ include_graphics(here("R", "Factsheet", "Figures", paste0("Monthly_mvmts_", para
 \begin{minipage}[t]{`r Traffic_layout1[3]`\textwidth}
 ```{r Market-segments, echo=FALSE, fig.align='center', out.height=paste0(Traffic_height1, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Monthly_mvmts_", params$icao, ".png")))
+include_graphics(here("R", "Factsheet", "Figures", paste0("Market_segments_", params$icao, ".png")))
 
 ```
 \end{minipage}
@@ -286,7 +292,7 @@ include_graphics(here("R", "Factsheet", "Figures", paste0("Monthly_mvmts_", para
 \begin{minipage}[t]{`r Traffic_layout2[1]`\textwidth}
 ```{r Traffic-country-apts, echo=FALSE, fig.align='center', out.height=paste0(Traffic_height2, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Monthly_mvmts_", params$icao, ".png")))
+include_graphics(here("R", "Factsheet", "Figures", paste0("Mvmts_country_treemap_", params$icao, ".png")))
 
 ```
 \end{minipage}
@@ -298,6 +304,12 @@ include_graphics(here("R", "Factsheet", "Figures", paste0("Monthly_mvmts_", para
 ```
 \end{minipage}
 
+```{r Hourly-throughput, echo=FALSE, fig.align='center', out.height=paste0(Traffic_height3, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Hourly_throughput_", params$icao, ".png")))
+
+```
+
 <!-- \renewcommand{\cleardoublepage}{} -->
 <!-- \renewcommand{\clearpage}{} -->
 
@@ -305,10 +317,3 @@ include_graphics(here("R", "Factsheet", "Figures", paste0("Monthly_mvmts_", para
 
 # Data exchange with EUROCONTROL
 
-```{r Tot-mvmts-yearly-test, echo=FALSE, fig.show='hold', fig.align='center', out.width="150px"}
-
-include_graphics(c(here("R", "Factsheet", "Figures", paste0("Tot_mvmts_", params$icao, ".png")),
-                   here("R", "Factsheet", "Figures", paste0("Monthly_mvmts_", params$icao, ".png")),
-                   here("R", "Factsheet", "Figures", paste0("Monthly_mvmts_", params$icao, ".png"))))
-
-```
