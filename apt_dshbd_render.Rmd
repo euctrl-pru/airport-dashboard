@@ -4252,7 +4252,7 @@ All other airport related data is collected through the Airport Operator Data Fl
 **Data and metrics are shown based on availability at the moment of publication**    
 
 * Traffic data comprises all IFR flown flight plans for the airport (arrivals and departures) based on NM data.
-*	ATFM delay data captures the arrival ATFM delay triggered by constraints at the airport based on NM data.
+*	ATFM delay data captures the arrival ATFM delay triggered by constraints at the airport based on NM data (_no post ops adjustments_).
 *	ATFM delays are grouped according to the regulation reason as described in https://ansperformance.eu/definition/atfm-delay-codes/
 * CDO/CCO performance is calculated by identifying level segments during the climb and descent. These level segments are considered to be inefficient. For more information please visit https://ansperformance.eu/efficiency/vfe/
 *	Additional ASMA time measures the difference between an observed travel time elapsing from entering the 40NM radius around the airport to landing. This time is compared against a reference time to the respective entry sector, aircraft type, and landing runway.
