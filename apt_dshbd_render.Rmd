@@ -1002,11 +1002,12 @@ if (nrow(params$atfm) > 0) {
         rangemode   = "tozero"
       ),
       showlegend = TRUE,
-      legend = list(
-        orientation = "h",
-        xanchor="center",
-        x = 0.5
-      ),
+      # legend = list(
+      #   orientation = "h",
+      #   xanchor="center",
+      #   x = 0.5,
+      #   y = -0.2
+      # ),
       updatemenus = list(button_type_list)
     ) %>%
     config(
