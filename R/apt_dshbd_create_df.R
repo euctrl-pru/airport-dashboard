@@ -47,6 +47,10 @@ TFC_VAR_DF <- TFC_VAR_DF %>%
   ) %>%
   select(APT_ICAO, ARP_NAME, DAY, FLTS, FLTS_2019, MOV_AVG_WK)
 
+# TRAFFIC MARKET ----
+
+TFC_MKT_DF <- read_csv2(here("data", "APT_DSHBD_TRAFFIC_MARKET.csv"))
+
 
 # THROUGHPUT ----
 
@@ -499,10 +503,16 @@ PDDLY_MM_DF <- APDF_MM_DF %>%
 
 
 # ..PDDLY YEARLY AVERAGE  ----
+
+#PDDLY_YY_AVG_DF <- APDF_MM_DF %>%
+#  select(AIRPORT, APT_ICAO, YEAR, DLY_89_PER_FL_YY) %>%
+#  group_by(AIRPORT, APT_ICAO, YEAR) %>%
+#  summarise( DLY_89_PER_FL_YY = mean(DLY_89_PER_FL_YY)) %>%
+#  ungroup()
 PDDLY_YY_AVG_DF <- APDF_MM_DF %>%
-  select(AIRPORT, APT_ICAO, YEAR, DLY_89_PER_FL_YY) %>%
-  group_by(AIRPORT, APT_ICAO, YEAR) %>%
-  summarise( DLY_89_PER_FL_YY = mean(DLY_89_PER_FL_YY)) %>%
+  select(AIRPORT, APT_ICAO, YEAR, DLY_89_PER_FL_MM)%>%
+  group_by(AIRPORT, APT_ICAO, YEAR)%>%
+  summarise( DLY_89_PER_FL_YY = mean(DLY_89_PER_FL_MM, na.rm = TRUE)) %>%
   ungroup()
 
 
@@ -517,7 +527,6 @@ PDDLY_MM_AVG_DF <- APDF_MM_DF %>%
 
 APDF_TURN_DF <- read_csv2(here("data","APT_DSHBD_TURNAROUND.csv"))
 
-
 # ..TURN YEARLY DATA ----
 TURN_YY_DF <- APDF_TURN_DF %>%
   select( # ..........
@@ -528,6 +537,7 @@ TURN_YY_DF <- APDF_TURN_DF %>%
     AC_CLASS,
     # ..........
     NB_TURN_ARROUND,
+    NB_OVERSHOOT,
     TOT_SDTT_MIN,
     TOT_ACTT_MIN,
     TOT_ADTT_MIN
@@ -539,7 +549,8 @@ TURN_YY_DF <- APDF_TURN_DF %>%
     TOT_SDTT_MIN = sum(TOT_SDTT_MIN, na.rm = TRUE),
     TOT_ACTT_MIN = sum(TOT_ACTT_MIN, na.rm = TRUE),
     TOT_ADTT_MIN = sum(TOT_ADTT_MIN, na.rm = TRUE),
-    TOT_TURN = sum(NB_TURN_ARROUND, na.rm = TRUE)
+    TOT_TURN     = sum(NB_TURN_ARROUND, na.rm = TRUE),
+    TOT_OVER     = sum(NB_OVERSHOOT, na.rm = TRUE)
   ) %>%
   ungroup() %>%
   mutate(
@@ -547,7 +558,7 @@ TURN_YY_DF <- APDF_TURN_DF %>%
     AVG_ACTT = TOT_ACTT_MIN / TOT_TURN,
     AVG_ADTT = TOT_ADTT_MIN / TOT_TURN
   ) %>%
-  select(AIRPORT, APT_ICAO, YEAR, AC_CLASS, TOT_TURN, AVG_SDTT, AVG_ACTT, AVG_ADTT)
+  select(AIRPORT, APT_ICAO, YEAR, AC_CLASS, TOT_TURN, TOT_OVER, AVG_SDTT, AVG_ACTT, AVG_ADTT)
 
 # ..TURN MONTHLY DATA ----
 TURN_MM_DF <- APDF_TURN_DF %>%
@@ -559,6 +570,7 @@ TURN_MM_DF <- APDF_TURN_DF %>%
     AC_CLASS,
     # ..........
     NB_TURN_ARROUND,
+    NB_OVERSHOOT,    
     TOT_SDTT_MIN,
     TOT_ACTT_MIN,
     TOT_ADTT_MIN
@@ -570,16 +582,56 @@ TURN_MM_DF <- APDF_TURN_DF %>%
     TOT_SDTT_MIN = sum(TOT_SDTT_MIN, na.rm = TRUE),
     TOT_ACTT_MIN = sum(TOT_ACTT_MIN, na.rm = TRUE),
     TOT_ADTT_MIN = sum(TOT_ADTT_MIN, na.rm = TRUE),
-    TOT_TURN = sum(NB_TURN_ARROUND, na.rm = TRUE)
+    TOT_TURN     = sum(NB_TURN_ARROUND, na.rm = TRUE),
+    TOT_OVER     = sum(NB_OVERSHOOT, na.rm = TRUE)
   ) %>%
   ungroup() %>%
   mutate(
     AVG_SDTT = TOT_SDTT_MIN / TOT_TURN,
     AVG_ACTT = TOT_ACTT_MIN / TOT_TURN,
-    AVG_ADTT = TOT_ADTT_MIN / TOT_TURN
+    AVG_ADTT = TOT_ADTT_MIN / TOT_TURN,
+    AVG_OVER = TOT_OVER     / TOT_TURN
   ) %>%
-  select(AIRPORT, APT_ICAO, YEAR, MONTH_NUM, AC_CLASS, TOT_TURN, AVG_SDTT, AVG_ACTT, AVG_ADTT)
+  select(AIRPORT, APT_ICAO, YEAR, MONTH_NUM, AC_CLASS, TOT_TURN, TOT_OVER, AVG_SDTT, AVG_ACTT, AVG_ADTT, AVG_OVER)
 
+
+# ..TURN NEW DATA ----
+TURN_NEW_DF <- APDF_TURN_DF %>%
+  filter(AC_CLASS %in% c("H", "MJ", "MT"))
+
+TURN_NEW_DF <- TURN_NEW_DF %>%  
+  select( # ..........
+    AIRPORT,
+    APT_ICAO,
+    YEAR,
+    MONTH_NUM,
+    # ..........
+    NB_TURN_ARROUND,
+    NB_OVERSHOOT,    
+    TOT_SDTT_MIN,
+    TOT_ACTT_MIN,
+    TOT_ADTT_MIN,
+    TOT_ERTT_MIN
+    # ..........
+  ) %>%
+  group_by(AIRPORT, APT_ICAO, YEAR, MONTH_NUM) %>%
+  summarise(
+    TOT_SDTT_MIN = sum(TOT_SDTT_MIN, na.rm = TRUE),
+    TOT_ACTT_MIN = sum(TOT_ACTT_MIN, na.rm = TRUE),
+    TOT_ADTT_MIN = sum(TOT_ADTT_MIN, na.rm = TRUE),
+    TOT_ERTT_MIN = sum(TOT_ERTT_MIN, na.rm = TRUE),
+    TOT_TURN     = sum(NB_TURN_ARROUND, na.rm = TRUE),
+    TOT_OVER     = sum(NB_OVERSHOOT, na.rm = TRUE)
+  ) %>%
+  ungroup() %>%
+  mutate(
+    AVG_SDTT = TOT_SDTT_MIN / TOT_TURN,
+    AVG_ACTT = TOT_ACTT_MIN / TOT_TURN,
+    AVG_ADTT = TOT_ADTT_MIN / TOT_TURN,
+    AVG_ERTT = TOT_ERTT_MIN / TOT_TURN,
+    AVG_OVER = TOT_OVER     / TOT_TURN
+  ) %>%
+  select(AIRPORT, APT_ICAO, YEAR, MONTH_NUM, TOT_TURN, TOT_OVER, AVG_SDTT, AVG_ACTT, AVG_ADTT, AVG_ERTT, AVG_OVER)
 
 
 # ****************************----

@@ -81,6 +81,18 @@ EXPORT_APT_DSHBD_TRAFFIC_EVO() %>%
 
 
 #***************************************************
+# ---- APT TRAFFIC MARKET ----
+#***************************************************
+EXPORT_APT_DSHBD_TRAFFIC_MARKET <- function() {
+  QUERY <- "SELECT * FROM PRU_AIRPORT.V_APT_DSHBD_TRAFFIC_MARKET"
+  EXPORT_QUERY("PRU_AIRPORT", QUERY)
+}
+
+EXPORT_APT_DSHBD_TRAFFIC_MARKET() %>%
+  readr::write_csv2(here::here("data", "APT_DSHBD_TRAFFIC_MARKET.csv"))
+
+
+#***************************************************
 # ---- APT THROUGHPUT ----
 #***************************************************
 EXPORT_APT_DSHBD_THROUGHPUT <- function() {

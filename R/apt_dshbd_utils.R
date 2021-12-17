@@ -204,9 +204,9 @@ pack_thru     <- function(.df, .apt)
                 
                 filter(MONTH_NUM == max(MONTH_NUM)) %>%
                 
-                dplyr::select(APT_ICAO, YEAR, MONTH_NUM, DATE, WEEKDAY, TIME, ROLLING_HOUR_MVT, PHASE) %>%
+                dplyr::select(APT_ICAO, YEAR, MONTH_NUM, DATE, WEEKDAY, TIME, ROLLING_HOUR_MVT, PHASE, PCT99_RHM) %>%
                 
-                dplyr::group_by(YEAR, MONTH_NUM, TIME, PHASE) %>% 
+                dplyr::group_by(YEAR, MONTH_NUM, TIME, PHASE, PCT99_RHM) %>% 
                 
                 summarise(ROLLING_HOUR_MVT = mean(ROLLING_HOUR_MVT)) %>%
                 
@@ -227,10 +227,11 @@ prepare_params <- function(apt_icao)
                 ldgsum    = landing_page_indicators(TFC_DF, APDF_MM_DF, ATFM_DF, .apt = apt_icao),
                 latest    = latest_month_indicators(TFC_DF, APDF_MM_DF, ATFM_DF, .apt = apt_icao),
                 #
-                tfcvar    = trim_tfcvar(      TFC_VAR_DF, .apt = apt_icao),                
-                #
                 tfc       = filter_df_by_apt(TFC_DF,      .apt = apt_icao),
-                thru      = pack_thru(       THRU_DF,     .apt = apt_icao),
+                tfcvar    = trim_tfcvar     (TFC_VAR_DF,  .apt = apt_icao),                
+                market    = filter_df_by_apt(TFC_MKT_DF,  .apt = apt_icao),
+                thru      = pack_thru       (THRU_DF,     .apt = apt_icao),
+                #
                 atfm      = filter_df_by_apt(ATFM_DF,     .apt = apt_icao),
                 slot_yy   = filter_df_by_apt(SLOT_YY_DF,  .apt = apt_icao),
                 slot_mm   = filter_df_by_apt(SLOT_MM_DF,  .apt = apt_icao),
@@ -256,6 +257,7 @@ prepare_params <- function(apt_icao)
                 #
                 turn_yy   = filter_df_by_apt(TURN_YY_DF,  .apt = apt_icao),
                 turn_mm   = filter_df_by_apt(TURN_MM_DF,  .apt = apt_icao),
+                turn_new  = filter_df_by_apt(TURN_NEW_DF, .apt = apt_icao),
                 #
                 cdo_cco   = filter_df_by_apt(CDO_CCO_DF,  .apt = apt_icao)
                 #

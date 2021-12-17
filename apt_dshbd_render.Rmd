@@ -10,6 +10,7 @@ params:
    latest:       $latest
    tfcvar:       $tfcvar
    tfc:          $tfc
+   market:       $market
    thru:         $thru
    atfm:         $atfm   
    slot_yy:      $slot_yy
@@ -30,6 +31,7 @@ params:
    pddly_mm_avg: $pddly_avg
    turn_yy:      $turn_yy
    turn_mm:      $turn_mm
+   turn_new:     $turn_new
    cdo_cco:      $cdo_cco
 
 title         : "`r params$icao`"
@@ -505,9 +507,11 @@ mvts_pm %>%
 
 ## Row -----------------------------------------------------------
 
+<!--
 ### Annual Variation of Daily Movements (Source: Network Manager)
 
 ```{r daily-movements}
+
 tmp <- params$tfc %>%
   select(YEAR,
     DATE = FLT_DATE,
@@ -565,6 +569,57 @@ pbox_group <- tmp %>%
   )
 
 pbox_group
+
+```
+-->
+
+### Share of Market Segment (Source: Network Manager)
+
+```{r market-segment}
+
+market_max_year <- params$market %>%
+    pull(YEAR) %>%
+    max() %>%
+    unique()
+
+  share_market <- params$market %>%
+    filter(YEAR == market_max_year) %>%
+    group_by(RULE_NAME) %>%
+    summarise(
+      FLT_TOT = sum(NB_FLIGHT, na.rm = TRUE)
+    ) %>%
+    ungroup() %>%
+    mutate(
+      FLIGHT_TOT   = sum(FLT_TOT, na.rm = TRUE),
+      FLIGHT_SHARE = round(FLT_TOT / FLIGHT_TOT, 2),
+      LABELS    = paste0(RULE_NAME, "<br>", FLIGHT_SHARE, "%")
+    ) 
+   # %>%
+   # filter(FLIGHT_SHARE > 0)
+
+  center_text <- paste0("<b>", market_max_year, "</b>")
+
+  share_market %>%
+    plot_ly(
+      labels = ~RULE_NAME,
+      values = ~FLIGHT_SHARE
+    ) %>%
+    add_pie(
+      hole         = 0.4,
+      textposition = "outside"
+    ) %>%
+    add_annotations(
+      text      = center_text,
+      font      = list(size = 18),
+      x         = 0.5,
+      y         = 0.5,
+      showarrow = FALSE
+    ) %>%
+    config(
+      displaylogo = FALSE,
+      modeBarButtonsToRemove = config_bar_remove_buttons
+    )
+
 ```
 
 
@@ -591,9 +646,20 @@ thru_tot <- thru %>%
   mutate(PHASE = "Total") %>%
   ungroup()
 
+thru_max <- thru %>%
+  group_by(TIME) %>%
+  summarise(ROLLING_HOUR_MVT = mean(PCT99_RHM, na.rm = TRUE)) %>%
+  mutate(PHASE = "Peak Service Rate<br>(2016-2021)") %>%
+  ungroup()
+
 thru <- thru %>%
   bind_rows(thru_tot) %>%
+  bind_rows(thru_max) %>%
   mutate(TIME = as.character(TIME), TIME = strtrim(TIME, 5))
+
+phase_grps <- c(  "Departures",  "Arrivals",  "Total",  "Peak Service Rate<br>(2016-2021)")
+
+phase_lbl  <- c(  "Departures",  "Arrivals",  "Total",  "Peak Service Rate<br>(2016-2021)")
 
 xax <- list(
   title = "",
@@ -620,6 +686,14 @@ if (max(thru$ROLLING_HOUR_MVT) <= 20) {
 } else {
   msg_y <- 0.1 * max(thru$ROLLING_HOUR_MVT)
 }
+
+
+thru <- thru %>%
+  mutate(PHASE = factor(PHASE,
+                             levels = phase_grps,
+                             labels = phase_lbl
+  ))
+
 
 thru %>%
   plot_ly(
@@ -2009,7 +2083,6 @@ plot_ly(MED_CDO_CCO_ALT_AVG_TIME_LVL_PLOT,
 
 ```
 
-<!--
 # Punctuality
 
 ```{r punctuality-data-check, results='asis', eval=params$apdf != "Y"}
@@ -2032,7 +2105,7 @@ cat("## Row -----------------------------------------------------------")
   
 ```{r punctuality-title1, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-cat("### Annual Departure Punctuality")
+cat("### Annual Departure Punctuality (Source: APDF)")
 
 ```
 
@@ -2047,23 +2120,37 @@ pun_col <- c(
   "#ffe699", # LATE 5-15		#rgb 255,230,153
   "#e1c000", # LATE 16-30	  #rgb 225,192,0
   "#ff0000", # LATE 31-60	  #rgb 255,0,0
-  "#c00000"
-) # LATE >60		  #rgb 192,0,0
+  "#c00000"  # LATE >60		  #rgb 192,0,0
+)           
 
 punc_dep_yy_plot <- params$punc_dep_yy
 
+#punc_dep_yy_plot$PUNCT_CAT <- factor(punc_dep_yy_plot$PUNCT_CAT,
+#                                     levels = c(
+#                                       "Early >30",
+#                                       "Early 16-30",
+#                                       "Early 5-15",
+#                                       "On Time -+4",
+#                                       "Late 5-15",
+#                                       "Late 16-30",
+#                                       "Late 31-60",
+#                                       "Late >60"
+#                                     )
+#)
+
 punc_dep_yy_plot$PUNCT_CAT <- factor(punc_dep_yy_plot$PUNCT_CAT,
                                      levels = c(
-                                       "Early >30",
-                                       "Early 16-30",
-                                       "Early 5-15",
-                                       "On Time -+4",
-                                       "Late 5-15",
-                                       "Late 16-30",
-                                       "Late 31-60",
-                                       "Late >60"
-                                     )
+                                       "[<-30]",
+                                       "[-16, -30]",
+                                       "[- 5, -15]",
+                                       "[- 4, + 4]",
+                                       "[+ 5, +15]",
+                                       "[+16, +30]",
+                                       "[+31, +60]",
+                                       "[>+60]"
+                                      )
 )
+
 
 punc_dep_yy_plot %>%
   plot_ly(
@@ -2081,21 +2168,21 @@ punc_dep_yy_plot %>%
       title = "Departure Punctuality repartition (%)",
       titlefont = list(size = 11),
       hoverformat = ".2f"
-    ),
+    )#,
     ##############################################################################
-    annotations = list(
-      x         = 1,
-      y         = -0.1,
-      text      = "Source: APDF",
-      showarrow = FALSE,
-      xref      = "paper",
-      yref      = "paper",
-      xanchor   = "right",
-      yanchor   = "auto",
-      xshift    = 0,
-      yshift    = -5,
-      font      = list(size = 12)
-    )
+#    annotations = list(
+#      x         = 1,
+#      y         = -0.1,
+#      text      = "Source: APDF",
+#      showarrow = FALSE,
+#      xref      = "paper",
+#      yref      = "paper",
+#      xanchor   = "right",
+#      yanchor   = "auto",
+#      xshift    = 0,
+#      yshift    = -5,
+#      font      = list(size = 12)
+#    )
     ##############################################################################
   ) %>%
   config(
@@ -2108,7 +2195,7 @@ punc_dep_yy_plot %>%
 
 ```{r punctuality-title2, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-cat("### Monthly Departure Punctuality")
+cat("### Monthly Departure Punctuality (Source: APDF)")
 
 ```
 
@@ -2117,17 +2204,33 @@ cat("### Monthly Departure Punctuality")
 
 punc_dep_mm_plot <- params$punc_dep_mm
 
+#punc_dep_mm_plot$PUNCT_CAT <- factor(
+#  punc_dep_mm_plot$PUNCT_CAT,
+#  levels = c(
+#    "Early >30",
+#    "Early 16-30",
+#    "Early 5-15",
+#    "On Time -+4",
+#    "Late 5-15",
+#    "Late 16-30",
+#    "Late 31-60",
+#    "Late >60"))
+
+
 punc_dep_mm_plot$PUNCT_CAT <- factor(
   punc_dep_mm_plot$PUNCT_CAT,
-  levels = c(
-    "Early >30",
-    "Early 16-30",
-    "Early 5-15",
-    "On Time -+4",
-    "Late 5-15",
-    "Late 16-30",
-    "Late 31-60",
-    "Late >60"))
+levels = c(
+                                       "[<-30]",
+                                       "[-16, -30]",
+                                       "[- 5, -15]",
+                                       "[- 4, + 4]",
+                                       "[+ 5, +15]",
+                                       "[+16, +30]",
+                                       "[+31, +60]",
+                                       "[>+60]"
+                                      )
+)
+
 
 
 filter_years <- punc_dep_mm_plot %>%
@@ -2188,21 +2291,21 @@ punc_dep_mm_plot %>%
       hoverformat = ".2f"
     ),
     showlegend = TRUE,
-    updatemenus = list(button_type_list),
+    updatemenus = list(button_type_list)#,
     ##############################################################################
-    annotations = list(
-      x         = 1,
-      y         = -0.1,
-      text      = "Source: APDF",
-      showarrow = FALSE,
-      xref      = "paper",
-      yref      = "paper",
-      xanchor   = "right",
-      yanchor   = "auto",
-      xshift    = 0,
-      yshift    = -10,
-      font      = list(size = 12)
-    )
+#    annotations = list(
+#      x         = 1,
+#      y         = -0.1,
+#      text      = "Source: APDF",
+#      showarrow = FALSE,
+#      xref      = "paper",
+#      yref      = "paper",
+#      xanchor   = "right",
+#      yanchor   = "auto",
+#      xshift    = 0,
+#      yshift    = -10,
+#      font      = list(size = 12)
+#    )
     ##############################################################################
   ) %>%
   config(
@@ -2222,7 +2325,7 @@ cat("## Row -----------------------------------------------------------")
   
 ```{r punctuality-title3, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-cat("### Annual Arrival Punctuality")
+cat("### Annual Arrival Punctuality (Source: APDF)")
 
 ```
 
@@ -2231,19 +2334,35 @@ cat("### Annual Arrival Punctuality")
 
 punc_arr_yy_plot <- params$punc_arr_yy
 
+#punc_arr_yy_plot$PUNCT_CAT <- factor(
+#  punc_arr_yy_plot$PUNCT_CAT,
+#  levels = c(
+#    "Early >30",
+#    "Early 16-30",
+#    "Early 5-15",
+#    "On Time -+4",
+#    "Late 5-15",
+#    "Late 16-30",
+#    "Late 31-60",
+#    "Late >60"
+#  )
+#)
+
+
 punc_arr_yy_plot$PUNCT_CAT <- factor(
   punc_arr_yy_plot$PUNCT_CAT,
-  levels = c(
-    "Early >30",
-    "Early 16-30",
-    "Early 5-15",
-    "On Time -+4",
-    "Late 5-15",
-    "Late 16-30",
-    "Late 31-60",
-    "Late >60"
-  )
+levels = c(
+                                       "[<-30]",
+                                       "[-16, -30]",
+                                       "[- 5, -15]",
+                                       "[- 4, + 4]",
+                                       "[+ 5, +15]",
+                                       "[+16, +30]",
+                                       "[+31, +60]",
+                                       "[>+60]"
+                                      )
 )
+
 
 
 punc_arr_yy_plot %>%
@@ -2262,21 +2381,21 @@ punc_arr_yy_plot %>%
       title       = "Arrival Punctuality repartition (%)",
       titlefont   = list(size = 11),
       hoverformat = ".2f"
-    ),
+    )#,
     ##############################################################################
-    annotations = list(
-      x         = 1,
-      y         = -0.1,
-      text      = "Source: APDF",
-      showarrow = FALSE,
-      xref      = "paper",
-      yref      = "paper",
-      xanchor   = "right",
-      yanchor   = "auto",
-      xshift    = 0,
-      yshift    = -5,
-      font      = list(size = 12)
-    )
+#    annotations = list(
+#      x         = 1,
+#      y         = -0.1,
+#      text      = "Source: APDF",
+#      showarrow = FALSE,
+#      xref      = "paper",
+#      yref      = "paper",
+#      xanchor   = "right",
+#      yanchor   = "auto",
+#      xshift    = 0,
+#      yshift    = -5,
+#      font      = list(size = 12)
+#    )
     ##############################################################################
   ) %>%
   config(
@@ -2289,7 +2408,7 @@ punc_arr_yy_plot %>%
 
 ```{r punctuality-title4, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-cat("### Monthly Arrival Punctuality")
+cat("### Monthly Arrival Punctuality (Source: APDF)")
 
 ```
 
@@ -2298,18 +2417,33 @@ cat("### Monthly Arrival Punctuality")
 
 punc_arr_mm_plot <- params$punc_arr_mm
 
+#punc_arr_mm_plot$PUNCT_CAT <- factor(punc_arr_mm_plot$PUNCT_CAT,
+#                                     levels = c(
+#                                       "Early >30",
+#                                       "Early 16-30",
+#                                       "Early 5-15",
+#                                       "On Time -+4",
+#                                       "Late 5-15",
+#                                       "Late 16-30",
+#                                       "Late 31-60",
+#                                       "Late >60"
+#                                     )
+#)
+
+
 punc_arr_mm_plot$PUNCT_CAT <- factor(punc_arr_mm_plot$PUNCT_CAT,
-                                     levels = c(
-                                       "Early >30",
-                                       "Early 16-30",
-                                       "Early 5-15",
-                                       "On Time -+4",
-                                       "Late 5-15",
-                                       "Late 16-30",
-                                       "Late 31-60",
-                                       "Late >60"
-                                     )
+levels = c(
+                                       "[<-30]",
+                                       "[-16, -30]",
+                                       "[- 5, -15]",
+                                       "[- 4, + 4]",
+                                       "[+ 5, +15]",
+                                       "[+16, +30]",
+                                       "[+31, +60]",
+                                       "[>+60]"
+                                      )
 )
+
 
 
 filter_years <- punc_arr_mm_plot %>%
@@ -2370,21 +2504,21 @@ punc_arr_mm_plot %>%
       hoverformat = ".2f"
     ),
     showlegend = TRUE,
-    updatemenus = list(button_type_list),
+    updatemenus = list(button_type_list)#,
     ##############################################################################
-    annotations = list(
-      x         = 1,
-      y         = -0.1,
-      text      = "Source: APDF",
-      showarrow = FALSE,
-      xref      = "paper",
-      yref      = "paper",
-      xanchor   = "right",
-      yanchor   = "auto",
-      xshift    = 0,
-      yshift    = -10,
-      font      = list(size = 12)
-    )
+#    annotations = list(
+#      x         = 1,
+#      y         = -0.1,
+#      text      = "Source: APDF",
+#      showarrow = FALSE,
+#      xref      = "paper",
+#      yref      = "paper",
+#      xanchor   = "right",
+#      yanchor   = "auto",
+#      xshift    = 0,
+#      yshift    = -10,
+#      font      = list(size = 12)
+#    )
     ##############################################################################
   ) %>%
   config(
@@ -2393,7 +2527,6 @@ punc_arr_mm_plot %>%
   )
 
 ```
--->
 
 # ASMA Time
 
@@ -4160,58 +4293,139 @@ cat("## Row -----------------------------------------------------------")
   
 ```{r Turnaround-times-title3, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-cat("### Variation of Annual Actual Turnaround Times (Source: APDF)")
+cat("### DDI-G and TDI (Source: APDF)")
 
 ```
 
 
-```{r annual-turn-time-var, results='asis', eval=params$apdf == "Y", echo = FALSE}
+```{r delay-difference-indicator, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-TURN_MM <- TURN_MM %>%
-  mutate(AC_CLASS = factor(
-    AC_CLASS,
-    levels = c("H", "MJ", "MT"),
-    labels = c("Heavy", "Medium Jet", "Medium Turboprop")
-  ))
+TURN_DDI <- params$turn_new %>%
+    select(YEAR, MONTH_NUM, AVG_ADTT, AVG_ERTT)
 
-TURN_MM %>%
-  plot_ly(
-    x      = ~YEAR,
-    y      = ~AVG_ACTT,
-    color  = ~AC_CLASS,
-    colors = turn_col,
-    type   = "box"
-  ) %>%
-  layout(
-    boxmode = "group",
-    xaxis   = list(title = ""),
-    yaxis   = list(
-      title       = "Average Actual Turnaround time [min/flight]",
-      titlefont   = list(size = 11),
-      hoverformat = ".2f"
+button_list <- lapply(
+  1:length(filter_years),
+  function(x) {
+    list(
+      method = "restyle",
+      args = list("transforms[0].value", filter_years[x]),
+      label = filter_years[x]
     )
-    ##############################################################################
-    # ,annotations = list(
-    #   x         = 1,
-    #   y         = -0.1,
-    #   text      = "Source: APDF",
-    #   showarrow = FALSE,
-    #   xref      = "paper",
-    #   yref      = "paper",
-    #   xanchor   = "right",
-    #   yanchor   = "auto",
-    #   xshift    = 0,
-    #   yshift    = -5,
-    #   font      = list(size = 12)
-    # )
-    ##############################################################################
-  ) %>%
-  config(
-    displaylogo = FALSE,
-    modeBarButtonsToRemove = config_bar_remove_buttons
-  )
+  }
+)
+
+button_type_list <- list(
+  buttons   = button_list,
+  type      = "buttons",
+  bgcolor   = "#c3c1e8",
+  active    = length(filter_years) - 1,
+  direction = "right",
+  xref      = "paper",
+  x         = 0.3,
+  xanchor   = "left",
+  yref      = "paper",
+  y         = 1.2,
+  yanchor   = "bottom"
+)
+
+plot_ly(TURN_DDI, 
+        x           = ~MONTH_NUM, 
+        y           = ~AVG_ADTT, 
+        customdata  = ~YEAR, 
+        type        = "bar",
+        marker = list(color = 'rgb(40, 120, 181)'),
+        name = 'DDI-G',
+        transforms  = list(list(type     = 'filter',
+                               target    = "customdata",
+                               operation = '=',
+                               value     = max_year)
+                          )
+        ) %>% 
+    add_trace(y      = ~AVG_ERTT, 
+              marker = list(color = 'rgb(106, 168, 82)'),
+              name   = 'TDI') %>%
+  layout(barmode     = 'group',
+         hovermode   = "x unified",
+         xaxis       = tick_yr_no_title,
+         yaxis       = list( title="Average minutes difference per rotation",
+                             titlefont = list(size = 11),
+                             hoverformat = ".2f"),
+         updatemenus = list( button_type_list ),
+         showlegend = TRUE
+         ) %>% 
+  config( displaylogo = FALSE,
+          modeBarButtonsToRemove = config_bar_remove_buttons)
 
 ```
+
+  
+```{r Turnaround-times-title4, results='asis', eval=params$apdf == "Y", echo = FALSE}
+
+cat("### Share of GTO (Ground Time Overshoot) (Source: APDF)")
+
+```
+
+
+```{r ground-time-overshoot, results='asis', eval=params$apdf == "Y", echo = FALSE}
+
+TURN_OVER <- params$turn_new %>%
+    select(YEAR, MONTH_NUM, AVG_OVER)
+
+button_list <- lapply(
+  1:length(filter_years),
+  function(x) {
+    list(
+      method = "restyle",
+      args = list("transforms[0].value", filter_years[x]),
+      label = filter_years[x]
+    )
+  }
+)
+
+button_type_list <- list(
+  buttons   = button_list,
+  type      = "buttons",
+  bgcolor   = "#c3c1e8",
+  active    = length(filter_years) - 1,
+  direction = "right",
+  xref      = "paper",
+  x         = 0.3,
+  xanchor   = "left",
+  yref      = "paper",
+  y         = 1.2,
+  yanchor   = "bottom"
+)
+
+plot_ly(TURN_OVER, 
+        x           = ~MONTH_NUM, 
+        y           = ~AVG_OVER*100, 
+        customdata  = ~YEAR, 
+        marker = list(color = 'rgb(106, 168, 82)'),
+        hovertemplate = "%{y:.1f}%",
+        type        = "bar",
+        name = '',
+        transforms  = list(list(type     = 'filter',
+                               target    = "customdata",
+                               operation = '=',
+                               value     = max_year)
+                          )
+        ) %>% 
+  layout(barmode     = 'group',
+         hovermode   = "x unified",
+         xaxis       = tick_yr_no_title,
+         yaxis       = list( title="Share of GTO (Ground Time Overshot)",
+                             titlefont = list(size = 11),
+                             ticksuffix = "%",  
+                             range = c(0, 100)
+                             ),
+         updatemenus = list( button_type_list ),
+         showlegend = FALSE
+         ) %>% 
+  config( displaylogo = FALSE,
+          modeBarButtonsToRemove = config_bar_remove_buttons)
+```
+
+
 
 # About
 
