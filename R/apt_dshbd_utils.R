@@ -221,7 +221,7 @@ prepare_params <- function(apt_icao)
                 name      = pick_apt_name(   APT_DF,      .apt = apt_icao),
                 state     = pick_state_name( APT_DF,      .apt = apt_icao),
                 apdf      = pick_apt_apdf(   APT_DF,      .apt = apt_icao),
-                punc      = "N",
+                punc      = pick_apt_apdf(   APT_DF,      .apt = apt_icao),
                 #
                 config    = filter_df_by_apt(CONFIG_DF,   .apt = apt_icao),
                 #

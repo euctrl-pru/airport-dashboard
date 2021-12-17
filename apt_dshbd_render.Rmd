@@ -2087,14 +2087,14 @@ plot_ly(MED_CDO_CCO_ALT_AVG_TIME_LVL_PLOT,
 
 # Punctuality
 
-```{r punctuality-data-check, results='asis', eval=params$punc == "Y"}
+```{r punctuality-data-check, results='asis', eval=params$punc != "Y"}
 
-cat("
+cat("<center>
 Analyses on punctuality are only available for airports providing the required data 
 using the Airport Operator Data Flow (APDF).
 
-If you belong to the airport and would like to implement such data flow, please contact DANSAP@eurocontrol.int")
-  
+If you belong to the airport and would like to implement such data flow, please contact DANSAP@eurocontrol.int </center>")
+
 ```
 
   
@@ -4292,6 +4292,7 @@ cat("## Row -----------------------------------------------------------")
 
 ```
 
+<!--
   
 ```{r Turnaround-times-title3, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
@@ -4427,7 +4428,7 @@ plot_ly(TURN_OVER,
           modeBarButtonsToRemove = config_bar_remove_buttons)
 ```
 
-
+-->
 
 # About
 
