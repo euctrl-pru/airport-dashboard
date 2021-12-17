@@ -5,6 +5,7 @@ params:
    name:         $name
    state:        $state
    apdf:         $apdf   
+   punc:         $punc   
    config:       $config
    ldgsum:       $ldgsum
    latest:       $latest
@@ -1075,11 +1076,12 @@ if (nrow(params$atfm) > 0) {
         rangemode   = "tozero"
       ),
       showlegend = TRUE,
-      legend = list(
-        orientation = "h",
-        xanchor="center",
-        x = 0.5
-      ),
+      # legend = list(
+      #   orientation = "h",
+      #   xanchor="center",
+      #   x = 0.5,
+      #   y = -0.2
+      # ),
       updatemenus = list(button_type_list)
     ) %>%
     config(
@@ -2085,7 +2087,7 @@ plot_ly(MED_CDO_CCO_ALT_AVG_TIME_LVL_PLOT,
 
 # Punctuality
 
-```{r punctuality-data-check, results='asis', eval=params$apdf != "Y"}
+```{r punctuality-data-check, results='asis', eval=params$punc == "Y"}
 
 cat("
 Analyses on punctuality are only available for airports providing the required data 
@@ -2096,21 +2098,21 @@ If you belong to the airport and would like to implement such data flow, please 
 ```
 
   
-```{r punctuality-row1, results='asis', eval=params$apdf == "Y", echo = FALSE}
+```{r punctuality-row1, results='asis', eval=params$punc == "Y", echo = FALSE}
 
 cat("## Row -----------------------------------------------------------")
 
 ```
 
   
-```{r punctuality-title1, results='asis', eval=params$apdf == "Y", echo = FALSE}
+```{r punctuality-title1, results='asis', eval=params$punc == "Y", echo = FALSE}
 
 cat("### Annual Departure Punctuality (Source: APDF)")
 
 ```
 
   
-```{r Punctuality-DEP-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
+```{r Punctuality-DEP-YEARLY-LAYOUT, results='asis', eval=params$punc == "Y", echo = FALSE}
 
 pun_col <- c(
   "#1f4e79", # EARLY >30		#rgb 31,78,121
@@ -2193,14 +2195,14 @@ punc_dep_yy_plot %>%
 ```
 
 
-```{r punctuality-title2, results='asis', eval=params$apdf == "Y", echo = FALSE}
+```{r punctuality-title2, results='asis', eval=params$punc == "Y", echo = FALSE}
 
 cat("### Monthly Departure Punctuality (Source: APDF)")
 
 ```
 
 
-```{r Punctuality-DEP-MONHTLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
+```{r Punctuality-DEP-MONHTLY-LAYOUT, results='asis', eval=params$punc == "Y", echo = FALSE}
 
 punc_dep_mm_plot <- params$punc_dep_mm
 
@@ -2316,21 +2318,21 @@ punc_dep_mm_plot %>%
 ```
 
 
-```{r punctuality-row2, results='asis', eval=params$apdf == "Y", echo = FALSE}
+```{r punctuality-row2, results='asis', eval=params$punc == "Y", echo = FALSE}
 
 cat("## Row -----------------------------------------------------------")
 
 ```
 
   
-```{r punctuality-title3, results='asis', eval=params$apdf == "Y", echo = FALSE}
+```{r punctuality-title3, results='asis', eval=params$punc == "Y", echo = FALSE}
 
 cat("### Annual Arrival Punctuality (Source: APDF)")
 
 ```
 
 
-```{r Punctuality-ARR-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
+```{r Punctuality-ARR-YEARLY-LAYOUT, results='asis', eval=params$punc == "Y", echo = FALSE}
 
 punc_arr_yy_plot <- params$punc_arr_yy
 
@@ -2406,14 +2408,14 @@ punc_arr_yy_plot %>%
 ```
 
 
-```{r punctuality-title4, results='asis', eval=params$apdf == "Y", echo = FALSE}
+```{r punctuality-title4, results='asis', eval=params$punc == "Y", echo = FALSE}
 
 cat("### Monthly Arrival Punctuality (Source: APDF)")
 
 ```
 
 
-```{r Punctuality-ARR-MONHTLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
+```{r Punctuality-ARR-MONHTLY-LAYOUT, results='asis', eval=params$punc == "Y", echo = FALSE}
 
 punc_arr_mm_plot <- params$punc_arr_mm
 
@@ -4466,7 +4468,7 @@ All other airport related data is collected through the Airport Operator Data Fl
 **Data and metrics are shown based on availability at the moment of publication**    
 
 * Traffic data comprises all IFR flown flight plans for the airport (arrivals and departures) based on NM data.
-*	ATFM delay data captures the arrival ATFM delay triggered by constraints at the airport based on NM data.
+*	ATFM delay data captures the arrival ATFM delay triggered by constraints at the airport based on NM data (_no post ops adjustments_).
 *	ATFM delays are grouped according to the regulation reason as described in https://ansperformance.eu/definition/atfm-delay-codes/
 * CDO/CCO performance is calculated by identifying level segments during the climb and descent. These level segments are considered to be inefficient. For more information please visit https://ansperformance.eu/efficiency/vfe/
 *	Additional ASMA time measures the difference between an observed travel time elapsing from entering the 40NM radius around the airport to landing. This time is compared against a reference time to the respective entry sector, aircraft type, and landing runway.
