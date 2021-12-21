@@ -501,7 +501,6 @@ PDDLY_MM_DF <- APDF_MM_DF %>%
   ) %>%
   select(AIRPORT, APT_ICAO, YEAR, MONTH_NUM, TOT_DLY_89, TOT_DLY_OTHER, TOT_DLY_UNID)
 
-
 # ..PDDLY YEARLY AVERAGE  ----
 
 #PDDLY_YY_AVG_DF <- APDF_MM_DF %>%
@@ -519,6 +518,99 @@ PDDLY_YY_AVG_DF <- APDF_MM_DF %>%
 # ..PDDLY MONTLHY AVERAGE  ----
 PDDLY_MM_AVG_DF <- APDF_MM_DF %>%
   select(AIRPORT, APT_ICAO, YEAR, MONTH_NUM, DLY_89_PER_FL_MM) #%>%
+
+
+
+# ****************************----
+# APDF DELAY GROUP DATA ----
+# ****************************----
+
+APDF_DELAY_DF <- read_csv2(here("data","APT_DSHBD_DELAY_DATA.csv"))
+
+# ..DLY YEARLY DATA ----
+DLY_YY_DF <- APDF_DELAY_DF %>%
+  select( # ..........
+    AIRPORT,
+    YEAR,
+    MONTH,
+    # ..........
+    AIRLINE,
+    WEATHER,
+    EN_ROUTE,
+    SECURITY_AND_IMMIGRATION,
+    DL_AIRPORT,
+    REACTIONARY,
+    MISCELLANEOUS,
+    UNIDENTIFIED,
+    OTHER    
+    # ..........
+  ) %>%
+  group_by(AIRPORT, YEAR) %>%
+  summarise(
+    TOT_DLY_AIRLINE       = sum(AIRLINE, na.rm = TRUE),
+    TOT_DLY_WEATHER       = sum(WEATHER, na.rm = TRUE),
+    TOT_DLY_EN_ROUTE      = sum(EN_ROUTE, na.rm = TRUE),
+    TOT_DLY_SECURITY_AND_IMMIGRATION = sum(SECURITY_AND_IMMIGRATION, na.rm = TRUE),
+    TOT_DLY_AIRPORT       = sum(DL_AIRPORT, na.rm = TRUE),
+    TOT_DLY_REACTIONARY   = sum(REACTIONARY, na.rm = TRUE),
+    TOT_DLY_MISCELLANEOUS = sum(MISCELLANEOUS, na.rm = TRUE),
+    TOT_DLY_UNIDENTIFIED  = sum(UNIDENTIFIED, na.rm = TRUE),
+    TOT_DLY_OTHER         = sum(OTHER, na.rm = TRUE)
+  ) %>%
+  ungroup() %>%
+  select(AIRPORT, YEAR, 
+         TOT_DLY_AIRLINE,
+         TOT_DLY_WEATHER,
+         TOT_DLY_EN_ROUTE,
+         TOT_DLY_SECURITY_AND_IMMIGRATION,
+         TOT_DLY_AIRPORT,
+         TOT_DLY_REACTIONARY,
+         TOT_DLY_MISCELLANEOUS,
+         TOT_DLY_UNIDENTIFIED,
+         TOT_DLY_OTHER)
+
+# ..DLY MONTHLY DATA ----
+DLY_MM_DF <- APDF_DELAY_DF %>%
+  select( # ..........
+    AIRPORT,
+    YEAR,
+    MONTH,
+    # ..........
+    AIRLINE,
+    WEATHER,
+    EN_ROUTE,
+    SECURITY_AND_IMMIGRATION,
+    DL_AIRPORT,
+    REACTIONARY,
+    MISCELLANEOUS,
+    UNIDENTIFIED,
+    OTHER    
+  ) %>%
+  mutate(MONTH = as.numeric(MONTH),
+        YEAR =  as.numeric(YEAR))%>%
+  group_by(AIRPORT, YEAR, MONTH) %>%
+  summarise(
+    TOT_DLY_AIRLINE       = sum(AIRLINE, na.rm = TRUE),
+    TOT_DLY_WEATHER       = sum(WEATHER, na.rm = TRUE),
+    TOT_DLY_EN_ROUTE      = sum(EN_ROUTE, na.rm = TRUE),
+    TOT_DLY_SECURITY_AND_IMMIGRATION = sum(SECURITY_AND_IMMIGRATION, na.rm = TRUE),
+    TOT_DLY_AIRPORT       = sum(DL_AIRPORT, na.rm = TRUE),
+    TOT_DLY_REACTIONARY   = sum(REACTIONARY, na.rm = TRUE),
+    TOT_DLY_MISCELLANEOUS = sum(MISCELLANEOUS, na.rm = TRUE),
+    TOT_DLY_UNIDENTIFIED  = sum(UNIDENTIFIED, na.rm = TRUE),
+    TOT_DLY_OTHER         = sum(OTHER, na.rm = TRUE)
+  )  %>%
+  ungroup() %>%
+  select(AIRPORT, YEAR, MONTH,
+         TOT_DLY_AIRLINE,
+         TOT_DLY_WEATHER,
+         TOT_DLY_EN_ROUTE,
+         TOT_DLY_SECURITY_AND_IMMIGRATION,
+         TOT_DLY_AIRPORT,
+         TOT_DLY_REACTIONARY,
+         TOT_DLY_MISCELLANEOUS,
+         TOT_DLY_UNIDENTIFIED,
+         TOT_DLY_OTHER)
 
 
 # ****************************----

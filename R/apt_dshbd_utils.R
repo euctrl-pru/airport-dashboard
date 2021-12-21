@@ -255,6 +255,9 @@ prepare_params <- function(apt_icao)
                 pddly_mm     = filter_df_by_apt(PDDLY_MM_DF    , .apt = apt_icao),
                 pddly_yy_avg = filter_df_by_apt(PDDLY_YY_AVG_DF, .apt = apt_icao),
                 pddly_mm_avg = filter_df_by_apt(PDDLY_MM_AVG_DF, .apt = apt_icao),
+                #                
+                dly_yy    = filter_df_by_apt(DLY_YY_DF    , .apt = apt_icao),
+                dly_mm    = filter_df_by_apt(DLY_MM_DF    , .apt = apt_icao),
                 #
                 turn_yy   = filter_df_by_apt(TURN_YY_DF,  .apt = apt_icao),
                 turn_mm   = filter_df_by_apt(TURN_MM_DF,  .apt = apt_icao),
