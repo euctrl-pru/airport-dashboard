@@ -1815,7 +1815,7 @@ avg_time_lvl_fig=plot_ly(AVG_TIME_LVL_PLOT,
             name = 'Climb (Fuel CCO)') %>%
   add_trace(y = ~AVG_TIME_LVL_DESCENT_BLW_70/60, 
             line = list(color = 'rgb(40, 120, 181)', dash = 'dash'),
-            name = 'Climb (Noise CDO)') %>% 
+            name = 'Descent (Noise CDO)') %>% 
   add_trace(y = ~AVG_TIME_LVL_CLIMB_BLW_100/60, 
             line = list(color = 'rgb(106, 168, 82)', dash = 'dash'),
             name = 'Climb (Noise CCO)') %>% 
@@ -1920,7 +1920,8 @@ plot_ly(MED_CDO_CCO_ALT_PLOT,
          hovermode   = "x unified",
          xaxis       = tick_yr_no_title,
          yaxis       = list( title="Median CDO/CCO altitude (feet)",
-                             titlefont = list(size = 11)),
+                             titlefont = list(size = 11),
+                             range = list(0, 40000)),
          showlegend  = TRUE,
          updatemenus = list( button_type_list )
          ##############################################################################
@@ -1962,7 +1963,7 @@ cat("### Share of CDO/CCO flights (Source: AIU analysis)")
 ```{r Share-unimpeded, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE}
 
 SHARE_CDO_CCO_FLIGHTS_PLOT <- params$cdo_cco %>% 
-    select(YEAR, MONTH_NUM, SHARE_CDO_FLIGHTS, SHARE_CCO_FLIGHTS)
+    select(YEAR, MONTH_NUM, SHARE_CDO_FLIGHTS, SHARE_CDO_FLIGHTS_BLW_70, SHARE_CCO_FLIGHTS, SHARE_CCO_FLIGHTS_BLW_100)
   
 button_list <- lapply(
   1:length(filter_years),
@@ -1993,9 +1994,10 @@ plot_ly(SHARE_CDO_CCO_FLIGHTS_PLOT,
         x = ~MONTH_NUM, 
         y = ~SHARE_CDO_FLIGHTS*100, 
         customdata = ~YEAR, 
-        marker = list(color = 'rgb(40, 120, 181)'),
+        line = list(color = 'rgb(40, 120, 181)'),
         hovertemplate = "%{y:.1f}%",
-        type = 'bar', 
+        type = 'scatter',
+        mode = 'lines', 
         name = 'Descent (Fuel CDO)',
         transforms = list(list(type      = 'filter',
                                target    = "customdata",
@@ -2003,8 +2005,14 @@ plot_ly(SHARE_CDO_CCO_FLIGHTS_PLOT,
                                value     = max_year)
         )) %>% 
   add_trace(y = ~SHARE_CCO_FLIGHTS*100, 
-            marker = list(color = 'rgb(106, 168, 82)'),
+            line = list(color = 'rgb(106, 168, 82)'),
             name = 'Climb (Fuel CCO)') %>%
+  add_trace(y = ~SHARE_CDO_FLIGHTS_BLW_70*100, 
+            line = list(color = 'rgb(40, 120, 181)', dash = 'dash'),
+            name = 'Descent (Noise CDO)') %>% 
+  add_trace(y = ~SHARE_CCO_FLIGHTS_BLW_100*100, 
+            line = list(color = 'rgb(106, 168, 82)', dash = 'dash'),
+            name = 'Climb (Noise CCO)') %>% 
   layout(barmode = 'group',
          hovermode   = "x unified",
          xaxis       = tick_yr_no_title,
