@@ -17,7 +17,7 @@ source(here("R","apt_dshbd_get_data.R"), encoding = "UTF8")
 # source(here("R","generate-apt-layout.R"), encoding = "UTF8")
 
 
-# 3. generate the various aiport HTML pages
+# 3. generate the various airport HTML pages
 source(here("R","apt_dshbd_render.R"), encoding = "UTF8")
 # source(here("R","apt_dshbd_index.R"), encoding = "UTF8")
 
