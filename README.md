@@ -4,25 +4,80 @@ Production repo for PRU airport dashboards published on ansperformance.eu.
 
 For more information contact rainer.koelle@eurocontrol.int.
 
+
+
+# Production
+
+The `master` branch is **PRODUCTION**, i.e. it contains what gets published on the
+Internet.
+
+In particular the `docs` directory contains the generated dashboard pages
+that are automatically served by Netlify at
+
+https://airport-dashboard.netlify.app/
+
+and pointed to by the AIU Portal at
+
+https://ansperformance.eu/dashboard/stakeholder/airport/db/
+
+So be aware that you need to be **CAREFUL** on `master`. 
+
+
+## Concrete steps to publish production
+
+There are 2 possible scenarios:
+
+1. merge from a development branch where `docs` has already been properly
+   generated
+
+1. change directly in master and regenerate the dashboard
+
+
+I would leave 2. for sort of emergency/tiny changes not worth the overhead
+of creating a new branch and develop/PR/test/merge...(even if it is a safer
+way of working.)
+
+Case 1. is more for a release preparation where different
+contributions eventually from different branches have been
+combined for publication in next release.
+
+
 # Development
 
-Development happens in separate branches, i.e. `YYYYMM-release` for a planned
-release in month `MM` of year `YYYY`, while production is in `master`.
+## Development of a feature
 
-You can have a preview of the development branch is you create a pull request
-out of changes pushed there.
+Development of a feature or change in the dashboards can happen in each
+person's favorite branch.
+When the changes are deemed ready for next release they can be merged in the
+relevant release branch.
+
+(The preview possibilities via Netlify described below apply to any branch.)
+
+
+## Development for a release
+
+Development for a release happens in a branch conventionally named like
+`YYYYMM-release` for a planned
+release in month `MM` of year `YYYY`.
+
+You can have a preview of the development branch if you create a [pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests)
+out of changes pushed on the corresponding branch.
 The preview is published automatically via Netlify at a URL like
 
 > `https://deploy-preview-DIGITS--aiu-airports-dashboard.netlify.app/`
 
 for the PR of number `DIGITS`, i.e. 
-https://deploy-preview-1--aiu-airports-dashboard.netlify.app/ for PR #1.
+
+https://deploy-preview-1--aiu-airport-dashboard.netlify.app/
+
+for PR #1.
 
 
 ## Dashboard generation
 
 The dashboard is generated from a templated Rmd.
-As coded in `build.R`, there are potentially few steps to execute:
+As coded in `build.R`, there are potentially few steps to execute
+all coded in that script:
 
 1. cleanup `docs/`: remove everything but (favicons and) `images/` and `index.html`
   
