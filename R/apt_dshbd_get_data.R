@@ -152,6 +152,16 @@ EXPORT_APT_DSHBD_APDF_DATA() %>%
   readr::write_csv2(here::here("data", "APT_DSHBD_APDF_DATA.csv"))
 
 
+
+EXPORT_APT_DSHBD_DELAY_DATA <- function() {
+  QUERY <- "SELECT * FROM PRU_AIRPORT.V_APT_DSHBD_DELAY_DATA"
+  EXPORT_QUERY("PRU_AIRPORT", QUERY)
+}
+
+EXPORT_APT_DSHBD_DELAY_DATA() %>%
+  readr::write_csv2(here::here("data", "APT_DSHBD_DELAY_DATA.csv"))
+
+
 #***********************************************************************
 # ---- APT TURNAROUND  ----
 #***********************************************************************

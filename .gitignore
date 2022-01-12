@@ -1,3 +1,5 @@
+README.html
+
 # exclude the data directory so as to avoid to store the big CSVs
 # exported from the DB
 /data
