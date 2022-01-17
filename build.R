@@ -6,8 +6,10 @@ library(stringr)
 fs::dir_delete(here("docs", "libs"))
 fs::dir_ls(here("docs"), recurse = TRUE) %>%
   as_tibble() %>%
-  filter(str_detect(value, pattern = "images", negate = TRUE),
-    str_detect(value, pattern = "index.html", negate = TRUE)) %>%
+  filter(
+    str_detect(value, pattern = "images", negate = TRUE),
+    str_detect(value, pattern = "index.html", negate = TRUE)
+  ) %>%
   dplyr::pull(value) %>%
   fs::file_delete()
 
