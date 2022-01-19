@@ -18,7 +18,7 @@ fs::dir_ls(here("docs"), recurse = TRUE) %>%
 source(here("R","apt_dshbd_get_data.R"), encoding = "UTF8")
 
 # 2. generate airport layout
-#    NOTE: it doesn't really work because it produces ugly layouts...
+#    TODO: it doesn't really work because it produces ugly layouts...
 # UNCOMMENT  if new airports have been added
 # source(here("R","generate-apt-layout.R"), encoding = "UTF8")
 
