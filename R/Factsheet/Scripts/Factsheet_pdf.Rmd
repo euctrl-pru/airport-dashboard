@@ -1,36 +1,42 @@
 ---
 params:
-  icao:         $icao
-  iata:         $iata
-  name:         $name
-  state:        $state
-  apdf:         $apdf   
-  config:       $config
-  ldgsum:       $ldgsum
-  latest:       $latest
-  tfcvar:       $tfcvar
-  tfc:          $tfc
-  thru:         $thru
-  atfm:         $atfm   
-  slot_yy:      $slot_yy
-  slot_mm:      $slot_mm      
-  punc_dep_yy:  $punc_dep_yy
-  punc_dep_mm:  $punc_dep_mm
-  punc_arr_yy:  $punc_arr_yy
-  punc_arr_mm:  $punc_arr_mm
-  asma_yy:      $asma_yy
-  asma_mm:      $asma_mm
-  txot_yy:      $txot_yy
-  txot_mm:      $txot_mm
-  txin_yy:      $txin_yy
-  txin_mm:      $txin_mm
-  pddly_yy:     $pddly_yy
-  pddly_mm:     $pddly_mm  
-  pddly_yy_avg: $pddly_yy_avg
-  pddly_mm_avg: $pddly_avg
-  turn_yy:      $turn_yy
-  turn_mm:      $turn_mm
-  cdo_cco:      $cdo_cco
+   icao:         $icao
+   iata:         $iata
+   name:         $name
+   state:        $state
+   apdf:         $apdf   
+   punc:         $punc   
+   config:       $config
+   ldgsum:       $ldgsum
+   latest:       $latest
+   tfcvar:       $tfcvar
+   tfc:          $tfc
+   market:       $market
+   thru:         $thru
+   atfm:         $atfm   
+   slot_yy:      $slot_yy
+   slot_mm:      $slot_mm      
+   punc_dep_yy:  $punc_dep_yy
+   punc_dep_mm:  $punc_dep_mm
+   punc_arr_yy:  $punc_arr_yy
+   punc_arr_mm:  $punc_arr_mm
+   asma_yy:      $asma_yy
+   asma_mm:      $asma_mm
+   txot_yy:      $txot_yy
+   txot_mm:      $txot_mm
+   txin_yy:      $txin_yy
+   txin_mm:      $txin_mm
+   pddly_yy:     $pddly_yy
+   pddly_mm:     $pddly_mm  
+   pddly_yy_avg: $pddly_yy_avg
+   pddly_mm_avg: $pddly_avg
+   dly_yy:       $dly_yy
+   dly_mm:       $dly_mm
+   turn_yy:      $turn_yy
+   turn_mm:      $turn_mm
+   turn_new:     $turn_new
+   cdo_cco:      $cdo_cco
+   
 title: "`r paste0('Factsheet for ', params$icao, ' (', params$name, ')')`"
 author: Aviation Intelligence Unit, EUROCONTROL
 date: "`r format(Sys.time(), '%d/%m/%Y')`" 
@@ -52,7 +58,7 @@ header-includes:
   - \usepackage{titling}
   - \pretitle{\begin{center}
   - \posttitle{\end{center}}
-    \includegraphics[width=2in,height=2in]{G:/HQ/dgof-pru/Project/Vertical_flight_efficiency/2015/airport-dashboard/R/factsheet/Figures/ECTL_logo.png}\LARGE\\}
+    \includegraphics[width=2in,height=2in]{G:/HQ/dgof-pru/Project/Vertical_flight_efficiency/2015/airport-dashboard/R/Factsheet/Figures/ECTL_logo}\LARGE\\}
 urlcolor: blue
 subparagraph: yes
 ---
@@ -216,9 +222,9 @@ RWY_CONFIG <- params$config %>%
 RWY_CONFIG$ITEM[1] <- "Configurations in 2019"
 
 ID_TBL <- ID_TBL %>%
-  bind_rows(RWY_CONFIG)
+  rbind(RWY_CONFIG)
 
-pander(ID_TBL, cols = NULL)
+pander(RWY_CONFIG, cols = NULL)
 
 ```
 
@@ -260,7 +266,7 @@ source(here("R", "Factsheet", "Scripts", "Fig_Monthly_mvmts_airport.R"), encodin
 source(here("R", "Factsheet", "Scripts", "Fig_Market_segments_airport.R"), encoding = "UTF8")
 Traffic_layout2<<-c(0.4, 0.6)
 Traffic_height2<<-100
-source(here("R", "Factsheet", "Scripts", "Fig_Mvmts_country_airports.R"), encoding = "UTF8")
+source(here("R", "Factsheet", "Scripts", "Fig_Mvmts_country_airports_treemap.R"), encoding = "UTF8")
 
 Traffic_layout3<<-1
 Traffic_height3<<-100
@@ -306,7 +312,7 @@ include_graphics(here("R", "Factsheet", "Figures", paste0("Monthly_mvmts_", para
 
 ```{r Hourly-throughput, echo=FALSE, fig.align='center', out.height=paste0(Traffic_height3, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Hourly_throughput_", params$icao, ".png")))
+include_graphics(here("R", "Factsheet", "Figures", paste0("Monthly_mvmts_", params$icao, ".png")))
 
 ```
 

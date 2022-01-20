@@ -19,7 +19,7 @@ if (nrow(mvts_country_apts1)>6) {
   
 }
 
-mvts_country_apts=mvts_country_apts%>% 
+mvts_country_apts=mvts_country_apts %>% 
   mutate(NBR_MVMTS=as.numeric(NBR_MVMTS),
          fraction=NBR_MVMTS/sum(NBR_MVMTS),
          label = paste0(AIRPORT, "\n", round(fraction*100), "%"),
