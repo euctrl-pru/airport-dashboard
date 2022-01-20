@@ -47,6 +47,10 @@ TFC_VAR_DF <- TFC_VAR_DF %>%
   ) %>%
   select(APT_ICAO, ARP_NAME, DAY, FLTS, FLTS_2019, MOV_AVG_WK)
 
+# TRAFFIC MARKET ----
+
+TFC_MKT_DF <- read_csv2(here("data", "APT_DSHBD_TRAFFIC_MARKET.csv"))
+
 
 # THROUGHPUT ----
 
@@ -497,12 +501,17 @@ PDDLY_MM_DF <- APDF_MM_DF %>%
   ) %>%
   select(AIRPORT, APT_ICAO, YEAR, MONTH_NUM, TOT_DLY_89, TOT_DLY_OTHER, TOT_DLY_UNID)
 
-
 # ..PDDLY YEARLY AVERAGE  ----
+
+#PDDLY_YY_AVG_DF <- APDF_MM_DF %>%
+#  select(AIRPORT, APT_ICAO, YEAR, DLY_89_PER_FL_YY) %>%
+#  group_by(AIRPORT, APT_ICAO, YEAR) %>%
+#  summarise( DLY_89_PER_FL_YY = mean(DLY_89_PER_FL_YY)) %>%
+#  ungroup()
 PDDLY_YY_AVG_DF <- APDF_MM_DF %>%
-  select(AIRPORT, APT_ICAO, YEAR, DLY_89_PER_FL_YY) %>%
-  group_by(AIRPORT, APT_ICAO, YEAR) %>%
-  summarise( DLY_89_PER_FL_YY = mean(DLY_89_PER_FL_YY)) %>%
+  select(AIRPORT, APT_ICAO, YEAR, DLY_89_PER_FL_MM)%>%
+  group_by(AIRPORT, APT_ICAO, YEAR)%>%
+  summarise( DLY_89_PER_FL_YY = mean(DLY_89_PER_FL_MM, na.rm = TRUE)) %>%
   ungroup()
 
 
@@ -511,12 +520,104 @@ PDDLY_MM_AVG_DF <- APDF_MM_DF %>%
   select(AIRPORT, APT_ICAO, YEAR, MONTH_NUM, DLY_89_PER_FL_MM) #%>%
 
 
+
+# ****************************----
+# APDF DELAY GROUP DATA ----
+# ****************************----
+
+APDF_DELAY_DF <- read_csv2(here("data","APT_DSHBD_DELAY_DATA.csv"))
+
+# ..DLY YEARLY DATA ----
+DLY_YY_DF <- APDF_DELAY_DF %>%
+  select( # ..........
+    AIRPORT,
+    YEAR,
+    MONTH,
+    # ..........
+    AIRLINE,
+    WEATHER,
+    EN_ROUTE,
+    SECURITY_AND_IMMIGRATION,
+    DL_AIRPORT,
+    REACTIONARY,
+    MISCELLANEOUS,
+    UNIDENTIFIED,
+    OTHER    
+    # ..........
+  ) %>%
+  group_by(AIRPORT, YEAR) %>%
+  summarise(
+    TOT_DLY_AIRLINE       = sum(AIRLINE, na.rm = TRUE),
+    TOT_DLY_WEATHER       = sum(WEATHER, na.rm = TRUE),
+    TOT_DLY_EN_ROUTE      = sum(EN_ROUTE, na.rm = TRUE),
+    TOT_DLY_SECURITY_AND_IMMIGRATION = sum(SECURITY_AND_IMMIGRATION, na.rm = TRUE),
+    TOT_DLY_AIRPORT       = sum(DL_AIRPORT, na.rm = TRUE),
+    TOT_DLY_REACTIONARY   = sum(REACTIONARY, na.rm = TRUE),
+    TOT_DLY_MISCELLANEOUS = sum(MISCELLANEOUS, na.rm = TRUE),
+    TOT_DLY_UNIDENTIFIED  = sum(UNIDENTIFIED, na.rm = TRUE),
+    TOT_DLY_OTHER         = sum(OTHER, na.rm = TRUE)
+  ) %>%
+  ungroup() %>%
+  select(AIRPORT, YEAR, 
+         TOT_DLY_AIRLINE,
+         TOT_DLY_WEATHER,
+         TOT_DLY_EN_ROUTE,
+         TOT_DLY_SECURITY_AND_IMMIGRATION,
+         TOT_DLY_AIRPORT,
+         TOT_DLY_REACTIONARY,
+         TOT_DLY_MISCELLANEOUS,
+         TOT_DLY_UNIDENTIFIED,
+         TOT_DLY_OTHER)
+
+# ..DLY MONTHLY DATA ----
+DLY_MM_DF <- APDF_DELAY_DF %>%
+  select( # ..........
+    AIRPORT,
+    YEAR,
+    MONTH,
+    # ..........
+    AIRLINE,
+    WEATHER,
+    EN_ROUTE,
+    SECURITY_AND_IMMIGRATION,
+    DL_AIRPORT,
+    REACTIONARY,
+    MISCELLANEOUS,
+    UNIDENTIFIED,
+    OTHER    
+  ) %>%
+  mutate(MONTH = as.numeric(MONTH),
+        YEAR =  as.numeric(YEAR))%>%
+  group_by(AIRPORT, YEAR, MONTH) %>%
+  summarise(
+    TOT_DLY_AIRLINE       = sum(AIRLINE, na.rm = TRUE),
+    TOT_DLY_WEATHER       = sum(WEATHER, na.rm = TRUE),
+    TOT_DLY_EN_ROUTE      = sum(EN_ROUTE, na.rm = TRUE),
+    TOT_DLY_SECURITY_AND_IMMIGRATION = sum(SECURITY_AND_IMMIGRATION, na.rm = TRUE),
+    TOT_DLY_AIRPORT       = sum(DL_AIRPORT, na.rm = TRUE),
+    TOT_DLY_REACTIONARY   = sum(REACTIONARY, na.rm = TRUE),
+    TOT_DLY_MISCELLANEOUS = sum(MISCELLANEOUS, na.rm = TRUE),
+    TOT_DLY_UNIDENTIFIED  = sum(UNIDENTIFIED, na.rm = TRUE),
+    TOT_DLY_OTHER         = sum(OTHER, na.rm = TRUE)
+  )  %>%
+  ungroup() %>%
+  select(AIRPORT, YEAR, MONTH,
+         TOT_DLY_AIRLINE,
+         TOT_DLY_WEATHER,
+         TOT_DLY_EN_ROUTE,
+         TOT_DLY_SECURITY_AND_IMMIGRATION,
+         TOT_DLY_AIRPORT,
+         TOT_DLY_REACTIONARY,
+         TOT_DLY_MISCELLANEOUS,
+         TOT_DLY_UNIDENTIFIED,
+         TOT_DLY_OTHER)
+
+
 # ****************************----
 # APDF TURNAROUND DATA ----
 # ****************************----
 
 APDF_TURN_DF <- read_csv2(here("data","APT_DSHBD_TURNAROUND.csv"))
-
 
 # ..TURN YEARLY DATA ----
 TURN_YY_DF <- APDF_TURN_DF %>%
@@ -528,6 +629,7 @@ TURN_YY_DF <- APDF_TURN_DF %>%
     AC_CLASS,
     # ..........
     NB_TURN_ARROUND,
+    NB_OVERSHOOT,
     TOT_SDTT_MIN,
     TOT_ACTT_MIN,
     TOT_ADTT_MIN
@@ -539,7 +641,8 @@ TURN_YY_DF <- APDF_TURN_DF %>%
     TOT_SDTT_MIN = sum(TOT_SDTT_MIN, na.rm = TRUE),
     TOT_ACTT_MIN = sum(TOT_ACTT_MIN, na.rm = TRUE),
     TOT_ADTT_MIN = sum(TOT_ADTT_MIN, na.rm = TRUE),
-    TOT_TURN = sum(NB_TURN_ARROUND, na.rm = TRUE)
+    TOT_TURN     = sum(NB_TURN_ARROUND, na.rm = TRUE),
+    TOT_OVER     = sum(NB_OVERSHOOT, na.rm = TRUE)
   ) %>%
   ungroup() %>%
   mutate(
@@ -547,7 +650,7 @@ TURN_YY_DF <- APDF_TURN_DF %>%
     AVG_ACTT = TOT_ACTT_MIN / TOT_TURN,
     AVG_ADTT = TOT_ADTT_MIN / TOT_TURN
   ) %>%
-  select(AIRPORT, APT_ICAO, YEAR, AC_CLASS, TOT_TURN, AVG_SDTT, AVG_ACTT, AVG_ADTT)
+  select(AIRPORT, APT_ICAO, YEAR, AC_CLASS, TOT_TURN, TOT_OVER, AVG_SDTT, AVG_ACTT, AVG_ADTT)
 
 # ..TURN MONTHLY DATA ----
 TURN_MM_DF <- APDF_TURN_DF %>%
@@ -559,6 +662,7 @@ TURN_MM_DF <- APDF_TURN_DF %>%
     AC_CLASS,
     # ..........
     NB_TURN_ARROUND,
+    NB_OVERSHOOT,    
     TOT_SDTT_MIN,
     TOT_ACTT_MIN,
     TOT_ADTT_MIN
@@ -570,16 +674,56 @@ TURN_MM_DF <- APDF_TURN_DF %>%
     TOT_SDTT_MIN = sum(TOT_SDTT_MIN, na.rm = TRUE),
     TOT_ACTT_MIN = sum(TOT_ACTT_MIN, na.rm = TRUE),
     TOT_ADTT_MIN = sum(TOT_ADTT_MIN, na.rm = TRUE),
-    TOT_TURN = sum(NB_TURN_ARROUND, na.rm = TRUE)
+    TOT_TURN     = sum(NB_TURN_ARROUND, na.rm = TRUE),
+    TOT_OVER     = sum(NB_OVERSHOOT, na.rm = TRUE)
   ) %>%
   ungroup() %>%
   mutate(
     AVG_SDTT = TOT_SDTT_MIN / TOT_TURN,
     AVG_ACTT = TOT_ACTT_MIN / TOT_TURN,
-    AVG_ADTT = TOT_ADTT_MIN / TOT_TURN
+    AVG_ADTT = TOT_ADTT_MIN / TOT_TURN,
+    AVG_OVER = TOT_OVER     / TOT_TURN
   ) %>%
-  select(AIRPORT, APT_ICAO, YEAR, MONTH_NUM, AC_CLASS, TOT_TURN, AVG_SDTT, AVG_ACTT, AVG_ADTT)
+  select(AIRPORT, APT_ICAO, YEAR, MONTH_NUM, AC_CLASS, TOT_TURN, TOT_OVER, AVG_SDTT, AVG_ACTT, AVG_ADTT, AVG_OVER)
 
+
+# ..TURN NEW DATA ----
+TURN_NEW_DF <- APDF_TURN_DF %>%
+  filter(AC_CLASS %in% c("H", "MJ", "MT"))
+
+TURN_NEW_DF <- TURN_NEW_DF %>%  
+  select( # ..........
+    AIRPORT,
+    APT_ICAO,
+    YEAR,
+    MONTH_NUM,
+    # ..........
+    NB_TURN_ARROUND,
+    NB_OVERSHOOT,    
+    TOT_SDTT_MIN,
+    TOT_ACTT_MIN,
+    TOT_ADTT_MIN,
+    TOT_ERTT_MIN
+    # ..........
+  ) %>%
+  group_by(AIRPORT, APT_ICAO, YEAR, MONTH_NUM) %>%
+  summarise(
+    TOT_SDTT_MIN = sum(TOT_SDTT_MIN, na.rm = TRUE),
+    TOT_ACTT_MIN = sum(TOT_ACTT_MIN, na.rm = TRUE),
+    TOT_ADTT_MIN = sum(TOT_ADTT_MIN, na.rm = TRUE),
+    TOT_ERTT_MIN = sum(TOT_ERTT_MIN, na.rm = TRUE),
+    TOT_TURN     = sum(NB_TURN_ARROUND, na.rm = TRUE),
+    TOT_OVER     = sum(NB_OVERSHOOT, na.rm = TRUE)
+  ) %>%
+  ungroup() %>%
+  mutate(
+    AVG_SDTT = TOT_SDTT_MIN / TOT_TURN,
+    AVG_ACTT = TOT_ACTT_MIN / TOT_TURN,
+    AVG_ADTT = TOT_ADTT_MIN / TOT_TURN,
+    AVG_ERTT = TOT_ERTT_MIN / TOT_TURN,
+    AVG_OVER = TOT_OVER     / TOT_TURN
+  ) %>%
+  select(AIRPORT, APT_ICAO, YEAR, MONTH_NUM, TOT_TURN, TOT_OVER, AVG_SDTT, AVG_ACTT, AVG_ADTT, AVG_ERTT, AVG_OVER)
 
 
 # ****************************----
@@ -589,14 +733,20 @@ TURN_MM_DF <- APDF_TURN_DF %>%
 CDO_CCO_DF <- read_csv2(here("data","APT_DSHBD_CDO_CCO.csv")) %>%
   arrange(YEAR, MONTH_NUM, APT_ICAO) %>% 
   select(YEAR, MONTH_NUM, APT_ICAO,
-         NBR_FLIGHTS_DESCENT, TOT_TIME_LEVEL_SECONDS_DESCENT, MEDIAN_CDO_ALT, NBR_CDO_FLIGHTS,
-         NBR_FLIGHTS_CLIMB, TOT_TIME_LEVEL_SECONDS_CLIMB, MEDIAN_CCO_ALT, NBR_CCO_FLIGHTS) %>% 
+         NBR_FLIGHTS_DESCENT, TOT_TIME_LEVEL_SECONDS_DESCENT, TOT_TIME_LEVEL_SEC_DESC_BLW_70,
+         MEDIAN_CDO_ALT, NBR_CDO_FLIGHTS, NBR_CDO_FLIGHTS_BELOW_7000,
+         NBR_FLIGHTS_CLIMB, TOT_TIME_LEVEL_SECONDS_CLIMB, TOT_TIME_LVL_SEC_CLIMB_BLW_100,
+         MEDIAN_CCO_ALT, NBR_CCO_FLIGHTS, NBR_CCO_FLIGHTS_BELOW_10000) %>% 
   mutate(AVG_TIME_LVL_DESCENT=TOT_TIME_LEVEL_SECONDS_DESCENT/NBR_FLIGHTS_DESCENT,
+         AVG_TIME_LVL_DESCENT_BLW_70=TOT_TIME_LEVEL_SEC_DESC_BLW_70/NBR_FLIGHTS_DESCENT,
          SHARE_CDO_FLIGHTS=NBR_CDO_FLIGHTS/NBR_FLIGHTS_DESCENT,
+         SHARE_CDO_FLIGHTS_BLW_70=NBR_CDO_FLIGHTS_BELOW_7000/NBR_FLIGHTS_DESCENT,
          AVG_TIME_LVL_CLIMB=TOT_TIME_LEVEL_SECONDS_CLIMB/NBR_FLIGHTS_CLIMB,
-         SHARE_CCO_FLIGHTS=NBR_CCO_FLIGHTS/NBR_FLIGHTS_CLIMB) %>% 
+         AVG_TIME_LVL_CLIMB_BLW_100=TOT_TIME_LVL_SEC_CLIMB_BLW_100/NBR_FLIGHTS_CLIMB,
+         SHARE_CCO_FLIGHTS=NBR_CCO_FLIGHTS/NBR_FLIGHTS_CLIMB,
+         SHARE_CCO_FLIGHTS_BLW_100=NBR_CCO_FLIGHTS_BELOW_10000/NBR_FLIGHTS_CLIMB) %>% 
   select(AIRPORT=APT_ICAO, YEAR, MONTH_NUM,
-         AVG_TIME_LVL_DESCENT, MEDIAN_CDO_ALT, SHARE_CDO_FLIGHTS,
-         AVG_TIME_LVL_CLIMB, MEDIAN_CCO_ALT, SHARE_CCO_FLIGHTS)
+         AVG_TIME_LVL_DESCENT, AVG_TIME_LVL_DESCENT_BLW_70, MEDIAN_CDO_ALT, SHARE_CDO_FLIGHTS, SHARE_CDO_FLIGHTS_BLW_70,
+         AVG_TIME_LVL_CLIMB, AVG_TIME_LVL_CLIMB_BLW_100, MEDIAN_CCO_ALT, SHARE_CCO_FLIGHTS, SHARE_CCO_FLIGHTS_BLW_100)
 
 
