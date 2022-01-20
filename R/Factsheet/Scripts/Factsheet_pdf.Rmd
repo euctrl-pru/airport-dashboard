@@ -222,7 +222,7 @@ RWY_CONFIG <- params$config %>%
 RWY_CONFIG$ITEM[1] <- "Configurations in 2019"
 
 ID_TBL <- ID_TBL %>%
-  rbind(RWY_CONFIG)
+  bind_rows(RWY_CONFIG)
 
 pander(RWY_CONFIG, cols = NULL)
 
