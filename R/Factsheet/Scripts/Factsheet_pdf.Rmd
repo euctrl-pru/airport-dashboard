@@ -106,6 +106,53 @@ append_date_suffix <- function(nbr){
 
 ```
 
+```{r plotly-utility}
+tick_yr <- list(
+  dtick = 1,
+  ticktext = list(
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  ),
+  tickvals = list(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+  tickmode = "array",
+  range = c(0.5, 12.5)
+)
+
+tick_yr_no_title <- list(
+  title = "",
+  dtick = 1,
+  ticktext = list(
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  ),
+  tickvals = list(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+  tickmode = "array",
+  range = c(0.5, 12.5)
+)
+
+pick_mth <- c(
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+)
+
+config_bar_remove_buttons <- c(
+  "sendDataToCloud",
+  "autoScale2d",
+  "select2d",
+  "lasso2d",
+  "pan2d",
+  "zoom2d",
+  "zoomIn2d",
+  "zoomOut2d",
+  "zoomInGeo",
+  "zoomOutGeo",
+  "hoverClosestCartesian",
+  "hoverCompareCartesian",
+  "toggleSpikelines",
+  "drawrect"
+)
+```
+
 ```{r Gen-info, include=FALSE}
 
 Last_complete_year<<-2020
@@ -267,9 +314,10 @@ source(here("R", "Factsheet", "Scripts", "Fig_Market_segments_airport.R"), encod
 Traffic_layout2<<-c(0.4, 0.6)
 Traffic_height2<<-100
 source(here("R", "Factsheet", "Scripts", "Fig_Mvmts_country_airports_treemap.R"), encoding = "UTF8")
-
+# source(here("R", "Factsheet", "Scripts", "Fig_Flights_moving_avg.R"), encoding = "UTF8")
 Traffic_layout3<<-1
 Traffic_height3<<-100
+source(here("R", "Factsheet", "Scripts", "Fig_Avg_weekday_hourly_throughput.R"), encoding = "UTF8", local = TRUE)
 
 ```
 
@@ -312,7 +360,7 @@ include_graphics(here("R", "Factsheet", "Figures", paste0("Monthly_mvmts_", para
 
 ```{r Hourly-throughput, echo=FALSE, fig.align='center', out.height=paste0(Traffic_height3, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Monthly_mvmts_", params$icao, ".png")))
+include_graphics(here("R", "Factsheet", "Figures", paste0("Avg_weekday_hourly_throughput_", params$icao, ".png")))
 
 ```
 
