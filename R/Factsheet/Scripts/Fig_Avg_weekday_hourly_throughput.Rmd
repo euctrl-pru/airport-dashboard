@@ -1,4 +1,6 @@
 
+```{r Avg-weekday-hourly-throughput-plotly}
+
 thru <- params$thru %>% # pack_thru(THRU_DF, "EBBR")
   filter(
     TIME >= hm("05:55"),
@@ -111,10 +113,13 @@ thru %>%
     modeBarButtonsToRemove = config_bar_remove_buttons
   )
 
+```
+
+```{r Avg-weekday-hourly-throughput-ggplot, include=FALSE}
 
 # Factsheet figure
 
-phase_lbl2  <- c(  "Departures",  "Arrivals",  "Total",  "Peak Service Rate\n(2016-2021)")
+phase_lbl2  <- c("Departures", "Arrivals", "Total", "Peak Service Rate\n(2016-2021)")
 
 mvts_pm_fig = ggplot(mutate(thru, PHASE = factor(PHASE,
                                                  levels = phase_grps,
@@ -134,3 +139,5 @@ mvts_pm_fig = ggplot(mutate(thru, PHASE = factor(PHASE,
   labs(x="", y="Average Throughput\n[flights/hour]")
 ggsave(here("R", "Factsheet", "Figures", paste0("Avg_weekday_hourly_throughput_", params$icao, ".png")), 
        width = Traffic_layout3[1]*Page_width, height = Traffic_height3, units = "cm", dpi=100, limitsize = FALSE)
+
+```
