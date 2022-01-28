@@ -1,6 +1,13 @@
 
-share_market <- filter(TFC_MKT_DF, AIRPORT==Airport) %>%
-  filter(YEAR == Last_complete_year) %>%
+```{r Market-segment-plotly}
+
+market_max_year <- params$market %>%
+  pull(YEAR) %>%
+  max() %>%
+  unique()
+
+share_market <- params$market %>%
+  filter(YEAR == market_max_year) %>%
   group_by(RULE_NAME) %>%
   summarise(
     FLT_TOT = sum(NB_FLIGHT, na.rm = TRUE)
@@ -9,7 +16,40 @@ share_market <- filter(TFC_MKT_DF, AIRPORT==Airport) %>%
   mutate(
     FLIGHT_TOT   = sum(FLT_TOT, na.rm = TRUE),
     FLIGHT_SHARE = round(FLT_TOT / FLIGHT_TOT, 2),
-    label = paste0(RULE_NAME, "\n", FLIGHT_SHARE*100, "%"))
+    LABELS       = paste0(RULE_NAME, "<br>", FLIGHT_SHARE, "%"),
+    label        = paste0(RULE_NAME, "\n", FLIGHT_SHARE*100, "%")
+  ) 
+# %>%
+# filter(FLIGHT_SHARE > 0)
+
+center_text <- paste0("<b>", market_max_year, "</b>")
+
+share_market %>%
+  plot_ly(
+    labels = ~RULE_NAME,
+    values = ~FLIGHT_SHARE
+  ) %>%
+  add_pie(
+    hole         = 0.4,
+    textposition = "outside"
+  ) %>%
+  add_annotations(
+    text      = center_text,
+    font      = list(size = 18),
+    x         = 0.5,
+    y         = 0.5,
+    showarrow = FALSE
+  ) %>%
+  config(
+    displaylogo = FALSE,
+    modeBarButtonsToRemove = config_bar_remove_buttons
+  )
+
+```
+
+```{r Market-segment-ggplot, include=FALSE}
+
+# Factsheet figure
 
 if (nrow(share_market)>1) {
   share_market_fig=ggplot(share_market, aes(area = FLT_TOT, fill = RULE_NAME, label = label)) +
@@ -30,5 +70,7 @@ if (nrow(share_market)>1) {
     theme(legend.position = "none")
 }
 
-ggsave(here("R", "Factsheet", "Figures", paste0("Market_segments_", Airport, ".png")), 
+ggsave(here("R", "Factsheet", "Figures", paste0("Market_segments_", params$icao, ".png")), 
        width = Traffic_layout1[3]*Page_width, height = Traffic_height1, units = "cm", dpi=100, limitsize = FALSE)
+
+```

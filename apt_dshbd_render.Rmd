@@ -68,6 +68,7 @@ library(plotly)
 library(magick)
 library(here)
 library(stringr)
+library(treemapify)
 ```
 
 ```{r plotly-utility}
@@ -417,50 +418,7 @@ pbox_group
 
 ### Share of Market Segment (Source: Network Manager)
 
-```{r market-segment}
-
-market_max_year <- params$market %>%
-    pull(YEAR) %>%
-    max() %>%
-    unique()
-
-  share_market <- params$market %>%
-    filter(YEAR == market_max_year) %>%
-    group_by(RULE_NAME) %>%
-    summarise(
-      FLT_TOT = sum(NB_FLIGHT, na.rm = TRUE)
-    ) %>%
-    ungroup() %>%
-    mutate(
-      FLIGHT_TOT   = sum(FLT_TOT, na.rm = TRUE),
-      FLIGHT_SHARE = round(FLT_TOT / FLIGHT_TOT, 2),
-      LABELS    = paste0(RULE_NAME, "<br>", FLIGHT_SHARE, "%")
-    ) 
-   # %>%
-   # filter(FLIGHT_SHARE > 0)
-
-  center_text <- paste0("<b>", market_max_year, "</b>")
-
-  share_market %>%
-    plot_ly(
-      labels = ~RULE_NAME,
-      values = ~FLIGHT_SHARE
-    ) %>%
-    add_pie(
-      hole         = 0.4,
-      textposition = "outside"
-    ) %>%
-    add_annotations(
-      text      = center_text,
-      font      = list(size = 18),
-      x         = 0.5,
-      y         = 0.5,
-      showarrow = FALSE
-    ) %>%
-    config(
-      displaylogo = FALSE,
-      modeBarButtonsToRemove = config_bar_remove_buttons
-    )
+```{r market-segment, child='R/Factsheet/Scripts/Fig_Market_segment.Rmd'}
 
 ```
 
