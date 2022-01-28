@@ -342,77 +342,8 @@ if (nrow(params$tfcvar) < 1) {
 
 ### Monthly Traffic (Source: Network Manager)
 
-```{r monthly-traffic}
-mvts_pm <- params$tfc %>%
-  select(YEAR, MONTH_NUM, FLT_TOT) %>%
-  group_by(YEAR, MONTH_NUM) %>%
-  summarise(FLT_TOT = sum(FLT_TOT, na.rm = TRUE)) %>%
-  ungroup()
+```{r monthly-traffic, child='R/Factsheet/Scripts/Fig_Monthly_traffic.Rmd'}
 
-mvts_pm_max <- mvts_pm %>% filter(FLT_TOT == max(FLT_TOT))
-
-msg <- paste0(
-  "<b>Busiest month <br>(last 5 years): <br>",
-  mvts_pm_max$MONTH_NUM, "-",
-  mvts_pm_max$YEAR,
-  "<br>", mvts_pm_max$FLT_TOT, "</b>"
-)
-
-xax <- tick_yr_no_title
-
-yax <- list(
-  title = "Number of flights",
-  rangemode = "tozero",
-  titlefont = list(size = 11)
-)
-
-mvts_pm <- mvts_pm %>%
-  mutate(YEAR = as.character(YEAR))
-
-mvts_pm %>%
-  plot_ly(
-    x = ~MONTH_NUM,
-    y = ~FLT_TOT,
-    group = ~YEAR,
-    color = ~YEAR
-  ) %>%
-  add_trace(
-    type = "scatter",
-    mode = "markers+lines",
-    hovertemplate = "%{y:.r}"
-  ) %>%
-  add_annotations(
-    text = msg,
-    x = mvts_pm_max$MONTH_NUM,
-    y = mvts_pm_max$FLT_TOT,
-    showarrow = TRUE,
-    ax = 50,
-    ay = 100
-  ) %>%
-  layout(
-    xaxis = xax,
-    yaxis = yax,
-    hovermode = "x unified"
-    ##############################################################################
-    # , annotations = list(
-    #   x = 1,
-    #   y = -0.1,
-    #   text = "Source: Network Manager",
-    #   showarrow = FALSE,
-    #   xref = "paper",
-    #   yref = "paper",
-    #   xanchor = "right",
-    #   yanchor = "auto",
-    #   xshift = 0,
-    #   yshift = -5,
-    #   font = list(size = 12)
-    # )
-    ##############################################################################
-  ) %>%
-  config(
-    displaylogo = FALSE,
-    modeBarButtonsToRemove = config_bar_remove_buttons
-  )
 ```
 
 

@@ -308,8 +308,6 @@ Airport<<-params$icao
 Page_width<<-450
 Traffic_layout1<<-c(0.2, 0.5, 0.3)
 Traffic_height1<<-100
-source(here("R", "Factsheet", "Scripts", "Fig_Total_mvmts_airport.R"), encoding = "UTF8")
-source(here("R", "Factsheet", "Scripts", "Fig_Monthly_mvmts_airport.R"), encoding = "UTF8")
 source(here("R", "Factsheet", "Scripts", "Fig_Market_segments_airport.R"), encoding = "UTF8")
 Traffic_layout2<<-c(0.4, 0.6)
 Traffic_height2<<-100
