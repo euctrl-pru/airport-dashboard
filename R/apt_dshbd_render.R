@@ -5,6 +5,7 @@
 library(here)
 library(dplyr)
 library(lubridate)
+library(scales)
 
 # IMPORTANT: Data frames need to be generated via "apt_dshbd_create_df.R" before execution
 source(here("R","apt_dshbd_create_df.R"), encoding = "UTF8")
