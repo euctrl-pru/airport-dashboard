@@ -306,9 +306,6 @@ Airport<<-params$icao
 
 source(here("R", "Factsheet", "Scripts", "Fig_Mvmts_country_airports_treemap.R"), encoding = "UTF8")
 # source(here("R", "Factsheet", "Scripts", "Fig_Flights_moving_avg.R"), encoding = "UTF8")
-Traffic_layout3<<-1
-Traffic_height3<<-100
-source(here("R", "Factsheet", "Scripts", "Fig_Avg_weekday_hourly_throughput.R"), encoding = "UTF8", local = TRUE)
 
 ```
 
