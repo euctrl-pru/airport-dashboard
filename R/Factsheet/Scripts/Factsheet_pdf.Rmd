@@ -58,7 +58,7 @@ header-includes:
   - \usepackage{titling}
   - \pretitle{\begin{center}
   - \posttitle{\end{center}}
-    \includegraphics[width=2in,height=2in]{G:/HQ/dgof-pru/Project/Vertical_flight_efficiency/2015/airport-dashboard/R/Factsheet/Figures/ECTL_logo}\LARGE\\}
+    \includegraphics[width=2in,height=2in]{G:/HQ/dgof-pru/Project/Vertical_flight_efficiency/2015/airport-dashboard/R/Figures/ECTL_logo}\LARGE\\}
 urlcolor: blue
 subparagraph: yes
 ---
@@ -358,4 +358,29 @@ include_graphics(here("R", "Factsheet", "Figures", paste0("Avg_weekday_hourly_th
 
 
 # Data exchange with EUROCONTROL
+
+
+# Arrival ATFM Delay
+
+\begin{minipage}[t]{`r Arr_ATFM_Delay_layout1[1]`\textwidth}
+```{r Annual_Arr_ATFM_Delay, echo=FALSE, fig.align='center', out.height=paste0(Arr_ATFM_Delay_height1, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Annual_Arr_ATFM_Delay_", params$icao, ".png")))
+
+```
+\end{minipage}
+\begin{minipage}[t]{`r Arr_ATFM_Delay_layout1[2]`\textwidth}
+```{r Monthly_Arr_ATFM_Delay, echo=FALSE, fig.align='center', out.height=paste0(Arr_ATFM_Delay_height1, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Monthly_Arr_ATFM_Delay_", params$icao, ".png")))
+
+```
+\end{minipage}
+\begin{minipage}[t]{`r Arr_ATFM_Delay_layout1[3]`\textwidth}
+```{r Arr-ATFM-delay-state, echo=FALSE, fig.align='center', out.height=paste0(Arr_ATFM_Delay_height1, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Market_segments_", params$icao, ".png")))
+
+```
+\end{minipage}
 

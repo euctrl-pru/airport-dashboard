@@ -123,7 +123,7 @@ if (nrow(params$atfm) > 0) {
 # Factsheet figure
 
 atfm_pa_fig = ggplot(data=atfm_pa) +
-  geom_bar(aes(x=YEAR, y=AVG_ARR_ATFM_REG, colour=REG_REASON), position = "dodge", stat="identity") +
+  geom_bar(aes(x=YEAR, y=AVG_ARR_ATFM_REG, fill=REG_REASON), stat="identity") +
   theme_bw() +
   theme(plot.title = element_blank(),
         legend.title=element_blank(),
@@ -135,6 +135,6 @@ atfm_pa_fig = ggplot(data=atfm_pa) +
         plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
   labs(x="", y="Average arrival ATFM delay (min/arr)\n")
 ggsave(here("R", "Factsheet", "Figures", paste0("Annual_Arr_ATFM_Delay_", params$icao, ".png")), plot=atfm_pa_fig, 
-       width = Traffic_layout1[1]*Page_width, height = Traffic_height1, units = "cm", dpi=100, limitsize = FALSE)
+       width = Arr_ATFM_Delay_layout1[1]*Page_width, height = Arr_ATFM_Delay_height1, units = "cm", dpi=100, limitsize = FALSE)
 
 ```

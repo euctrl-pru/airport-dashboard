@@ -13,3 +13,30 @@ Traffic_height2<<-100
 
 Traffic_layout3<<-1
 Traffic_height3<<-100
+
+Arr_ATFM_Delay_layout1<<-c(0.2, 0.5, 0.3)
+Arr_ATFM_Delay_height1<<-100
+
+ATFM_Slot_Adherence_layout1<<-c(0.2, 0.5, 0.3)
+ATFM_Slot_Adherence_height1<<-100
+
+VFE_layout1<<-c(0.2, 0.4, 0.4)
+VFE_height1<<-100
+
+Punctuality_layout1<<-c(0.4, 0.4, 0.2)
+Punctuality_height1<<-100
+
+ASMA_layout1<<-c(0.3, 0.7)
+ASMA_height1<<-100
+
+Pre_dep_delay_layout1<<-c(0.3, 0.7)
+Pre_dep_delay_height1<<-100
+
+Taxi_in_times_layout1<<-c(0.3, 0.7)
+Taxi_in_times_height1<<-100
+
+Taxi_out_times_layout1<<-c(0.3, 0.7)
+Taxi_out_times_height1<<-100
+
+Turnaround_times_layout1<<-c(0.3, 0.7)
+Turnaround_times_height1<<-100
