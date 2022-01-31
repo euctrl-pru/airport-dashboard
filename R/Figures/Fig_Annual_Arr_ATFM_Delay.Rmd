@@ -124,6 +124,7 @@ if (nrow(params$atfm) > 0) {
 
 atfm_pa_fig = ggplot(data=atfm_pa) +
   geom_bar(aes(x=YEAR, y=AVG_ARR_ATFM_REG, fill=REG_REASON), stat="identity") +
+  scale_fill_manual(values=atfm_col) +
   theme_bw() +
   theme(plot.title = element_blank(),
         legend.title=element_blank(),

@@ -385,3 +385,32 @@ include_graphics(here("R", "Factsheet", "Figures", paste0("ARR_ATFM_delay_countr
 ```
 \end{minipage}
 
+
+
+# ATFM Slot Adherence
+
+\begin{minipage}[t]{`r ATFM_Slot_Adherence_layout1[1]`\textwidth}
+```{r Annual-ATFM-Slot, echo=FALSE, fig.align='center', out.height=paste0(ATFM_Slot_Adherence_height1, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Annual_ATFM_Slot_", params$icao, ".png")))
+
+```
+\end{minipage}
+\begin{minipage}[t]{`r ATFM_Slot_Adherence_layout1[2]`\textwidth}
+```{r Monthly-ATFM-Slot, echo=FALSE, fig.align='center', out.height=paste0(ATFM_Slot_Adherence_height1, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Monthly_ATFM_Slot_", params$icao, ".png")))
+
+```
+\end{minipage}
+\begin{minipage}[t]{`r ATFM_Slot_Adherence_layout1[3]`\textwidth}
+```{r Departures-outside-STW, echo=FALSE, fig.align='center', out.height=paste0(ATFM_Slot_Adherence_height1, "px")}
+
+source(here("R", "Factsheet", "Scripts", paste0("Fig_Arr_ATFM_Delay_country_airports_treemap.R")), encoding = "UTF8")
+include_graphics(here("R", "Factsheet", "Figures", paste0("Departures_outside_STW_", params$icao, ".png")))
+
+```
+\end{minipage}
+
+
+

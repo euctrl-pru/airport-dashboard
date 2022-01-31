@@ -61,7 +61,7 @@ if (nrow(ARR_ATFM_delay_country_apts)>1) {
     ARR_ATFM_delay_country_apts_fig = ggplot() +
       geom_rect(aes(xmin=0, xmax=1, ymin=0, ymax=1), fill="blue") +
       geom_text(aes(x=0.5, y=1, label=paste0("No Arrival ATFM Delay in ", Last_complete_year)), 
-                position = position_stack(vjust = 0.5), size=6, colour="white") +
+                position = position_stack(vjust = 0.5), size=60, colour="white") +
       theme_void()
     
   }

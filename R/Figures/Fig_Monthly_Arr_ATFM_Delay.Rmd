@@ -1,5 +1,5 @@
 
-```{r Monthly_Arr_ATFM_Delay-plotly}
+```{r Monthly-Arr-ATFM-Delay-plotly}
 
 # monthly trend
 
@@ -242,7 +242,7 @@ if (nrow(params$atfm) > 0) {
 
 ```
 
-```{r Monthly_Arr_ATFM_Delay-ggplot, include=FALSE}
+```{r Monthly-Arr-ATFM-Delay-ggplot, include=FALSE}
 
 # Factsheet figure
 atfm_pm_curr_year=filter(atfm_pm, YEAR == max(YEAR)) %>% 
@@ -250,6 +250,7 @@ atfm_pm_curr_year=filter(atfm_pm, YEAR == max(YEAR)) %>%
 
 atfm_pm_fig = ggplot(data=atfm_pm_curr_year) +
   geom_bar(aes(x=Month, y=AVG_ARR_ATFM_REG, fill=REG_REASON), stat="identity") +
+  scale_fill_manual(values=atfm_col) +
   theme_bw() +
   theme(plot.title = element_blank(),
         legend.title=element_blank(),
