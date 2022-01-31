@@ -337,13 +337,13 @@ if (nrow(params$tfcvar) < 1) {
 
 ### Annual Traffic (Source: Network Manager)
 
-```{r annual-traffic, child='R/Factsheet/Scripts/Fig_Annual_traffic.Rmd'}
+```{r annual-traffic, child='R/Figures/Fig_Annual_traffic.Rmd'}
 
 ```
 
 ### Monthly Traffic (Source: Network Manager)
 
-```{r monthly-traffic, child='R/Factsheet/Scripts/Fig_Monthly_traffic.Rmd'}
+```{r monthly-traffic, child='R/Figures/Fig_Monthly_traffic.Rmd'}
 
 ```
 
@@ -418,14 +418,14 @@ pbox_group
 
 ### Share of Market Segment (Source: Network Manager)
 
-```{r market-segment, child='R/Factsheet/Scripts/Fig_Market_segment.Rmd'}
+```{r market-segment, child='R/Figures/Fig_Market_segment.Rmd'}
 
 ```
 
 
 ### Average Weekday Hourly Throughput (Source: Network Manager)
 
-```{r Avg-weekday-hourly-throughput, child='R/Factsheet/Scripts/Fig_Avg_weekday_hourly_throughput.Rmd'}
+```{r Avg-weekday-hourly-throughput, child='R/Figures/Fig_Avg_weekday_hourly_throughput.Rmd'}
 
 ```
 
