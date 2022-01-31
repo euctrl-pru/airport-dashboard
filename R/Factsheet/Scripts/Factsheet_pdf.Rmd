@@ -363,14 +363,14 @@ include_graphics(here("R", "Factsheet", "Figures", paste0("Avg_weekday_hourly_th
 # Arrival ATFM Delay
 
 \begin{minipage}[t]{`r Arr_ATFM_Delay_layout1[1]`\textwidth}
-```{r Annual_Arr_ATFM_Delay, echo=FALSE, fig.align='center', out.height=paste0(Arr_ATFM_Delay_height1, "px")}
+```{r Annual-Arr-ATFM-Delay, echo=FALSE, fig.align='center', out.height=paste0(Arr_ATFM_Delay_height1, "px")}
 
 include_graphics(here("R", "Factsheet", "Figures", paste0("Annual_Arr_ATFM_Delay_", params$icao, ".png")))
 
 ```
 \end{minipage}
 \begin{minipage}[t]{`r Arr_ATFM_Delay_layout1[2]`\textwidth}
-```{r Monthly_Arr_ATFM_Delay, echo=FALSE, fig.align='center', out.height=paste0(Arr_ATFM_Delay_height1, "px")}
+```{r Monthly-Arr-ATFM-Delay, echo=FALSE, fig.align='center', out.height=paste0(Arr_ATFM_Delay_height1, "px")}
 
 include_graphics(here("R", "Factsheet", "Figures", paste0("Monthly_Arr_ATFM_Delay_", params$icao, ".png")))
 
@@ -379,6 +379,7 @@ include_graphics(here("R", "Factsheet", "Figures", paste0("Monthly_Arr_ATFM_Dela
 \begin{minipage}[t]{`r Arr_ATFM_Delay_layout1[3]`\textwidth}
 ```{r Arr-ATFM-delay-state, echo=FALSE, fig.align='center', out.height=paste0(Arr_ATFM_Delay_height1, "px")}
 
+source(here("R", "Factsheet", "Scripts", paste0("Fig_Arr_ATFM_Delay_country_airports_treemap.R")), encoding = "UTF8")
 include_graphics(here("R", "Factsheet", "Figures", paste0("ARR_ATFM_delay_country_treemap_", params$icao, ".png")))
 
 ```

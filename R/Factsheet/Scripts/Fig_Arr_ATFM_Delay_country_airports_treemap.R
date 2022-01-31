@@ -12,7 +12,8 @@ ARR_ATFM_delay_country_apts1 <- filter(ATFM_DF, substr(AIRPORT, 1, 2)==substr(Ai
     FLT_ARR_TOT       = sum(FLT_ARR_1, na.rm = TRUE),
     DLY_APT_ARR_TOT   = sum(DLY_APT_ARR_1, na.rm = TRUE)) %>% 
   arrange(-FLT_ARR_TOT) %>% 
-  ungroup()
+  ungroup() %>% 
+  select(-YEAR, -FLT_ARR_TOT)
 
 if (nrow(ARR_ATFM_delay_country_apts1)>6) {
   
@@ -29,7 +30,8 @@ if (nrow(ARR_ATFM_delay_country_apts1)>6) {
 }
 
 ARR_ATFM_delay_country_apts=ARR_ATFM_delay_country_apts %>% 
-  mutate(fraction=DLY_APT_ARR_TOT/sum(DLY_APT_ARR_TOT),
+  mutate(DLY_APT_ARR_TOT=as.numeric(DLY_APT_ARR_TOT),
+         fraction=DLY_APT_ARR_TOT/sum(DLY_APT_ARR_TOT),
          label = paste0(AIRPORT, "\n", round(fraction*100), "%"),
          AIRPORT=factor(AIRPORT, levels=ARR_ATFM_delay_country_apts$AIRPORT))
 
@@ -42,14 +44,27 @@ if (nrow(ARR_ATFM_delay_country_apts)>1) {
                       grow = TRUE) +
     theme(legend.position = "none")
 } else {
-  ARR_ATFM_delay_country_apts_fig = ggplot(data=ARR_ATFM_delay_country_apts, aes(x=3, y=DLY_APT_ARR_TOT, fill=AIRPORT)) +
-    geom_col() +
-    scale_fill_brewer(palette=4) +
-    coord_polar(theta="y") +
-    geom_text(aes(x=3.4, label=label), position = position_stack(vjust = 0.5), size=60) +
-    xlim(c(0.2, 3.5)) +
-    theme_void() +
-    theme(legend.position = "none")
+  
+  if (ARR_ATFM_delay_country_apts$DLY_APT_ARR_TOT[1]>0) {
+    
+    ARR_ATFM_delay_country_apts_fig = ggplot(data=ARR_ATFM_delay_country_apts, aes(x=3, y=DLY_APT_ARR_TOT, fill=AIRPORT)) +
+      geom_col() +
+      scale_fill_brewer(palette=4) +
+      coord_polar(theta="y") +
+      geom_text(aes(x=3.4, label=label), position = position_stack(vjust = 0.5), size=60) +
+      xlim(c(0.2, 3.5)) +
+      theme_void() +
+      theme(legend.position = "none")
+    
+  } else {
+    
+    ARR_ATFM_delay_country_apts_fig = ggplot() +
+      geom_rect(aes(xmin=0, xmax=1, ymin=0, ymax=1), fill="blue") +
+      geom_text(aes(x=0.5, y=1, label=paste0("No Arrival ATFM Delay in ", Last_complete_year)), 
+                position = position_stack(vjust = 0.5), size=6, colour="white") +
+      theme_void()
+    
+  }
 }
 
 ggsave(here("R", "Factsheet", "Figures", paste0("ARR_ATFM_delay_country_treemap_", Airport, ".png")), 
