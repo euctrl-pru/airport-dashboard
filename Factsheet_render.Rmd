@@ -1,36 +1,42 @@
 ---
 params:
-  icao:         $icao
-  iata:         $iata
-  name:         $name
-  state:        $state
-  apdf:         $apdf   
-  config:       $config
-  ldgsum:       $ldgsum
-  latest:       $latest
-  tfcvar:       $tfcvar
-  tfc:          $tfc
-  thru:         $thru
-  atfm:         $atfm   
-  slot_yy:      $slot_yy
-  slot_mm:      $slot_mm      
-  punc_dep_yy:  $punc_dep_yy
-  punc_dep_mm:  $punc_dep_mm
-  punc_arr_yy:  $punc_arr_yy
-  punc_arr_mm:  $punc_arr_mm
-  asma_yy:      $asma_yy
-  asma_mm:      $asma_mm
-  txot_yy:      $txot_yy
-  txot_mm:      $txot_mm
-  txin_yy:      $txin_yy
-  txin_mm:      $txin_mm
-  pddly_yy:     $pddly_yy
-  pddly_mm:     $pddly_mm  
-  pddly_yy_avg: $pddly_yy_avg
-  pddly_mm_avg: $pddly_avg
-  turn_yy:      $turn_yy
-  turn_mm:      $turn_mm
-  cdo_cco:      $cdo_cco
+   icao:         $icao
+   iata:         $iata
+   name:         $name
+   state:        $state
+   apdf:         $apdf   
+   punc:         $punc   
+   config:       $config
+   ldgsum:       $ldgsum
+   latest:       $latest
+   tfcvar:       $tfcvar
+   tfc:          $tfc
+   market:       $market
+   thru:         $thru
+   atfm:         $atfm   
+   slot_yy:      $slot_yy
+   slot_mm:      $slot_mm      
+   punc_dep_yy:  $punc_dep_yy
+   punc_dep_mm:  $punc_dep_mm
+   punc_arr_yy:  $punc_arr_yy
+   punc_arr_mm:  $punc_arr_mm
+   asma_yy:      $asma_yy
+   asma_mm:      $asma_mm
+   txot_yy:      $txot_yy
+   txot_mm:      $txot_mm
+   txin_yy:      $txin_yy
+   txin_mm:      $txin_mm
+   pddly_yy:     $pddly_yy
+   pddly_mm:     $pddly_mm  
+   pddly_yy_avg: $pddly_yy_avg
+   pddly_mm_avg: $pddly_avg
+   dly_yy:       $dly_yy
+   dly_mm:       $dly_mm
+   turn_yy:      $turn_yy
+   turn_mm:      $turn_mm
+   turn_new:     $turn_new
+   cdo_cco:      $cdo_cco
+   
 title: "`r paste0('Factsheet for ', params$icao, ' (', params$name, ')')`"
 author: Aviation Intelligence Unit, EUROCONTROL
 date: "`r format(Sys.time(), '%d/%m/%Y')`" 
@@ -41,6 +47,7 @@ output:
     fig_caption: false
     toc: false
     keep_tex: false
+  # extra_dependencies: "subfig"
     includes:
       in_header: G:/HQ/dgof-pru/Project/Vertical_flight_efficiency/2015/airport-dashboard/R/Factsheet/header.txt
 editor_options: 
@@ -51,7 +58,7 @@ header-includes:
   - \usepackage{titling}
   - \pretitle{\begin{center}
   - \posttitle{\end{center}}
-    \includegraphics[width=2in,height=2in]{G:/HQ/dgof-pru/Project/Vertical_flight_efficiency/2015/airport-dashboard/R/factsheet/Figures/ECTL_logo.png}\LARGE\\}
+    \includegraphics[width=2in,height=2in]{G:/HQ/dgof-pru/Project/Vertical_flight_efficiency/2015/airport-dashboard/R/Figures/ECTL_logo}\LARGE\\}
 urlcolor: blue
 subparagraph: yes
 ---
@@ -64,7 +71,6 @@ library("dplyr")
 library("zoo")
 library("reshape2")
 library("ggplot2")
-library("scales")
 library("ggrepel")
 library("lubridate")
 library("bookdown")
@@ -98,12 +104,59 @@ append_date_suffix <- function(nbr){
 
 ```
 
+```{r plotly-utility}
+tick_yr <- list(
+  dtick = 1,
+  ticktext = list(
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  ),
+  tickvals = list(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+  tickmode = "array",
+  range = c(0.5, 12.5)
+)
+
+tick_yr_no_title <- list(
+  title = "",
+  dtick = 1,
+  ticktext = list(
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  ),
+  tickvals = list(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+  tickmode = "array",
+  range = c(0.5, 12.5)
+)
+
+pick_mth <- c(
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+)
+
+config_bar_remove_buttons <- c(
+  "sendDataToCloud",
+  "autoScale2d",
+  "select2d",
+  "lasso2d",
+  "pan2d",
+  "zoom2d",
+  "zoomIn2d",
+  "zoomOut2d",
+  "zoomInGeo",
+  "zoomOutGeo",
+  "hoverClosestCartesian",
+  "hoverCompareCartesian",
+  "toggleSpikelines",
+  "drawrect"
+)
+```
+
 ```{r Gen-info, include=FALSE}
 
-Last_complete_year=2020
+Last_complete_year<<-2020
 drv <- dbDriver("Oracle")
 con <- dbConnect(drv, "PRUTEST", "test", dbname='//porape5.ops.cfmu.eurocontrol.be:1521/pe5')
-TOP_APTs=dbGetQuery(con, "SELECT * FROM SP_TOP_APTS") %>%
+TOP_APTs<<-dbGetQuery(con, "SELECT * FROM SP_TOP_APTS") %>%
   filter(YEAR==Last_complete_year) %>%
   arrange(-NBR_MVMTS) %>% 
   mutate(Rank=rank(-NBR_MVMTS))
@@ -190,7 +243,7 @@ Top_ATFM_dly_cause_airport=filter(params$atfm, YEAR==Last_complete_year) %>%
 
 In `r paste0(Last_complete_year, ", ", params$name)` managed `r Traffic_share_in_country`% of the traffic at airports in `r params$state`, and their arrival delays accounted for `r Arr_ATFM_dly_share_in_country`% of the arrival ATFM minutes of delay, mainly due to `r Top_ATFM_dly_cause_airport`.
 
-\begin{minipage}[t]{0.4\textwidth}
+\begin{minipage}[t]{`r General_layout[1]`\textwidth}
 ```{r apt-info}
 
 ID_TBL <- tribble(
@@ -216,12 +269,12 @@ RWY_CONFIG$ITEM[1] <- "Configurations in 2019"
 ID_TBL <- ID_TBL %>%
   bind_rows(RWY_CONFIG)
 
-pander(ID_TBL, cols = NULL)
+pander(RWY_CONFIG, cols = NULL)
 
 ```
 
 \end{minipage}
-\begin{minipage}[t]{0.3\textwidth}
+\begin{minipage}[t]{`r General_layout[2]`\textwidth}
 
 ```{r APT-map, echo=FALSE, fig.align='center'}
 
@@ -230,7 +283,7 @@ include_graphics(here("R", "Factsheet", "Figures", "Airport_maps", paste0("APT_m
 ```
 
 \end{minipage}
-\begin{minipage}[t]{0.3\textwidth}
+\begin{minipage}[t]{`r General_layout[3]`\textwidth}
 
 ```{r APT_layout, echo=FALSE, fig.align='center'}
 
@@ -247,42 +300,57 @@ include_graphics(here("layouts", paste0(params$icao, ".png")))
 
 # Traffic
 
-\begin{minipage}[t]{0.2\textwidth}
-```{r Tot-mvmts-yearly, echo=FALSE, fig.align='center'}
+```{r traffic-setup}
+
+Airport<<-params$icao
+
+source(here("R", "Factsheet", "Scripts", "Fig_Mvmts_country_airports_treemap.R"), encoding = "UTF8")
+# source(here("R", "Factsheet", "Scripts", "Fig_Flights_moving_avg.R"), encoding = "UTF8")
+
+```
+
+\begin{minipage}[t]{`r Traffic_layout1[1]`\textwidth}
+```{r Tot-mvmts-yearly, echo=FALSE, fig.align='center', out.height=paste0(Traffic_height1, "px")}
 
 include_graphics(here("R", "Factsheet", "Figures", paste0("Tot_mvmts_", params$icao, ".png")))
 
 ```
 \end{minipage}
-\begin{minipage}[t]{0.5\textwidth}
-```{r Tot-mvmts-monthly, echo=FALSE, fig.align='center'}
+\begin{minipage}[t]{`r Traffic_layout1[2]`\textwidth}
+```{r Tot-mvmts-monthly, echo=FALSE, fig.align='center', out.height=paste0(Traffic_height1, "px")}
 
 include_graphics(here("R", "Factsheet", "Figures", paste0("Monthly_mvmts_", params$icao, ".png")))
 
 ```
 \end{minipage}
-\begin{minipage}[t]{0.3\textwidth}
-```{r Market-segments, echo=FALSE, fig.align='center'}
+\begin{minipage}[t]{`r Traffic_layout1[3]`\textwidth}
+```{r Market-segments, echo=FALSE, fig.align='center', out.height=paste0(Traffic_height1, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Market_segments_", params$icao, ".png")))
+
+```
+\end{minipage}
+
+\begin{minipage}[t]{`r Traffic_layout2[1]`\textwidth}
+```{r Traffic-country-apts, echo=FALSE, fig.align='center', out.height=paste0(Traffic_height2, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Mvmts_country_treemap_", params$icao, ".png")))
+
+```
+\end{minipage}
+\begin{minipage}[t]{`r Traffic_layout2[2]`\textwidth}
+```{r Daily-flights, echo=FALSE, fig.align='center', out.height=paste0(Traffic_height2, "px")}
 
 include_graphics(here("R", "Factsheet", "Figures", paste0("Monthly_mvmts_", params$icao, ".png")))
 
 ```
 \end{minipage}
 
-\begin{minipage}[t]{0.4\textwidth}
-```{r Traffic-country-apts, echo=FALSE, fig.align='center'}
+```{r Hourly-throughput, echo=FALSE, fig.align='center', out.height=paste0(Traffic_height3, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Monthly_mvmts_", params$icao, ".png")))
-
-```
-\end{minipage}
-\begin{minipage}[t]{0.6\textwidth}
-```{r Daily-flights, echo=FALSE, fig.align='center'}
-
-include_graphics(here("R", "Factsheet", "Figures", paste0("Monthly_mvmts_", params$icao, ".png")))
+include_graphics(here("R", "Factsheet", "Figures", paste0("Avg_weekday_hourly_throughput_", params$icao, ".png")))
 
 ```
-\end{minipage}
 
 <!-- \renewcommand{\cleardoublepage}{} -->
 <!-- \renewcommand{\clearpage}{} -->
@@ -290,3 +358,73 @@ include_graphics(here("R", "Factsheet", "Figures", paste0("Monthly_mvmts_", para
 
 
 # Data exchange with EUROCONTROL
+
+
+# Arrival ATFM Delay
+
+```{r Arr-ATFM-Delay-country, child='R/Figures/Fig_Arr_ATFM_Delay_country_airports_treemap.Rmd'}
+
+```
+
+\begin{minipage}[t]{`r Arr_ATFM_Delay_layout1[1]`\textwidth}
+```{r Annual-Arr-ATFM-Delay, echo=FALSE, fig.align='center', out.height=paste0(Arr_ATFM_Delay_height1, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Annual_Arr_ATFM_Delay_", params$icao, ".png")))
+
+```
+\end{minipage}
+\begin{minipage}[t]{`r Arr_ATFM_Delay_layout1[2]`\textwidth}
+```{r Monthly-Arr-ATFM-Delay, echo=FALSE, fig.align='center', out.height=paste0(Arr_ATFM_Delay_height1, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Monthly_Arr_ATFM_Delay_", params$icao, ".png")))
+
+```
+\end{minipage}
+\begin{minipage}[t]{`r Arr_ATFM_Delay_layout1[3]`\textwidth}
+```{r Arr-ATFM-delay-state, echo=FALSE, fig.align='center', out.height=paste0(Arr_ATFM_Delay_height1, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("ARR_ATFM_delay_country_treemap_", params$icao, ".png")))
+
+```
+\end{minipage}
+
+
+
+# ATFM Slot Adherence
+
+```{r ATFM-SLOT-Dep-outside-STW, child='R/Figures/Fig_Departures_outside_STW.Rmd'}
+
+```
+
+\begin{minipage}[t]{`r ATFM_Slot_Adherence_layout1[1]`\textwidth}
+```{r Annual-ATFM-Slot, echo=FALSE, fig.align='center', out.height=paste0(ATFM_Slot_Adherence_height1, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Annual_ATFM_Slot_Adherence_", params$icao, ".png")))
+
+```
+\end{minipage}
+\begin{minipage}[t]{`r ATFM_Slot_Adherence_layout1[2]`\textwidth}
+```{r Monthly-ATFM-Slot, echo=FALSE, fig.align='center', out.height=paste0(ATFM_Slot_Adherence_height1, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Monthly_ATFM_Slot_Adherence_", params$icao, ".png")))
+
+```
+\end{minipage}
+\begin{minipage}[t]{`r ATFM_Slot_Adherence_layout1[3]`\textwidth}
+```{r Departures-outside-STW, echo=FALSE, fig.align='center', out.height=paste0(ATFM_Slot_Adherence_height1, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Departures_outside_STW_", params$icao, ".png")))
+
+```
+\end{minipage}
+
+
+
+# Vertical Flight Efficiency in Climb and Descent
+
+```{r CDO-CCO-share, child='R/Figures/Fig_Share_CDO_CCO.Rmd'}
+
+```
+
+
+

@@ -1,4 +1,14 @@
 
+```{r Arr-ATFM-Delay-country-plotly}
+
+
+
+```
+
+```{r Arr-ATFM-Delay-country-ggplot, include=FALSE}
+
+# Factsheet figure
+
 ARR_ATFM_delay_country_apts1 <- filter(ATFM_DF, substr(AIRPORT, 1, 2)==substr(Airport, 1, 2) & YEAR==Last_complete_year)  %>%
   select(
     AIRPORT,
@@ -70,3 +80,6 @@ if (nrow(ARR_ATFM_delay_country_apts)>1) {
 ggsave(here("R", "Factsheet", "Figures", paste0("ARR_ATFM_delay_country_treemap_", Airport, ".png")), 
        plot=ARR_ATFM_delay_country_apts_fig,width = Arr_ATFM_Delay_layout1[3]*Page_width, height = Arr_ATFM_Delay_height1, 
        units = "cm", dpi=100, limitsize = FALSE)
+
+
+```
