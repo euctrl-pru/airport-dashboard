@@ -170,7 +170,7 @@ avg_time_lvl_fig
 
 ```
 
-```{r Avg-time-lvl-ggplot, include=FALSE}
+```{r Avg-time-lvl-ggplot, eval=nrow(params$cdo_cco)>0, include=FALSE}
 
 # Factsheet figure
 

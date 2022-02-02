@@ -449,7 +449,7 @@ include_graphics(here("R", "Factsheet", "Figures", paste0("Share_CDO_CCO_flights
 # Punctuality
 
 \begin{minipage}[t]{`r Punctuality_layout1[1]`\textwidth}
-```{r Avg-time-lvl, echo=FALSE, fig.align='center', out.height=paste0(Punctuality_height1, "px")}
+```{r Punctuality-DEP-YEARLY-LAYOUT, echo=FALSE, fig.align='center', out.height=paste0(Punctuality_height1, "px")}
 
 include_graphics(here("R", "Factsheet", "Figures", paste0("Avg_time_lvl_", params$icao, ".png")))
 

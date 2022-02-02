@@ -75,7 +75,7 @@ plot_ly(MED_CDO_CCO_ALT_PLOT,
 
 ```
 
-```{r Med-CDO-CCO-alt-ggplot, include=FALSE}
+```{r Med-CDO-CCO-alt-ggplot, eval=nrow(params$cdo_cco)>0, include=FALSE}
 
 # Factsheet figure
 
