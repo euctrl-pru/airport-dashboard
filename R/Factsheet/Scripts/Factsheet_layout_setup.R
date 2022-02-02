@@ -20,7 +20,7 @@ Arr_ATFM_Delay_height1<<-100
 ATFM_Slot_Adherence_layout1<<-c(0.2, 0.5, 0.3)
 ATFM_Slot_Adherence_height1<<-100
 
-VFE_layout1<<-c(0.2, 0.4, 0.4)
+VFE_layout1<<-c(0.4, 0.4, 0.2)
 VFE_height1<<-100
 
 Punctuality_layout1<<-c(0.4, 0.4, 0.2)
