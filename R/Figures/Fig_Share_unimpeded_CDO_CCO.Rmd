@@ -87,7 +87,7 @@ plot_ly(SHARE_CDO_CCO_FLIGHTS_PLOT,
 
 # Factsheet figure
 
-SHARE_CDO_CCO_FLIGHTS_PLOT_curr_year=filter(SHARE_CDO_CCO_FLIGHTS_PLOT, YEAR==Last_complete_year) %>% 
+SHARE_CDO_CCO_FLIGHTS_PLOT_curr_year=filter(SHARE_CDO_CCO_FLIGHTS_PLOT, YEAR==max_year) %>% 
   ungroup() %>% 
   group_by(YEAR) %>% 
   summarise(TOT_NBR_FLIGHTS_DESCENT=sum(NBR_FLIGHTS_DESCENT),
@@ -106,7 +106,7 @@ SHARE_CDO_CCO_FLIGHTS_PLOT_curr_year_fig = ggplot(data=SHARE_CDO_CCO_FLIGHTS_PLO
             size=60, colour="black") +
   theme_void()
 
-ggsave(here("R", "Factsheet", "Figures", paste0("SHARE_CDO_CCO_FLIGHTS_", Airport, ".png")), 
+ggsave(here("R", "Factsheet", "Figures", paste0("Share_CDO_CCO_flights_", params$icao, ".png")), 
        plot=SHARE_CDO_CCO_FLIGHTS_PLOT_curr_year_fig, width = VFE_layout1[1]*Page_width, height = VFE_height1, 
        units = "cm", dpi=100, limitsize = FALSE)
 
