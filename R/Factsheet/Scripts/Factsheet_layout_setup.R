@@ -26,6 +26,9 @@ VFE_height1<<-100
 Punctuality_layout1<<-c(0.4, 0.4, 0.2)
 Punctuality_height1<<-100
 
+Punctuality_layout2<<-c(0.4, 0.4, 0.2)
+Punctuality_height2<<-100
+
 ASMA_layout1<<-c(0.3, 0.7)
 ASMA_height1<<-100
 

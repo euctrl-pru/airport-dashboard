@@ -182,8 +182,7 @@ AVG_TIME_LVL_PLOT_curr_year=filter(AVG_TIME_LVL_PLOT, YEAR==max_year) %>%
       names_to  = "Metric",
       values_to = "Value"
     ) %>% 
-  mutate(Month=factor(month.abb[MONTH_NUM], levels = month.abb),
-         Metric=factor(Metric, levels = unique(AVG_TIME_LVL_PLOT_curr_year$Metric))) %>% 
+  mutate(Month=factor(month.abb[MONTH_NUM], levels = month.abb)) %>% 
   arrange(YEAR, Month, Metric)
 
 
@@ -202,7 +201,7 @@ AVG_TIME_LVL_PLOT_fig = ggplot(data=AVG_TIME_LVL_PLOT_curr_year) +
         axis.title=element_text(size=100),
         axis.title.x = element_blank(),
         plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
-  labs(x="", y="", title="Average time flown level per flight (min.)")
+  labs(x="", y="Average time flown level per flight (min.)\n", title="")
 
 ggsave(here("R", "Factsheet", "Figures", paste0("Avg_time_lvl_", params$icao, ".png")), 
        plot=AVG_TIME_LVL_PLOT_fig, width = VFE_layout1[1]*Page_width, height = VFE_height1, 

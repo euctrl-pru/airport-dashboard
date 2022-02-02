@@ -19,6 +19,12 @@ Deps_outside_STW <- params$slot_yy %>%
          )) %>% 
   arrange(SLOT_CAT)
 
+slot_col <- c(
+  "#BDD7EE", # blue
+  "#C6E0B4", # green
+  "#F8CBAD"
+) # orange
+
 ```
 
 ```{r Departures-outside-STW-ggplot, include=FALSE}

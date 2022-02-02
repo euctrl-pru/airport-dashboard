@@ -422,10 +422,6 @@ include_graphics(here("R", "Factsheet", "Figures", paste0("Departures_outside_ST
 
 # Vertical Flight Efficiency in Climb and Descent
 
-```{r CDO-CCO-share, child='R/Figures/Fig_Share_unimpeded_CDO_CCO.Rmd'}
-
-```
-
 \begin{minipage}[t]{`r VFE_layout1[1]`\textwidth}
 ```{r Avg-time-lvl, echo=FALSE, fig.align='center', out.height=paste0(VFE_height1, "px")}
 
@@ -443,8 +439,55 @@ include_graphics(here("R", "Factsheet", "Figures", paste0("Med_CDO_CCO_alt_", pa
 \begin{minipage}[t]{`r VFE_layout1[3]`\textwidth}
 ```{r Share-unimpeded, echo=FALSE, fig.align='center', out.height=paste0(VFE_height1, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Share_unimpeded_", params$icao, ".png")))
+include_graphics(here("R", "Factsheet", "Figures", paste0("Share_CDO_CCO_flights_", params$icao, ".png")))
 
 ```
 \end{minipage}
 
+
+
+# Punctuality
+
+\begin{minipage}[t]{`r Punctuality_layout1[1]`\textwidth}
+```{r Avg-time-lvl, echo=FALSE, fig.align='center', out.height=paste0(Punctuality_height1, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Avg_time_lvl_", params$icao, ".png")))
+
+```
+\end{minipage}
+\begin{minipage}[t]{`r Punctuality_layout1[2]`\textwidth}
+```{r Med-CDO-CCO-alt, echo=FALSE, fig.align='center', out.height=paste0(Punctuality_height1, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Med_CDO_CCO_alt_", params$icao, ".png")))
+
+```
+\end{minipage}
+\begin{minipage}[t]{`r Punctuality_layout1[3]`\textwidth}
+```{r Share-unimpeded, echo=FALSE, fig.align='center', out.height=paste0(Punctuality_height1, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Share_CDO_CCO_flights_", params$icao, ".png")))
+
+```
+\end{minipage}
+
+\begin{minipage}[t]{`r Punctuality_layout2[1]`\textwidth}
+```{r Avg-time-lvl, echo=FALSE, fig.align='center', out.height=paste0(Punctuality_height2, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Avg_time_lvl_", params$icao, ".png")))
+
+```
+\end{minipage}
+\begin{minipage}[t]{`r Punctuality_layout2[2]`\textwidth}
+```{r Med-CDO-CCO-alt, echo=FALSE, fig.align='center', out.height=paste0(Punctuality_height2, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Med_CDO_CCO_alt_", params$icao, ".png")))
+
+```
+\end{minipage}
+\begin{minipage}[t]{`r Punctuality_layout2[3]`\textwidth}
+```{r Share-unimpeded, echo=FALSE, fig.align='center', out.height=paste0(Punctuality_height2, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Share_CDO_CCO_flights_", params$icao, ".png")))
+
+```
+\end{minipage}

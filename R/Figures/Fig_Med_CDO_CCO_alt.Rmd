@@ -86,13 +86,12 @@ MED_CDO_CCO_ALT_PLOT_curr_year=filter(MED_CDO_CCO_ALT_PLOT, YEAR==max_year) %>%
       names_to  = "Metric",
       values_to = "Value"
     ) %>% 
-  mutate(Month=factor(month.abb[MONTH_NUM], levels = month.abb),
-         Metric=factor(Metric, levels = unique(MED_CDO_CCO_ALT_PLOT_curr_year$Metric))) %>% 
+  mutate(Month=factor(month.abb[MONTH_NUM], levels = month.abb)) %>% 
   arrange(YEAR, Month, Metric)
 
 
 MED_CDO_CCO_ALT_PLOT_fig = ggplot(data=MED_CDO_CCO_ALT_PLOT_curr_year) +
-  geom_line(aes(x=Month, y = Value/60, group=Metric, colour=Metric), size=2) +
+  geom_line(aes(x=Month, y = Value, group=Metric, colour=Metric), size=2) +
   scale_colour_manual(name ="", values = MED_CDO_CCO_ALT_PLOT_cols,
                       labels=c("Descent (Fuel CDO)", "Climb (Fuel CCO)")) +
   theme_bw() +
@@ -104,7 +103,7 @@ MED_CDO_CCO_ALT_PLOT_fig = ggplot(data=MED_CDO_CCO_ALT_PLOT_curr_year) +
         axis.title=element_text(size=100),
         axis.title.x = element_blank(),
         plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
-  labs(x="", y="", title="Median CDO/CCO altitude (feet)")
+  labs(x="", y="Median CDO/CCO altitude (feet)\n", title="")
 
 ggsave(here("R", "Factsheet", "Figures", paste0("Med_CDO_CCO_alt_", params$icao, ".png")), 
        plot=MED_CDO_CCO_ALT_PLOT_fig, width = VFE_layout1[2]*Page_width, height = VFE_height1, 
