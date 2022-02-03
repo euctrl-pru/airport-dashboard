@@ -234,6 +234,8 @@ Top_ATFM_dly_cause_airport=filter(params$atfm, YEAR==Last_complete_year) %>%
 
 
 
+
+
 # General
 `r params$name` is the `r ifelse(Traffic_ranking_in_country==1, "", append_date_suffix(Traffic_ranking_in_country))` busiest airport in `r params$state` and the `r ifelse(Traffic_ranking_in_ECTL_area==1, "", append_date_suffix(Traffic_ranking_in_ECTL_area))` in the EUROCONTROL area in terms of movements in the year `r Last_complete_year`.
 
@@ -295,6 +297,8 @@ include_graphics(here("layouts", paste0(params$icao, ".png")))
 
 <!-- \renewcommand{\cleardoublepage}{} -->
 <!-- \renewcommand{\clearpage}{} -->
+
+
 
 
 
@@ -360,6 +364,9 @@ include_graphics(here("R", "Factsheet", "Figures", paste0("Avg_weekday_hourly_th
 # Data exchange with EUROCONTROL
 
 
+
+
+
 # Arrival ATFM Delay
 
 ```{r Arr-ATFM-Delay-country, child='R/Figures/Fig_Arr_ATFM_Delay_country_airports_treemap.Rmd'}
@@ -387,6 +394,8 @@ include_graphics(here("R", "Factsheet", "Figures", paste0("ARR_ATFM_delay_countr
 
 ```
 \end{minipage}
+
+
 
 
 
@@ -420,7 +429,9 @@ include_graphics(here("R", "Factsheet", "Figures", paste0("Departures_outside_ST
 
 
 
-```{r punctuality-title, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE}
+
+
+```{r cdo-cco-title, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE}
 
 cat("# Vertical Flight Efficiency in Climb and Descent")
 
@@ -450,9 +461,15 @@ include_graphics(here("R", "Factsheet", "Figures", paste0("Share_CDO_CCO_flights
 
 
 
+
+
 ```{r punctuality-title, results='asis', eval=params$punc == "Y", echo = FALSE}
 
 cat("# Punctuality")
+
+```
+
+```{r punctuality-Overall-shares, eval=params$punc == "Y", child=c('R/Figures/Fig_Punctuality_Dep_overall_share.Rmd', 'R/Figures/Fig_Punctuality_Arr_overall_share.Rmd')}
 
 ```
 
@@ -499,3 +516,33 @@ include_graphics(here("R", "Factsheet", "Figures", paste0("Punc_Arr_Overall_shar
 
 ```
 \end{minipage}
+
+
+
+
+
+```{r ASMA-title, results='asis', eval=params$apdf == "Y", echo = FALSE}
+
+cat("# ASMA (Terminal airspace) Times")
+
+```
+
+\begin{minipage}[t]{`r ASMA_layout1[1]`\textwidth}
+```{r ASMA-YEARLY-LAYOUT, eval=params$apdf == "Y", echo=FALSE, fig.align='center', out.height=paste0(ASMA_height1, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("ASMA_Yearly_", params$icao, ".png")))
+
+```
+\end{minipage}
+\begin{minipage}[t]{`r ASMA_layout1[2]`\textwidth}
+```{r ASMA-MONHTLY-LAYOUT, eval=params$apdf == "Y", echo=FALSE, fig.align='center', out.height=paste0(ASMA_height1, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("ASMA_Monthly_", params$icao, ".png")))
+
+```
+\end{minipage}
+
+
+
+
+

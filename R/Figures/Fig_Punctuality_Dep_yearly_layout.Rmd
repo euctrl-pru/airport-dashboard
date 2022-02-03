@@ -1,9 +1,3 @@
----
-output: html_document
-editor_options: 
-  chunk_output_type: console
----
-
 ```{r Punctuality-DEP-YEARLY-LAYOUT-plotly, results='asis', eval=params$punc == "Y", echo = FALSE}
 
 pun_col <- c(
