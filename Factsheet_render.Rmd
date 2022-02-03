@@ -420,24 +420,28 @@ include_graphics(here("R", "Factsheet", "Figures", paste0("Departures_outside_ST
 
 
 
-# Vertical Flight Efficiency in Climb and Descent
+```{r punctuality-title, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE}
+
+cat("# Vertical Flight Efficiency in Climb and Descent")
+
+```
 
 \begin{minipage}[t]{`r VFE_layout1[1]`\textwidth}
-```{r Avg-time-lvl, echo=FALSE, fig.align='center', out.height=paste0(VFE_height1, "px")}
+```{r Avg-time-lvl, eval=nrow(params$cdo_cco)>0, echo=FALSE, fig.align='center', out.height=paste0(VFE_height1, "px")}
 
 include_graphics(here("R", "Factsheet", "Figures", paste0("Avg_time_lvl_", params$icao, ".png")))
 
 ```
 \end{minipage}
 \begin{minipage}[t]{`r VFE_layout1[2]`\textwidth}
-```{r Med-CDO-CCO-alt, echo=FALSE, fig.align='center', out.height=paste0(VFE_height1, "px")}
+```{r Med-CDO-CCO-alt, eval=nrow(params$cdo_cco)>0, echo=FALSE, fig.align='center', out.height=paste0(VFE_height1, "px")}
 
 include_graphics(here("R", "Factsheet", "Figures", paste0("Med_CDO_CCO_alt_", params$icao, ".png")))
 
 ```
 \end{minipage}
 \begin{minipage}[t]{`r VFE_layout1[3]`\textwidth}
-```{r Share-unimpeded, echo=FALSE, fig.align='center', out.height=paste0(VFE_height1, "px")}
+```{r Share-unimpeded, eval=nrow(params$cdo_cco)>0, echo=FALSE, fig.align='center', out.height=paste0(VFE_height1, "px")}
 
 include_graphics(here("R", "Factsheet", "Figures", paste0("Share_CDO_CCO_flights_", params$icao, ".png")))
 
@@ -446,48 +450,52 @@ include_graphics(here("R", "Factsheet", "Figures", paste0("Share_CDO_CCO_flights
 
 
 
-# Punctuality
+```{r punctuality-title, results='asis', eval=params$punc == "Y", echo = FALSE}
+
+cat("# Punctuality")
+
+```
 
 \begin{minipage}[t]{`r Punctuality_layout1[1]`\textwidth}
-```{r Punctuality-DEP-YEARLY-LAYOUT, echo=FALSE, fig.align='center', out.height=paste0(Punctuality_height1, "px")}
+```{r Punctuality-DEP-YEARLY-LAYOUT, eval=params$punc == "Y", echo=FALSE, fig.align='center', out.height=paste0(Punctuality_height1, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Avg_time_lvl_", params$icao, ".png")))
+include_graphics(here("R", "Factsheet", "Figures", paste0("Punc_Dep_Yearly_", params$icao, ".png")))
 
 ```
 \end{minipage}
 \begin{minipage}[t]{`r Punctuality_layout1[2]`\textwidth}
-```{r Med-CDO-CCO-alt, echo=FALSE, fig.align='center', out.height=paste0(Punctuality_height1, "px")}
+```{r Punctuality-DEP-MONHTLY-LAYOUT, eval=params$punc == "Y", echo=FALSE, fig.align='center', out.height=paste0(Punctuality_height1, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Med_CDO_CCO_alt_", params$icao, ".png")))
+include_graphics(here("R", "Factsheet", "Figures", paste0("Punc_Dep_Monthly_", params$icao, ".png")))
 
 ```
 \end{minipage}
 \begin{minipage}[t]{`r Punctuality_layout1[3]`\textwidth}
-```{r Share-unimpeded, echo=FALSE, fig.align='center', out.height=paste0(Punctuality_height1, "px")}
+```{r Punctuality-DEP-Overall-share, eval=params$punc == "Y", echo=FALSE, fig.align='center', out.height=paste0(Punctuality_height1, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Share_CDO_CCO_flights_", params$icao, ".png")))
+include_graphics(here("R", "Factsheet", "Figures", paste0("Punc_Dep_Overall_share_", params$icao, ".png")))
 
 ```
 \end{minipage}
 
 \begin{minipage}[t]{`r Punctuality_layout2[1]`\textwidth}
-```{r Avg-time-lvl, echo=FALSE, fig.align='center', out.height=paste0(Punctuality_height2, "px")}
+```{r Punctuality-ARR-YEARLY-LAYOUT, eval=params$punc == "Y", echo=FALSE, fig.align='center', out.height=paste0(Punctuality_height2, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Avg_time_lvl_", params$icao, ".png")))
+include_graphics(here("R", "Factsheet", "Figures", paste0("Punc_Arr_Yearly_", params$icao, ".png")))
 
 ```
 \end{minipage}
 \begin{minipage}[t]{`r Punctuality_layout2[2]`\textwidth}
-```{r Med-CDO-CCO-alt, echo=FALSE, fig.align='center', out.height=paste0(Punctuality_height2, "px")}
+```{r Punctuality-ARR-MONHTLY-LAYOUT, eval=params$punc == "Y", echo=FALSE, fig.align='center', out.height=paste0(Punctuality_height2, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Med_CDO_CCO_alt_", params$icao, ".png")))
+include_graphics(here("R", "Factsheet", "Figures", paste0("Punc_Arr_Monthly_", params$icao, ".png")))
 
 ```
 \end{minipage}
 \begin{minipage}[t]{`r Punctuality_layout2[3]`\textwidth}
-```{r Share-unimpeded, echo=FALSE, fig.align='center', out.height=paste0(Punctuality_height2, "px")}
+```{r Punctuality-ARR-Overall-share, eval=params$punc == "Y", echo=FALSE, fig.align='center', out.height=paste0(Punctuality_height2, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Share_CDO_CCO_flights_", params$icao, ".png")))
+include_graphics(here("R", "Factsheet", "Figures", paste0("Punc_Arr_Overall_share_", params$icao, ".png")))
 
 ```
 \end{minipage}
