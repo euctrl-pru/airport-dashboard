@@ -546,3 +546,28 @@ include_graphics(here("R", "Factsheet", "Figures", paste0("ASMA_Monthly_", param
 
 
 
+```{r Pre-dep-delay-title, results='asis', eval=params$apdf == "Y", echo = FALSE}
+
+cat("# Reported Pre-departure Delay")
+
+```
+
+\begin{minipage}[t]{`r Pre_dep_delay_layout1[1]`\textwidth}
+```{r pre-dep-dly-pa, eval=params$apdf == "Y", echo=FALSE, fig.align='center', out.height=paste0(Pre_dep_delay_height1, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Pre_Departure_Delay_Yearly_", params$icao, ".png")))
+
+```
+\end{minipage}
+\begin{minipage}[t]{`r Pre_dep_delay_layout1[2]`\textwidth}
+```{r pre-dep-dly-pm, eval=params$apdf == "Y", echo=FALSE, fig.align='center', out.height=paste0(Pre_dep_delay_height1, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Pre_Departure_Delay_Monthly_", params$icao, ".png")))
+
+```
+\end{minipage}
+
+
+
+
+
