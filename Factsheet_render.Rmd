@@ -621,3 +621,28 @@ include_graphics(here("R", "Factsheet", "Figures", paste0("Taxi_Out_Times_Monthl
 
 
 
+```{r Turnaround-times-title, results='asis', eval=params$apdf == "Y", echo = FALSE}
+
+cat("# Turnaround times")
+
+```
+
+\begin{minipage}[t]{`r Turnaround_times_layout1[1]`\textwidth}
+```{r annual-turn-time, eval=params$apdf == "Y", echo=FALSE, fig.align='center', out.height=paste0(Turnaround_times_height1, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Turn_Time_Yearly_", params$icao, ".png")))
+
+```
+\end{minipage}
+\begin{minipage}[t]{`r Turnaround_times_layout1[2]`\textwidth}
+```{r monthly-turn-time, eval=params$apdf == "Y", echo=FALSE, fig.align='center', out.height=paste0(Turnaround_times_height1, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Turn_Time_Monthly_", params$icao, ".png")))
+
+```
+\end{minipage}
+
+
+# About this report
+
+
