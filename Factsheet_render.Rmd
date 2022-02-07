@@ -571,3 +571,53 @@ include_graphics(here("R", "Factsheet", "Figures", paste0("Pre_Departure_Delay_M
 
 
 
+```{r Taxi-in-time-title, results='asis', eval=params$apdf == "Y", echo = FALSE}
+
+cat("# Taxi-In Times")
+
+```
+
+\begin{minipage}[t]{`r Taxi_in_times_layout1[1]`\textwidth}
+```{r TXIN-YEARLY-LAYOUT, eval=params$apdf == "Y", echo=FALSE, fig.align='center', out.height=paste0(Taxi_in_times_height1, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Taxi_In_Times_Yearly_", params$icao, ".png")))
+
+```
+\end{minipage}
+\begin{minipage}[t]{`r Taxi_in_times_layout1[2]`\textwidth}
+```{r TXIN-MONTHLY-LAYOUT, eval=params$apdf == "Y", echo=FALSE, fig.align='center', out.height=paste0(Taxi_in_times_height1, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Taxi_In_Times_Monthly_", params$icao, ".png")))
+
+```
+\end{minipage}
+
+
+
+
+
+```{r Taxi-out-time-title, results='asis', eval=params$apdf == "Y", echo = FALSE}
+
+cat("# Taxi-Out Times")
+
+```
+
+\begin{minipage}[t]{`r Taxi_out_times_layout1[1]`\textwidth}
+```{r TXOT-YEARLY-LAYOUT, eval=params$apdf == "Y", echo=FALSE, fig.align='center', out.height=paste0(Taxi_out_times_height1, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Taxi_Out_Times_Yearly_", params$icao, ".png")))
+
+```
+\end{minipage}
+\begin{minipage}[t]{`r Taxi_out_times_layout1[2]`\textwidth}
+```{r TXOT-MONTHLY-LAYOUT, eval=params$apdf == "Y", echo=FALSE, fig.align='center', out.height=paste0(Taxi_out_times_height1, "px")}
+
+include_graphics(here("R", "Factsheet", "Figures", paste0("Taxi_Out_Times_Monthly_", params$icao, ".png")))
+
+```
+\end{minipage}
+
+
+
+
+
