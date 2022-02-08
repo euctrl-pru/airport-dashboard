@@ -87,15 +87,16 @@ punc_dep_yy_plot %>%
 punc_dep_yy_plot_fig = ggplot(data=punc_dep_yy_plot) +
   geom_bar(aes(x=YEAR, y=AVG_PER_CATEG, fill=PUNCT_CAT), stat="identity", position = position_stack(reverse = TRUE)) +
   scale_fill_manual(values=pun_col) +
-  theme_bw() +
-  theme(plot.title = element_blank(),
-        legend.title=element_blank(),
-        legend.text=element_text(size=36),
-        legend.position = "bottom",
-        axis.text=element_text(size=100),
-        axis.title=element_text(size=100),
-        axis.title.x = element_blank(),
-        plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
+  theme_factsheet() +
+  # theme_bw() +
+  # theme(plot.title = element_blank(),
+  #       legend.title=element_blank(),
+  #       legend.text=element_text(size=36),
+  #       legend.position = "bottom",
+  #       axis.text=element_text(size=100),
+  #       axis.title=element_text(size=100),
+  #       axis.title.x = element_blank(),
+  #       plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
   labs(x="", y="Departure Punctuality repartition (%)\n")
 ggsave(here("R", "Factsheet", "Figures", paste0("Punc_Dep_Yearly_", params$icao, ".png")), plot=punc_dep_yy_plot_fig, 
        width = Punctuality_layout1[1]*Page_width, height = Punctuality_height1, units = "cm", dpi=100, limitsize = FALSE)

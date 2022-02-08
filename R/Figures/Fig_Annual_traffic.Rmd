@@ -102,15 +102,16 @@ mvts_pa %>%
 
 mvts_pa_fig = ggplot(data=mvts_pa) +
   geom_bar(aes(x=YEAR, y=FLT_TOT/1000), position = "dodge", stat="identity") +
-  theme_bw() +
-  theme(plot.title = element_blank(),
-        legend.title=element_blank(),
-        legend.text=element_text(size=36),
-        legend.position = "bottom",
-        axis.text=element_text(size=100),
-        axis.title=element_text(size=100),
-        axis.title.x = element_blank(),
-        plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
+  theme_factsheet() +
+  # theme_bw() +
+  # theme(plot.title = element_blank(),
+  #       legend.title=element_blank(),
+  #       legend.text=element_text(size=36),
+  #       legend.position = "bottom",
+  #       axis.text=element_text(size=100),
+  #       axis.title=element_text(size=100),
+  #       axis.title.x = element_blank(),
+  #       plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
   labs(x="", y="Total movements (thousands)\n") +
   scale_y_continuous(labels = label_number(suffix = "k"))
 ggsave(here("R", "Factsheet", "Figures", paste0("Tot_mvmts_", params$icao, ".png")), plot=mvts_pa_fig, 

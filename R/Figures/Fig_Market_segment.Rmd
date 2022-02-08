@@ -58,6 +58,7 @@ if (nrow(share_market)>1) {
                       place = "centre",
                       size = 15,
                       grow = TRUE) +
+    theme_factsheet() +
     theme(legend.position = "none")
 } else {
   share_market_fig = ggplot(data=share_market, aes(x=3, y=FLT_TOT, fill=RULE_NAME)) +
@@ -66,6 +67,7 @@ if (nrow(share_market)>1) {
     coord_polar(theta="y") +
     geom_text(aes(x=3.4, label=label), position = position_stack(vjust = 0.5), size=60) +
     xlim(c(0.2, 3.5)) +
+    theme_factsheet() +
     theme_void() +
     theme(legend.position = "none")
 }

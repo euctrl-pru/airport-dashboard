@@ -43,6 +43,7 @@ punc_dep_yy_share_plot_fig = ggplot() +
                 label=paste0(round(punc_dep_OTP, 0), "%\nOn-Time Performance\n(flights departing not later than\n",
                              "15 minutes from scheduled)")), 
             size=60, colour="black") +
+  theme_factsheet() +
   theme_void()
 ggsave(here("R", "Factsheet", "Figures", paste0("Punc_Dep_Overall_share_", params$icao, ".png")),
        plot=punc_dep_yy_share_plot_fig, width = Punctuality_layout1[3]*Page_width, height = Punctuality_height1, 

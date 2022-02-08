@@ -32,6 +32,7 @@ if (nrow(mvts_country_apts)>1) {
                       place = "centre",
                       size = 15,
                       grow = TRUE) +
+    theme_factsheet() +
     theme(legend.position = "none")
 } else {
   mvts_country_apts_fig = ggplot(data=mvts_country_apts, aes(x=3, y=NBR_MVMTS, fill=AIRPORT)) +
@@ -40,6 +41,7 @@ if (nrow(mvts_country_apts)>1) {
     coord_polar(theta="y") +
     geom_text(aes(x=3.4, label=label), position = position_stack(vjust = 0.5), size=60) +
     xlim(c(0.2, 3.5)) +
+    theme_factsheet() +
     theme_void() +
     theme(legend.position = "none")
 }

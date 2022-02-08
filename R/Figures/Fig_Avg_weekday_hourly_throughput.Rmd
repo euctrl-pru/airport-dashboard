@@ -124,17 +124,18 @@ phase_lbl2  <- c("Departures", "Arrivals", "Total", "Peak Service Rate\n(2016-20
 mvts_pm_fig = ggplot(mutate(thru, PHASE = factor(PHASE,
                                                  levels = phase_grps,
                                                  labels = phase_lbl2))) +
-  geom_line(aes(x=TIME, y = ROLLING_HOUR_MVT, group = PHASE, color = PHASE), size=2) +
-  theme_bw() +
-  theme(plot.title = element_text(size=100, face="bold", hjust=0.5),
-        legend.title=element_blank(),
-        legend.text=element_text(size=100),
-        legend.position = "bottom",
-        axis.text=element_text(size=100),
-        axis.text.x=element_text(angle=270, vjust=0.5),
-        axis.title=element_text(size=100),
-        axis.title.x = element_blank(),
-        plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
+  geom_line(aes(x=TIME, y = ROLLING_HOUR_MVT, group = PHASE, color = PHASE), size=linesize_factsheet) +
+  theme_factsheet() +
+  # theme_bw() +
+  # theme(plot.title = element_text(size=100, face="bold", hjust=0.5),
+  #       legend.title=element_blank(),
+  #       legend.text=element_text(size=100),
+  #       legend.position = "bottom",
+  #       axis.text=element_text(size=100),
+  #       axis.text.x=element_text(angle=270, vjust=0.5),
+  #       axis.title=element_text(size=100),
+  #       axis.title.x = element_blank(),
+  #       plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
   scale_x_discrete(breaks = unique(thru$TIME)[c(TRUE, FALSE)]) +
   labs(x="", y="Average Throughput\n[flights/hour]")
 ggsave(here("R", "Factsheet", "Figures", paste0("Avg_weekday_hourly_throughput_", params$icao, ".png")), 

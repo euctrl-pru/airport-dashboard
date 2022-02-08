@@ -150,15 +150,16 @@ DLY_MM_curr_year=filter(DLY_MM, YEAR==max_year) %>%
 DLY_MM_fig = ggplot(data=filter(DLY_MM_curr_year, YEAR==max_year)) +
   geom_bar(aes(x=Month, y=DLY_DUR/1000, fill=DLY_CAT), stat="identity", position = position_stack(reverse = TRUE)) +
   # scale_fill_manual(values=slot_col) +
-  theme_bw() +
-  theme(plot.title = element_blank(),
-        legend.title=element_blank(),
-        legend.text=element_text(size=36),
-        legend.position = "bottom",
-        axis.text=element_text(size=100),
-        axis.title=element_text(size=100),
-        axis.title.x = element_blank(),
-        plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
+  theme_factsheet() +
+  # theme_bw() +
+  # theme(plot.title = element_blank(),
+  #       legend.title=element_blank(),
+  #       legend.text=element_text(size=36),
+  #       legend.position = "bottom",
+  #       axis.text=element_text(size=100),
+  #       axis.title=element_text(size=100),
+  #       axis.title.x = element_blank(),
+  #       plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
   labs(x="", y="Pre-Departure delay (min)\n") +
   scale_y_continuous(labels = label_number(suffix = "k"))
 ggsave(here("R", "Factsheet", "Figures", paste0("Pre_Departure_Delay_Monthly_", params$icao, ".png")), plot=DLY_MM_fig, 

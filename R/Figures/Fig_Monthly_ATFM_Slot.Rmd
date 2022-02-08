@@ -124,15 +124,16 @@ slot_pm_curr_year=filter(SLOT_MM_PLOT2, YEAR == max(YEAR)) %>%
 slot_pm_fig = ggplot(data=slot_pm_curr_year) +
   geom_bar(aes(x=Month, y=NB_SLOT, fill=SLOT_CAT), stat="identity") +
   scale_fill_manual(values=slot_col) +
-  theme_bw() +
-  theme(plot.title = element_blank(),
-        legend.title=element_blank(),
-        legend.text=element_text(size=36),
-        legend.position = "bottom",
-        axis.text=element_text(size=100),
-        axis.title=element_text(size=100),
-        axis.title.x = element_blank(),
-        plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
+  theme_factsheet() +
+  # theme_bw() +
+  # theme(plot.title = element_blank(),
+  #       legend.title=element_blank(),
+  #       legend.text=element_text(size=36),
+  #       legend.position = "bottom",
+  #       axis.text=element_text(size=100),
+  #       axis.title=element_text(size=100),
+  #       axis.title.x = element_blank(),
+  #       plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
   labs(x="", y="Number of regulated departures\n")
 ggsave(here("R", "Factsheet", "Figures", paste0("Monthly_ATFM_Slot_Adherence_", params$icao, ".png")), plot=slot_pm_fig, 
        width = ATFM_Slot_Adherence_layout1[2]*Page_width, height = ATFM_Slot_Adherence_height1, units = "cm", dpi=100, 

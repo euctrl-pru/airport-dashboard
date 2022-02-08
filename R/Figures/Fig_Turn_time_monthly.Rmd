@@ -139,7 +139,7 @@ TURN_MM_curr_year=filter(TURN_MM, YEAR==max_year) %>%
   arrange(YEAR, Month, Label)
 
 TURN_MM_fig = ggplot(data=filter(TURN_MM_curr_year, YEAR==max_year)) +
-  geom_line(aes(x=Month, y=TT, colour=Label, group=Label, linetype=Label), size=2) +
+  geom_line(aes(x=Month, y=TT, colour=Label, group=Label, linetype=Label), size=linesize_factsheet) +
   scale_colour_manual(values=rep(turn_col, 2),
                         labels=c("Actual Turnaround H", "Actual Turnaround MJ", "Actual Turnaround MT", 
                                  "Scheduled Turnaround H", "Scheduled Turnaround MJ", "Scheduled Turnaround MT")) +
@@ -147,15 +147,16 @@ TURN_MM_fig = ggplot(data=filter(TURN_MM_curr_year, YEAR==max_year)) +
                         labels=c("Actual Turnaround H", "Actual Turnaround MJ", "Actual Turnaround MT", 
                                  "Scheduled Turnaround H", "Scheduled Turnaround MJ", "Scheduled Turnaround MT")) +
   labs(colour="", linetype="") +
-  theme_bw() +
-  theme(plot.title = element_blank(),
-        legend.title=element_blank(),
-        legend.text=element_text(size=36),
-        legend.position = "bottom",
-        axis.text=element_text(size=100),
-        axis.title=element_text(size=100),
-        axis.title.x = element_blank(),
-        plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
+  theme_factsheet() +
+  # theme_bw() +
+  # theme(plot.title = element_blank(),
+  #       legend.title=element_blank(),
+  #       legend.text=element_text(size=36),
+  #       legend.position = "bottom",
+  #       axis.text=element_text(size=100),
+  #       axis.title=element_text(size=100),
+  #       axis.title.x = element_blank(),
+  #       plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
   labs(x="", y="Average Actual Turnaround time (min/flight)\n")
 ggsave(here("R", "Factsheet", "Figures", paste0("Turn_Time_Monthly_", params$icao, ".png")), plot=TURN_MM_fig, 
        width = Turnaround_times_layout1[2]*Page_width, height = Turnaround_times_height1, units = "cm", dpi=100, 

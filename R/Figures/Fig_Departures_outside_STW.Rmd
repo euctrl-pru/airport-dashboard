@@ -48,6 +48,7 @@ Deps_outside_STW_fig = ggplot() +
   geom_text(data=filter(Deps_outside_STW, SLOT_CAT=="TOT_FLT_DEP_OUT_LATE_1"), 
             aes(x=1.5, y=Share/2, vjust=0, label=NB_SLOT), 
             size=60, colour="black") +
+  theme_factsheet() +
   theme_void()
 
 

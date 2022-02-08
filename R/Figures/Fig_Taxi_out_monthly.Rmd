@@ -195,15 +195,16 @@ TXOT_MM_curr_year=filter(TXOT_MM, YEAR==max_year) %>%
 TXOT_MM_fig = ggplot(data=filter(TXOT_MM_curr_year, YEAR==max_year)) +
   geom_bar(aes(x=Month, y=TIME, fill=TYPE), stat="identity", position = position_stack(reverse = TRUE)) +
   # scale_fill_manual(values=slot_col) +
-  theme_bw() +
-  theme(plot.title = element_blank(),
-        legend.title=element_blank(),
-        legend.text=element_text(size=36),
-        legend.position = "bottom",
-        axis.text=element_text(size=100),
-        axis.title=element_text(size=100),
-        axis.title.x = element_blank(),
-        plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
+  theme_factsheet() +
+  # theme_bw() +
+  # theme(plot.title = element_blank(),
+  #       legend.title=element_blank(),
+  #       legend.text=element_text(size=36),
+  #       legend.position = "bottom",
+  #       axis.text=element_text(size=100),
+  #       axis.title=element_text(size=100),
+  #       axis.title.x = element_blank(),
+  #       plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
   labs(x="", y="Average Taxi-Out Time (min/dep)\n")
 ggsave(here("R", "Factsheet", "Figures", paste0("Taxi_Out_Times_Monthly_", params$icao, ".png")), plot=TXOT_MM_fig, 
        width = Taxi_out_times_layout1[2]*Page_width, height = Taxi_out_times_height1, units = "cm", dpi=100, limitsize = FALSE)

@@ -104,6 +104,7 @@ SHARE_CDO_CCO_FLIGHTS_PLOT_curr_year_fig = ggplot(data=SHARE_CDO_CCO_FLIGHTS_PLO
   geom_text(aes(x=0.5, y=0.5,
                 label=paste0(round(SHARE_CCO_FLIGHTS*100, 1), "% CCO\n(", TOT_NBR_FLIGHTS_CLIMB, " flights)")), 
             size=60, colour="black") +
+  theme_factsheet() +
   theme_void()
 
 ggsave(here("R", "Factsheet", "Figures", paste0("Share_CDO_CCO_flights_", params$icao, ".png")), 

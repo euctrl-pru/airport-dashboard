@@ -43,6 +43,7 @@ punc_arr_yy_share_plot_fig = ggplot() +
                 label=paste0(round(punc_arr_OTP, 0), "%\nOn-Time Performance\n(flights arriving not later than\n",
                              "15 minutes from scheduled)")), 
             size=60, colour="black") +
+  theme_factsheet() +
   theme_void()
 ggsave(here("R", "Factsheet", "Figures", paste0("Punc_Arr_Overall_share_", params$icao, ".png")),
        plot=punc_arr_yy_share_plot_fig, width = Punctuality_layout2[3]*Page_width, height = Punctuality_height2, 
