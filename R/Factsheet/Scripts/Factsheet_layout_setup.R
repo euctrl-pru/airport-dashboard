@@ -5,7 +5,6 @@ linesize_factsheet=10
 
 theme_factsheet = function(){
   
-  font_factsheet="Calibri"
   size_general=150
   
   theme_bw() %+replace%
@@ -13,30 +12,32 @@ theme_factsheet = function(){
           legend.text=element_text(size=100),
           legend.position = "bottom",
           plot.margin = unit(c(5.5, 20, 5.5, 60), "pt"),
-          plot.title = element_text(family = font_factsheet,            #set font family
-                                    size   = size_general+10,           #set font size
+          plot.title = element_text(size   = size_general+10,           #set font size
                                     face   = 'bold',                    #bold typeface
                                     hjust  = 0,                         #left align
                                     vjust  = 2),                        #raise slightly
           
-          plot.subtitle = element_text(family = font_factsheet,         #font family
-                                        size  = 14),                    #font size
+          plot.subtitle = element_text(size  = 14),                    #font size
           
-          plot.caption = element_text(family = font_factsheet,          #font family
-                                      size   = 9,                       #font size
+          plot.caption = element_text(size   = 9,                       #font size
                                       hjust  = 1),                      #right align
           
-          axis.title = element_text(family = font_factsheet,            #font family
-                                    size   = size_general),             #font size
+          axis.title = element_text(size   = size_general),             #font size
           
           axis.title.x = element_blank(),
           
-          axis.text = element_text(family = font_factsheet,             #axis family
-                                   size   = size_general),              #font size
+          axis.text = element_text(size   = size_general),              #font size
           
           axis.text.x = element_text(margin=margin(5, b = 10)))         #margin for axis text
-            
   
+  
+  
+}
+
+theme_factsheet_line_figure=function(){
+  
+  theme_factsheet() +
+    guides(colour = guide_legend(override.aes = list(size = 3) ) )
   
 }
 
