@@ -17,7 +17,7 @@ theme_factsheet = function(){
                                     hjust  = 0,                         #left align
                                     vjust  = 2),                        #raise slightly
           
-          plot.subtitle = element_text(size  = 14),                    #font size
+          plot.subtitle = element_text(size  = 14),                     #font size
           
           plot.caption = element_text(size   = 9,                       #font size
                                       hjust  = 1),                      #right align

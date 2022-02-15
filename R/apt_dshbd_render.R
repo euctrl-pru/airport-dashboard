@@ -19,7 +19,7 @@ source(here("R", "Factsheet", "Scripts", "Factsheet_layout_setup.R"))
 APT_DF <- APT_DF %>% arrange(AIRPORT) %>% mutate(idx = row_number())
 
 APT_DF %>%
-  filter( AIRPORT %in% c("EBBR", "EGLL", "LATI")) %>%   # for debug
+  # filter( AIRPORT %in% c("EBBR", "EGLL", "LATI")) %>%   # for debug
   pull(AIRPORT) %>%
   purrr::walk(
     .f = function(icao) {
@@ -38,7 +38,7 @@ APT_DF %>%
 # source(here("R", "Factsheet", "Scripts", "Create_country_maps.R"), encoding = "UTF8")
 
 APT_DF %>%
-  filter( AIRPORT %in% c("EBBR", "EGLL", "LATI")) %>%   # for debug
+  # filter( AIRPORT %in% c("EBBR", "EGLL", "LATI")) %>%   # for debug
   pull(AIRPORT) %>%
   purrr::walk(
     .f = function(icao) {
