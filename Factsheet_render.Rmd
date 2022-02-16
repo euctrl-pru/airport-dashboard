@@ -1,5 +1,6 @@
 ---
 params:
+   
    icao:         $icao
    iata:         $iata
    name:         $name
@@ -36,7 +37,6 @@ params:
    turn_mm:      $turn_mm
    turn_new:     $turn_new
    cdo_cco:      $cdo_cco
-   
 title: "`r paste0('Factsheet for ', params$icao, ' (', params$name, ')')`"
 author: Aviation Intelligence Unit, EUROCONTROL
 date: "`r format(Sys.time(), '%d/%m/%Y')`" 
@@ -49,16 +49,9 @@ output:
     keep_tex: false
   # extra_dependencies: "subfig"
     includes:
-      in_header: G:/HQ/dgof-pru/Project/Vertical_flight_efficiency/2015/airport-dashboard/R/Factsheet/header.txt
+      in_header: preamble.tex
 editor_options: 
   chunk_output_type: console
-header-includes: 
-  - \usepackage{float}
-  - \floatplacement{figure}{H} # make every figure with caption = h
-  - \usepackage{titling}
-  - \pretitle{\begin{center}
-  - \posttitle{\end{center}}
-    \includegraphics[width=2in,height=2in]{G:/HQ/dgof-pru/Project/Vertical_flight_efficiency/2015/airport-dashboard/R/Figures/ECTL_logo}\LARGE\\}
 urlcolor: blue
 subparagraph: yes
 ---
@@ -79,6 +72,7 @@ library("openxlsx")
 library("here")
 library("DT")
 library("patchwork")
+library("treemapify")
 
 knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE, error=FALSE, out.width = "\\textwidth")
 Sys.setenv(TZ = "UTC")
@@ -308,8 +302,7 @@ include_graphics(here("layouts", paste0(params$icao, ".png")))
 
 Airport<<-params$icao
 
-source(here("R", "Factsheet", "Scripts", "Fig_Mvmts_country_airports_treemap.R"), encoding = "UTF8")
-# source(here("R", "Factsheet", "Scripts", "Fig_Flights_moving_avg.R"), encoding = "UTF8")
+source(here("R", "fig_mvmts_country_airports_treemap.R"), encoding = "UTF8")
 
 ```
 

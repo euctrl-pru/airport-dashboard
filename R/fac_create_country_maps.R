@@ -12,7 +12,7 @@ library(geonames)
 library(countrycode)
 
 options(geonamesUsername = "spatc")
-source(here("R", "Factsheet", "Scripts", "Install_phantomjs.R"))
+source(here("R", "fac_install_phantomjs.R"))
 
 APT_DF <- read_csv2(here("data","APT_DSHBD_AIRPORT.csv"))
 
