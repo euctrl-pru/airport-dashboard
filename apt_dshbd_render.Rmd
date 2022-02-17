@@ -337,13 +337,13 @@ if (nrow(params$tfcvar) < 1) {
 
 ### Annual Traffic (Source: Network Manager)
 
-```{r annual-traffic, child='R/Figures/Fig_Annual_traffic.Rmd'}
+```{r annual-traffic, file='R/fig_annual_traffic.R'}
 
 ```
 
 ### Monthly Traffic (Source: Network Manager)
 
-```{r monthly-traffic, child='R/Figures/Fig_Monthly_traffic.Rmd'}
+```{r monthly-traffic, file='R/fig_monthly_traffic.R'}
 
 ```
 
@@ -418,14 +418,14 @@ pbox_group
 
 ### Share of Market Segment (Source: Network Manager)
 
-```{r market-segment, child='R/Figures/Fig_Market_segment.Rmd'}
+```{r market-segment, file='R/fig_market_segment.R'}
 
 ```
 
 
 ### Average Weekday Hourly Throughput (Source: Network Manager)
 
-```{r Avg-weekday-hourly-throughput, child='R/Figures/Fig_Avg_weekday_hourly_throughput.Rmd'}
+```{r Avg-weekday-hourly-throughput, file='R/fig_avg_weekday_hourly_throughput.R'}
 
 ```
 
@@ -436,13 +436,13 @@ pbox_group
 ### Annual Arrival ATFM Delay (Source: Network Manager)
 
 
-```{r atfm-pa, child='R/Figures/Fig_Annual_Arr_ATFM_Delay.Rmd'}
+```{r atfm-pa, file='R/fig_annual_arr_atfm_delay.R'}
 
 ```
 
 ### Monthly Arrival ATFM Delay (Source: Network Manager)
 
-```{r atfm-pm, child='R/Figures/Fig_Monthly_Arr_ATFM_Delay.Rmd'}
+```{r atfm-pm, file='R/fig_monthly_arr_atfm_delay.R'}
 
 ```
 
@@ -817,13 +817,13 @@ SLOT_MM_PLOT1 %>%
 
 ### Annual ATFM Slot Adherence (Source: Network Manager)
 
-```{r ANNUAL-ATFM-SLOT2, child='R/Figures/Fig_Annual_ATFM_Slot.Rmd'}
+```{r ANNUAL-ATFM-SLOT2, file='R/fig_annual_atfm_slot.R'}
 
 ```
 
 ### Monthly ATFM Slot Adherence (Source: Network Manager)
 
-```{r MONTHLY-ATFM-SLOT2, child='R/Figures/Fig_Monthly_ATFM_Slot.Rmd'}
+```{r MONTHLY-ATFM-SLOT2, file='R/fig_monthly_atfm_slot.R'}
 
 ```
 
@@ -850,7 +850,7 @@ cat("### Average time flown level per flight (Source: AIU analysis)")
 ```
 
   
-```{r Avg-time-lvl, child='R/Figures/Fig_Avg_time_lvl.Rmd'}
+```{r Avg-time-lvl, file='R/fig_avg_time_lvl.R'}
 
 ```
 
@@ -862,7 +862,7 @@ cat("### Median CDO/CCO altitudes (Source: AIU analysis)")
 ```
 
 
-```{r Med-CDO-CCO-alt, child='R/Figures/Fig_Med_CDO_CCO_alt.Rmd'}
+```{r Med-CDO-CCO-alt, file='R/fig_med_cdo_cco_alt.R'}
 
 ```
 
@@ -881,7 +881,7 @@ cat("### Share of CDO/CCO flights (Source: AIU analysis)")
 ```
 
 
-```{r Share-unimpeded, child='R/Figures/Fig_Share_unimpeded_CDO_CCO.Rmd'}
+```{r Share-unimpeded, file='R/fig_share_unimpeded_cdo_cco.R'}
 
 ```
 

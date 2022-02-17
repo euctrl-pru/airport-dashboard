@@ -19,7 +19,7 @@ source(here("R", "fac_layout_setup.R"))
 APT_DF <- APT_DF %>% arrange(AIRPORT) %>% mutate(idx = row_number())
 
 APT_DF %>%
-  # filter( AIRPORT %in% c("EBBR", "EGLL", "LATI")) %>%   # for debug
+  filter( AIRPORT %in% c("EBBR", "EGLL", "LATI")) %>%   # for debug
   pull(AIRPORT) %>%
   purrr::walk(
     .f = function(icao) {
