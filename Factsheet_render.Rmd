@@ -362,7 +362,7 @@ include_graphics(here("R", "Factsheet", "Figures", paste0("Avg_weekday_hourly_th
 
 # Arrival ATFM Delay
 
-```{r Arr-ATFM-Delay-country, child='R/Figures/Fig_Arr_ATFM_Delay_country_airports_treemap.Rmd'}
+```{r Arr-ATFM-Delay-country, file='R/fig_arr_atfm_delay_country_airports_treemap.R'}
 
 ```
 
@@ -394,7 +394,7 @@ include_graphics(here("R", "Factsheet", "Figures", paste0("ARR_ATFM_delay_countr
 
 # ATFM Slot Adherence
 
-```{r ATFM-SLOT-Dep-outside-STW, child='R/Figures/Fig_Departures_outside_STW.Rmd'}
+```{r ATFM-SLOT-Dep-outside-STW, file='R/fig_departures_outside_stw.R'}
 
 ```
 
@@ -462,7 +462,11 @@ cat("# Punctuality")
 
 ```
 
-```{r punctuality-Overall-shares, eval=params$punc == "Y", child=c('R/Figures/Fig_Punctuality_Dep_overall_share.Rmd', 'R/Figures/Fig_Punctuality_Arr_overall_share.Rmd')}
+```{r punctuality-dep-overall-share, results='asis', eval=params$punc == "Y", echo = FALSE, file='R/fig_punctuality_dep_overall_share.R'}
+
+```
+
+```{r punctuality-arr-overall-share, results='asis', eval=params$punc == "Y", echo = FALSE, file='R/fig_punctuality_arr_overall_share.R'}
 
 ```
 

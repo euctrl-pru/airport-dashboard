@@ -850,7 +850,7 @@ cat("### Average time flown level per flight (Source: AIU analysis)")
 ```
 
   
-```{r Avg-time-lvl, file='R/fig_avg_time_lvl.R'}
+```{r Avg-time-lvl, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE, file='R/fig_avg_time_lvl.R'}
 
 ```
 
@@ -862,7 +862,7 @@ cat("### Median CDO/CCO altitudes (Source: AIU analysis)")
 ```
 
 
-```{r Med-CDO-CCO-alt, file='R/fig_med_cdo_cco_alt.R'}
+```{r Med-CDO-CCO-alt, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE, file='R/fig_med_cdo_cco_alt.R'}
 
 ```
 
@@ -881,7 +881,7 @@ cat("### Share of CDO/CCO flights (Source: AIU analysis)")
 ```
 
 
-```{r Share-unimpeded, file='R/fig_share_unimpeded_cdo_cco.R'}
+```{r Share-unimpeded, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE, file='R/fig_share_unimpeded_cdo_cco.R'}
 
 ```
 
@@ -972,7 +972,7 @@ cat("### Annual ASMA Time (Source: APDF)")
 ```
 
 
-```{r ASMA-YEARLY-LAYOUT, child='R/Figures/Fig_ASMA_yearly.Rmd'}
+```{r ASMA-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, file='R/fig_asma_yearly.R'}
 
 ```
 
@@ -984,7 +984,7 @@ cat("### Monthly ASMA Time (Source: APDF)")
 ```
 
 
-```{r ASMA-MONTHLY-LAYOUT, child='R/Figures/Fig_ASMA_monthly.Rmd'}
+```{r ASMA-MONTHLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, file='R/fig_asma_monthly.R'}
 
 ```
 
@@ -1076,7 +1076,7 @@ cat("### Annual Taxi-Out Time (Source: APDF)")
 ```
 
 
-```{r TXOT-YEARLY-LAYOUT, child='R/Figures/Fig_Taxi_out_yearly.Rmd'}
+```{r TXOT-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, file='R/fig_taxi_out_yearly.R'}
 
 ```
 
@@ -1088,7 +1088,7 @@ cat("### Monthly Taxi-Out Time (Source: APDF)")
 ```
 
 
-```{r TAXI-OUT-MONTHLY-LAYOUT, child='R/Figures/Fig_Taxi_out_monthly.Rmd'}
+```{r TAXI-OUT-MONTHLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, file='R/fig_taxi_out_monthly.R'}
 
 ```
 
@@ -1128,7 +1128,7 @@ cat("### Annual Taxi-In Time (Source: APDF)")
 ```
 
 
-```{r TXIN-YEARLY-LAYOUT, child='R/Figures/Fig_Taxi_in_yearly.Rmd'}
+```{r TXIN-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, file='R/fig_taxi_in_yearly.R'}
 
 ```
 
@@ -1140,7 +1140,7 @@ cat("### Monthly Taxi-In Time (Source: APDF)")
 ```
 
 
-```{r TAXI-IN-MONTHLY-LAYOUT, child='R/Figures/Fig_Taxi_in_monthly.Rmd'}
+```{r TAXI-IN-MONTHLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, file='R/fig_taxi_in_monthly.R'}
 
 ```
 
@@ -1179,7 +1179,7 @@ cat("### Annual Pre-Departure Delay (Source: APDF)")
 ```
 
 
-```{r pre-dep-dly-pa, child='R/Figures/Fig_Pre_departure_delay_yearly.Rmd'}
+```{r pre-dep-dly-pa, results='asis', eval=params$apdf == "Y", echo = FALSE, file='R/fig_pre_departure_delay_yearly.R'}
 
 ```
 
@@ -1191,7 +1191,7 @@ cat("### Monthly Pre-Departure Delay (Source: APDF)")
 ```
 
 
-```{r pre-dep-dly-month, child='R/Figures/Fig_Pre_departure_delay_monthly.Rmd'}
+```{r pre-dep-dly-month, results='asis', eval=params$apdf == "Y", echo = FALSE, file='R/fig_pre_departure_delay_monthly.R'}
 
 ```
 
@@ -1422,7 +1422,7 @@ cat("### Annual Departure Punctuality (Source: APDF)")
 ```
 
   
-```{r Punctuality-DEP-YEARLY-LAYOUT, child='R/Figures/Fig_Punctuality_Dep_yearly_layout.Rmd'}
+```{r Punctuality-DEP-YEARLY-LAYOUT, results='asis', eval=params$punc == "Y", echo = FALSE, file='R/fig_punctuality_dep_yearly_layout.R'}
 
 ```
 
@@ -1434,7 +1434,7 @@ cat("### Monthly Departure Punctuality (Source: APDF)")
 ```
 
 
-```{r Punctuality-DEP-MONHTLY-LAYOUT, child='R/Figures/Fig_Punctuality_Dep_monthly_layout.Rmd'}
+```{r Punctuality-DEP-MONHTLY-LAYOUT, results='asis', eval=params$punc == "Y", echo = FALSE, file='R/fig_punctuality_dep_monthly_layout.R'}
 
 ```
 
@@ -1453,7 +1453,7 @@ cat("### Annual Arrival Punctuality (Source: APDF)")
 ```
 
 
-```{r Punctuality-ARR-YEARLY-LAYOUT, child='R/Figures/Fig_Punctuality_Arr_yearly_layout.Rmd'}
+```{r Punctuality-ARR-YEARLY-LAYOUT, results='asis', eval=params$punc == "Y", echo = FALSE, file='R/fig_punctuality_arr_yearly_layout.R'}
 
 ```
 
@@ -1465,7 +1465,7 @@ cat("### Monthly Arrival Punctuality (Source: APDF)")
 ```
 
 
-```{r Punctuality-ARR-MONHTLY-LAYOUT, child='R/Figures/Fig_Punctuality_Arr_monthly_layout.Rmd'}
+```{r Punctuality-ARR-MONHTLY-LAYOUT, results='asis', eval=params$punc == "Y", echo = FALSE, file='R/fig_punctuality_arr_monthly_layout.R'}
 
 ```
 
@@ -1498,7 +1498,7 @@ cat("### Annual Actual Turnaround Time (Source: APDF)")
 ```
 
 
-```{r annual-turn-time, child='R/Figures/Fig_Turn_time_yearly.Rmd'}
+```{r annual-turn-time, results='asis', eval=params$apdf == "Y", echo = FALSE, file='R/fig_turn_time_yearly.R'}
 
 ```
 
@@ -1510,7 +1510,7 @@ cat("### Monthly Turnaround Times (Source: APDF)")
 ```
 
 
-```{r monthly-turn-time, child='R/Figures/Fig_Turn_time_monthly.Rmd'}
+```{r monthly-turn-time, results='asis', eval=params$apdf == "Y", echo = FALSE, file='R/fig_turn_time_monthly.R'}
 
 ```
 
