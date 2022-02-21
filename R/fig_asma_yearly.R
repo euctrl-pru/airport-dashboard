@@ -132,6 +132,6 @@ ASMA_YY_fig = ggplot(data=ASMA_YY) +
   #       axis.title.x = element_blank(),
   #       plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
   labs(x="", y="Average ASMA time (min/arr)\n")
-ggsave(here("R", "Factsheet", "Figures", paste0("ASMA_Yearly_", params$icao, ".png")), plot=ASMA_YY_fig, 
+ggsave(here("media", "factsheet", paste0("ASMA_Yearly_", params$icao, ".png")), plot=ASMA_YY_fig, 
        width = ASMA_layout1[1]*Page_width, height = ASMA_height1, units = "cm", dpi=100, limitsize = FALSE)
 

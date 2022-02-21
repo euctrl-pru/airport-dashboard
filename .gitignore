@@ -95,5 +95,5 @@ $RECYCLE.BIN/
 .RDataTmp
 
 # Factsheet figures
-R/Factsheet/Figures/**
-R/Factsheet/Factsheets/**
+media/airport_maps/**
+media/factsheet/**

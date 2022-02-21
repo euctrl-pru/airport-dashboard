@@ -72,7 +72,7 @@ if (nrow(ARR_ATFM_delay_country_apts)>1) {
   }
 }
 
-ggsave(here("R", "Factsheet", "Figures", paste0("ARR_ATFM_delay_country_treemap_", Airport, ".png")), 
+ggsave(here("media", "factsheet", paste0("ARR_ATFM_delay_country_treemap_", Airport, ".png")), 
        plot=ARR_ATFM_delay_country_apts_fig,width = Arr_ATFM_Delay_layout1[3]*Page_width, height = Arr_ATFM_Delay_height1, 
        units = "cm", dpi=100, limitsize = FALSE)
 

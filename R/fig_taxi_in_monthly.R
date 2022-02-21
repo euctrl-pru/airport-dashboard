@@ -203,6 +203,6 @@ TXIN_MM_fig = ggplot(data=filter(TXIN_MM_curr_year, YEAR==max_year)) +
   #       axis.title.x = element_blank(),
   #       plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
   labs(x="", y="Average Taxi-In Time (min/arr)\n")
-ggsave(here("R", "Factsheet", "Figures", paste0("Taxi_In_Times_Monthly_", params$icao, ".png")), plot=TXIN_MM_fig, 
+ggsave(here("media", "factsheet", paste0("Taxi_In_Times_Monthly_", params$icao, ".png")), plot=TXIN_MM_fig, 
        width = Taxi_in_times_layout1[2]*Page_width, height = Taxi_in_times_height1, units = "cm", dpi=100, limitsize = FALSE)
 

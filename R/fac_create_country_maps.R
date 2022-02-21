@@ -46,7 +46,7 @@ for (Airport in apt$icao) {
     addMarkers(lng = ~lon, lat = ~lat) %>% 
     fitBounds(lng1 = bounds$west, lat1 = bounds$north, lng2 = bounds$east, lat2 = bounds$south)
   
-  mapshot(m, file = here("R", "Factsheet", "Figures", "Airport_maps", paste0("APT_map_", Airport, ".png")))
+  mapshot(m, file = here("media", "airport_maps", paste0("APT_map_", Airport, ".png")))
   
 }
 

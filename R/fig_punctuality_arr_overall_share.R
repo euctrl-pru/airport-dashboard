@@ -43,7 +43,7 @@ punc_arr_yy_share_plot_fig = ggplot() +
             size=60, colour="black") +
   theme_factsheet() +
   theme_void()
-ggsave(here("R", "Factsheet", "Figures", paste0("Punc_Arr_Overall_share_", params$icao, ".png")),
+ggsave(here("media", "factsheet", paste0("Punc_Arr_Overall_share_", params$icao, ".png")),
        plot=punc_arr_yy_share_plot_fig, width = Punctuality_layout2[3]*Page_width, height = Punctuality_height2, 
        units = "cm", dpi=100, limitsize = FALSE)
 

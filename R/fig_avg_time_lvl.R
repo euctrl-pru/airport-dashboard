@@ -202,6 +202,6 @@ AVG_TIME_LVL_PLOT_fig = ggplot(data=AVG_TIME_LVL_PLOT_curr_year) +
   #       plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
   labs(x="", y="Average time flown level per flight (min.)\n", title="")
 
-ggsave(here("R", "Factsheet", "Figures", paste0("Avg_time_lvl_", params$icao, ".png")), 
+ggsave(here("media", "factsheet", paste0("Avg_time_lvl_", params$icao, ".png")), 
        plot=AVG_TIME_LVL_PLOT_fig, width = VFE_layout1[1]*Page_width, height = VFE_height1, 
        units = "cm", dpi=100, limitsize = FALSE)
