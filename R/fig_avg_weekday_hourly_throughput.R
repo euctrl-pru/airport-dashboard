@@ -140,8 +140,6 @@ if (nrow(thru)>0) {
     #       plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
     scale_x_discrete(breaks = unique(thru$TIME)[c(TRUE, FALSE)]) +
     labs(x="", y="Average Throughput\n[flights/hour]")
-  ggsave(here("R", "Factsheet", "Figures", paste0("Avg_weekday_hourly_throughput_", params$icao, ".png")), 
-         width = Traffic_layout3[1]*Page_width, height = Traffic_height3, units = "cm", dpi=100, limitsize = FALSE)
   
 } else {
   
@@ -153,3 +151,6 @@ if (nrow(thru)>0) {
     theme_void()
   
 }
+
+ggsave(here("media", "factsheet", paste0("Avg_weekday_hourly_throughput_", params$icao, ".png")), plot = mvts_pm_fig,
+       width = Traffic_layout3[1]*Page_width, height = Traffic_height3, units = "cm", dpi=100, limitsize = FALSE)

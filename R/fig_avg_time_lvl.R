@@ -25,8 +25,8 @@ for (i in 1:length(filter_years)) {
                          round(AVG_TIME_LVL_min_temp$AVG_TIME_LVL_DESCENT/60, 1), " min.</b>"),
                        yshift=40,
                        xshift = ifelse(AVG_TIME_LVL_min_temp$MONTH_NUM==1,
-                                       20,
-                                       ifelse(AVG_TIME_LVL_min_temp$MONTH_NUM==12, -20, 0)),
+                                       70,
+                                       ifelse(AVG_TIME_LVL_min_temp$MONTH_NUM==12, -70, 0)),
                        align = ifelse(AVG_TIME_LVL_min_temp$MONTH_NUM==1,
                                       "left",
                                       ifelse(AVG_TIME_LVL_min_temp$MONTH_NUM==12, "right", "center")),
@@ -108,9 +108,12 @@ avg_time_lvl_fig=plot_ly(AVG_TIME_LVL_PLOT,
                          y = ~AVG_TIME_LVL_DESCENT/60, 
                          customdata = ~YEAR, 
                          line = list(color = 'rgb(40, 120, 181)'),
+                         marker = list(color = 'rgb(40, 120, 181)'),
+                         symbol = ~max_year,
+                         symbols = 'circle',
                          hovertemplate = "%{y:.1f}",
                          type = 'scatter',
-                         mode = 'lines',
+                         mode = ifelse(nrow(filter(AVG_TIME_LVL_PLOT, YEAR==max_year))>1, 'lines', 'lines+markers'),
                          name = 'Descent (Fuel CDO)',
                          transforms = list(list(type      = 'filter',
                                                 target    = "customdata",
@@ -118,13 +121,25 @@ avg_time_lvl_fig=plot_ly(AVG_TIME_LVL_PLOT,
                                                 value     = max_year)
                          )) %>% 
   add_trace(y = ~AVG_TIME_LVL_CLIMB/60, 
+            mode = ifelse(nrow(filter(AVG_TIME_LVL_PLOT, YEAR==max_year))>1, 'lines', 'lines+markers'),
             line = list(color = 'rgb(106, 168, 82)'),
+            marker = list(color = 'rgb(106, 168, 82)'),
+            symbol = ~max_year,
+            symbols = 'circle',
             name = 'Climb (Fuel CCO)') %>%
   add_trace(y = ~AVG_TIME_LVL_DESCENT_BLW_70/60, 
+            mode = ifelse(nrow(filter(AVG_TIME_LVL_PLOT, YEAR==max_year))>1, 'lines', 'lines+markers'),
             line = list(color = 'rgb(40, 120, 181)', dash = 'dash'),
+            marker = list(color = 'rgb(40, 120, 181)'),
+            symbol = ~max_year+1,
+            symbols = 'triangle-up',
             name = 'Descent (Noise CDO)') %>% 
   add_trace(y = ~AVG_TIME_LVL_CLIMB_BLW_100/60, 
+            mode = ifelse(nrow(filter(AVG_TIME_LVL_PLOT, YEAR==max_year))>1, 'lines', 'lines+markers'),
             line = list(color = 'rgb(106, 168, 82)', dash = 'dash'),
+            marker = list(color = 'rgb(106, 168, 82)'),
+            symbol = ~max_year+1,
+            symbols = 'triangle-up',
             name = 'Climb (Noise CCO)') %>% 
   # add_annotations(x         = 1, 
   #                 y         = -0.1, 
@@ -202,6 +217,16 @@ AVG_TIME_LVL_PLOT_fig = ggplot(data=AVG_TIME_LVL_PLOT_curr_year) +
   #       plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
   labs(x="", y="Average time flown level per flight (min.)\n", title="")
 
-ggsave(here("R", "Factsheet", "Figures", paste0("Avg_time_lvl_", params$icao, ".png")), 
+if (nrow(filter(AVG_TIME_LVL_PLOT, YEAR==max_year))==1) {
+  
+  AVG_TIME_LVL_PLOT_fig = AVG_TIME_LVL_PLOT_fig +
+    geom_point(aes(x=Month, y = Value/60, group=Metric, colour=Metric, shape=Metric), size=20) +
+    scale_shape_manual(name="", values = c(16, 17, 16, 17),
+                          labels=c("Descent (Fuel CDO)", "Descent (Noise CDO)", "Climb (Fuel CCO)", "Climb (Noise CCO)")) +
+    scale_colour_manual(name ="", values = AVG_TIME_LVL_PLOT_cols,
+                        labels=c("Descent (Fuel CDO)", "Descent (Noise CDO)", "Climb (Fuel CCO)", "Climb (Noise CCO)"))
+}
+
+ggsave(here("media", "factsheet", paste0("Avg_time_lvl_", params$icao, ".png")), 
        plot=AVG_TIME_LVL_PLOT_fig, width = VFE_layout1[1]*Page_width, height = VFE_height1, 
        units = "cm", dpi=100, limitsize = FALSE)

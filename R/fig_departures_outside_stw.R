@@ -50,7 +50,7 @@ Deps_outside_STW_fig = ggplot() +
   theme_void()
 
 
-ggsave(here("R", "Factsheet", "Figures", paste0("Departures_outside_STW_", Airport, ".png")), 
+ggsave(here("media", "factsheet", paste0("Departures_outside_STW_", Airport, ".png")), 
        plot=Deps_outside_STW_fig,width = ATFM_Slot_Adherence_layout1[3]*Page_width,
        height = ATFM_Slot_Adherence_height1, units = "cm", dpi=100, limitsize = FALSE)
 

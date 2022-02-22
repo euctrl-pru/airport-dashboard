@@ -158,6 +158,6 @@ DLY_YY_fig = ggplot(data=DLY_YY) +
   #       plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
   labs(x="", y="Pre-Departure delay (min)\n") +
   scale_y_continuous(labels = label_number(suffix = "M"))
-ggsave(here("R", "Factsheet", "Figures", paste0("Pre_Departure_Delay_Yearly_", params$icao, ".png")), plot=DLY_YY_fig, 
+ggsave(here("media", "factsheet", paste0("Pre_Departure_Delay_Yearly_", params$icao, ".png")), plot=DLY_YY_fig, 
        width = Pre_dep_delay_layout1[1]*Page_width, height = Pre_dep_delay_height1, units = "cm", dpi=100, limitsize = FALSE)
 

@@ -87,7 +87,7 @@ slot_pa_fig = ggplot(data=SLOT_YY_PLOT2) +
   #       axis.title.x = element_blank(),
   #       plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
   labs(x="", y="Number of regulated departures\n")
-ggsave(here("R", "Factsheet", "Figures", paste0("Annual_ATFM_Slot_Adherence_", params$icao, ".png")), plot=slot_pa_fig, 
+ggsave(here("media", "factsheet", paste0("Annual_ATFM_Slot_Adherence_", params$icao, ".png")), plot=slot_pa_fig, 
        width = ATFM_Slot_Adherence_layout1[1]*Page_width, height = ATFM_Slot_Adherence_height1, units = "cm", dpi=100, 
        limitsize = FALSE)
 

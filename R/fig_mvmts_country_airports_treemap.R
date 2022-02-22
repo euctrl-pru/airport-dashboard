@@ -46,5 +46,5 @@ if (nrow(mvts_country_apts)>1) {
     theme(legend.position = "none")
 }
 
-ggsave(here("R", "Factsheet", "Figures", paste0("Mvmts_country_treemap_", Airport, ".png")), plot=mvts_country_apts_fig, 
+ggsave(here("media", "factsheet", paste0("Mvmts_country_treemap_", Airport, ".png")), plot=mvts_country_apts_fig, 
        width = Traffic_layout2[1]*Page_width, height = Traffic_height2, units = "cm", dpi=100, limitsize = FALSE)

@@ -274,7 +274,7 @@ pander(RWY_CONFIG, cols = NULL)
 
 ```{r APT-map, echo=FALSE, fig.align='center'}
 
-include_graphics(here("R", "Factsheet", "Figures", "Airport_maps", paste0("APT_map_", params$icao, ".png")))
+include_graphics(here("media", "airport_maps", paste0("APT_map_", params$icao, ".png")))
 
 ```
 
@@ -309,21 +309,21 @@ source(here("R", "fig_mvmts_country_airports_treemap.R"), encoding = "UTF8")
 \begin{minipage}[t]{`r Traffic_layout1[1]`\textwidth}
 ```{r Tot-mvmts-yearly, echo=FALSE, fig.align='center', out.height=paste0(Traffic_height1, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Tot_mvmts_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("Annual_mvmts_", params$icao, ".png")))
 
 ```
 \end{minipage}
 \begin{minipage}[t]{`r Traffic_layout1[2]`\textwidth}
 ```{r Tot-mvmts-monthly, echo=FALSE, fig.align='center', out.height=paste0(Traffic_height1, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Monthly_mvmts_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("Monthly_mvmts_", params$icao, ".png")))
 
 ```
 \end{minipage}
 \begin{minipage}[t]{`r Traffic_layout1[3]`\textwidth}
 ```{r Market-segments, echo=FALSE, fig.align='center', out.height=paste0(Traffic_height1, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Market_segments_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("Market_segments_", params$icao, ".png")))
 
 ```
 \end{minipage}
@@ -331,21 +331,21 @@ include_graphics(here("R", "Factsheet", "Figures", paste0("Market_segments_", pa
 \begin{minipage}[t]{`r Traffic_layout2[1]`\textwidth}
 ```{r Traffic-country-apts, echo=FALSE, fig.align='center', out.height=paste0(Traffic_height2, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Mvmts_country_treemap_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("Mvmts_country_treemap_", params$icao, ".png")))
 
 ```
 \end{minipage}
 \begin{minipage}[t]{`r Traffic_layout2[2]`\textwidth}
 ```{r Daily-flights, echo=FALSE, fig.align='center', out.height=paste0(Traffic_height2, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Monthly_mvmts_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("Monthly_mvmts_", params$icao, ".png")))
 
 ```
 \end{minipage}
 
 ```{r Hourly-throughput, echo=FALSE, fig.align='center', out.height=paste0(Traffic_height3, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Avg_weekday_hourly_throughput_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("Avg_weekday_hourly_throughput_", params$icao, ".png")))
 
 ```
 
@@ -369,21 +369,21 @@ include_graphics(here("R", "Factsheet", "Figures", paste0("Avg_weekday_hourly_th
 \begin{minipage}[t]{`r Arr_ATFM_Delay_layout1[1]`\textwidth}
 ```{r Annual-Arr-ATFM-Delay, echo=FALSE, fig.align='center', out.height=paste0(Arr_ATFM_Delay_height1, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Annual_Arr_ATFM_Delay_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("Annual_Arr_ATFM_Delay_", params$icao, ".png")))
 
 ```
 \end{minipage}
 \begin{minipage}[t]{`r Arr_ATFM_Delay_layout1[2]`\textwidth}
 ```{r Monthly-Arr-ATFM-Delay, echo=FALSE, fig.align='center', out.height=paste0(Arr_ATFM_Delay_height1, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Monthly_Arr_ATFM_Delay_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("Monthly_Arr_ATFM_Delay_", params$icao, ".png")))
 
 ```
 \end{minipage}
 \begin{minipage}[t]{`r Arr_ATFM_Delay_layout1[3]`\textwidth}
 ```{r Arr-ATFM-delay-state, echo=FALSE, fig.align='center', out.height=paste0(Arr_ATFM_Delay_height1, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("ARR_ATFM_delay_country_treemap_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("ARR_ATFM_delay_country_treemap_", params$icao, ".png")))
 
 ```
 \end{minipage}
@@ -401,21 +401,21 @@ include_graphics(here("R", "Factsheet", "Figures", paste0("ARR_ATFM_delay_countr
 \begin{minipage}[t]{`r ATFM_Slot_Adherence_layout1[1]`\textwidth}
 ```{r Annual-ATFM-Slot, echo=FALSE, fig.align='center', out.height=paste0(ATFM_Slot_Adherence_height1, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Annual_ATFM_Slot_Adherence_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("Annual_ATFM_Slot_Adherence_", params$icao, ".png")))
 
 ```
 \end{minipage}
 \begin{minipage}[t]{`r ATFM_Slot_Adherence_layout1[2]`\textwidth}
 ```{r Monthly-ATFM-Slot, echo=FALSE, fig.align='center', out.height=paste0(ATFM_Slot_Adherence_height1, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Monthly_ATFM_Slot_Adherence_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("Monthly_ATFM_Slot_Adherence_", params$icao, ".png")))
 
 ```
 \end{minipage}
 \begin{minipage}[t]{`r ATFM_Slot_Adherence_layout1[3]`\textwidth}
 ```{r Departures-outside-STW, echo=FALSE, fig.align='center', out.height=paste0(ATFM_Slot_Adherence_height1, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Departures_outside_STW_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("Departures_outside_STW_", params$icao, ".png")))
 
 ```
 \end{minipage}
@@ -433,21 +433,21 @@ cat("# Vertical Flight Efficiency in Climb and Descent")
 \begin{minipage}[t]{`r VFE_layout1[1]`\textwidth}
 ```{r Avg-time-lvl, eval=nrow(params$cdo_cco)>0, echo=FALSE, fig.align='center', out.height=paste0(VFE_height1, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Avg_time_lvl_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("Avg_time_lvl_", params$icao, ".png")))
 
 ```
 \end{minipage}
 \begin{minipage}[t]{`r VFE_layout1[2]`\textwidth}
 ```{r Med-CDO-CCO-alt, eval=nrow(params$cdo_cco)>0, echo=FALSE, fig.align='center', out.height=paste0(VFE_height1, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Med_CDO_CCO_alt_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("Med_CDO_CCO_alt_", params$icao, ".png")))
 
 ```
 \end{minipage}
 \begin{minipage}[t]{`r VFE_layout1[3]`\textwidth}
 ```{r Share-unimpeded, eval=nrow(params$cdo_cco)>0, echo=FALSE, fig.align='center', out.height=paste0(VFE_height1, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Share_CDO_CCO_flights_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("Share_CDO_CCO_flights_", params$icao, ".png")))
 
 ```
 \end{minipage}
@@ -473,21 +473,21 @@ cat("# Punctuality")
 \begin{minipage}[t]{`r Punctuality_layout1[1]`\textwidth}
 ```{r Punctuality-DEP-YEARLY-LAYOUT, eval=params$punc == "Y", echo=FALSE, fig.align='center', out.height=paste0(Punctuality_height1, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Punc_Dep_Yearly_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("Punc_Dep_Yearly_", params$icao, ".png")))
 
 ```
 \end{minipage}
 \begin{minipage}[t]{`r Punctuality_layout1[2]`\textwidth}
 ```{r Punctuality-DEP-MONHTLY-LAYOUT, eval=params$punc == "Y", echo=FALSE, fig.align='center', out.height=paste0(Punctuality_height1, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Punc_Dep_Monthly_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("Punc_Dep_Monthly_", params$icao, ".png")))
 
 ```
 \end{minipage}
 \begin{minipage}[t]{`r Punctuality_layout1[3]`\textwidth}
 ```{r Punctuality-DEP-Overall-share, eval=params$punc == "Y", echo=FALSE, fig.align='center', out.height=paste0(Punctuality_height1, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Punc_Dep_Overall_share_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("Punc_Dep_Overall_share_", params$icao, ".png")))
 
 ```
 \end{minipage}
@@ -495,21 +495,21 @@ include_graphics(here("R", "Factsheet", "Figures", paste0("Punc_Dep_Overall_shar
 \begin{minipage}[t]{`r Punctuality_layout2[1]`\textwidth}
 ```{r Punctuality-ARR-YEARLY-LAYOUT, eval=params$punc == "Y", echo=FALSE, fig.align='center', out.height=paste0(Punctuality_height2, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Punc_Arr_Yearly_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("Punc_Arr_Yearly_", params$icao, ".png")))
 
 ```
 \end{minipage}
 \begin{minipage}[t]{`r Punctuality_layout2[2]`\textwidth}
 ```{r Punctuality-ARR-MONHTLY-LAYOUT, eval=params$punc == "Y", echo=FALSE, fig.align='center', out.height=paste0(Punctuality_height2, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Punc_Arr_Monthly_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("Punc_Arr_Monthly_", params$icao, ".png")))
 
 ```
 \end{minipage}
 \begin{minipage}[t]{`r Punctuality_layout2[3]`\textwidth}
 ```{r Punctuality-ARR-Overall-share, eval=params$punc == "Y", echo=FALSE, fig.align='center', out.height=paste0(Punctuality_height2, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Punc_Arr_Overall_share_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("Punc_Arr_Overall_share_", params$icao, ".png")))
 
 ```
 \end{minipage}
@@ -527,14 +527,14 @@ cat("# ASMA (Terminal airspace) Times")
 \begin{minipage}[t]{`r ASMA_layout1[1]`\textwidth}
 ```{r ASMA-YEARLY-LAYOUT, eval=params$apdf == "Y", echo=FALSE, fig.align='center', out.height=paste0(ASMA_height1, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("ASMA_Yearly_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("ASMA_Yearly_", params$icao, ".png")))
 
 ```
 \end{minipage}
 \begin{minipage}[t]{`r ASMA_layout1[2]`\textwidth}
 ```{r ASMA-MONHTLY-LAYOUT, eval=params$apdf == "Y", echo=FALSE, fig.align='center', out.height=paste0(ASMA_height1, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("ASMA_Monthly_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("ASMA_Monthly_", params$icao, ".png")))
 
 ```
 \end{minipage}
@@ -552,14 +552,14 @@ cat("# Reported Pre-departure Delay")
 \begin{minipage}[t]{`r Pre_dep_delay_layout1[1]`\textwidth}
 ```{r pre-dep-dly-pa, eval=params$apdf == "Y", echo=FALSE, fig.align='center', out.height=paste0(Pre_dep_delay_height1, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Pre_Departure_Delay_Yearly_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("Pre_Departure_Delay_Yearly_", params$icao, ".png")))
 
 ```
 \end{minipage}
 \begin{minipage}[t]{`r Pre_dep_delay_layout1[2]`\textwidth}
 ```{r pre-dep-dly-pm, eval=params$apdf == "Y", echo=FALSE, fig.align='center', out.height=paste0(Pre_dep_delay_height1, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Pre_Departure_Delay_Monthly_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("Pre_Departure_Delay_Monthly_", params$icao, ".png")))
 
 ```
 \end{minipage}
@@ -577,14 +577,14 @@ cat("# Taxi-In Times")
 \begin{minipage}[t]{`r Taxi_in_times_layout1[1]`\textwidth}
 ```{r TXIN-YEARLY-LAYOUT, eval=params$apdf == "Y", echo=FALSE, fig.align='center', out.height=paste0(Taxi_in_times_height1, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Taxi_In_Times_Yearly_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("Taxi_In_Times_Yearly_", params$icao, ".png")))
 
 ```
 \end{minipage}
 \begin{minipage}[t]{`r Taxi_in_times_layout1[2]`\textwidth}
 ```{r TXIN-MONTHLY-LAYOUT, eval=params$apdf == "Y", echo=FALSE, fig.align='center', out.height=paste0(Taxi_in_times_height1, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Taxi_In_Times_Monthly_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("Taxi_In_Times_Monthly_", params$icao, ".png")))
 
 ```
 \end{minipage}
@@ -602,14 +602,14 @@ cat("# Taxi-Out Times")
 \begin{minipage}[t]{`r Taxi_out_times_layout1[1]`\textwidth}
 ```{r TXOT-YEARLY-LAYOUT, eval=params$apdf == "Y", echo=FALSE, fig.align='center', out.height=paste0(Taxi_out_times_height1, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Taxi_Out_Times_Yearly_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("Taxi_Out_Times_Yearly_", params$icao, ".png")))
 
 ```
 \end{minipage}
 \begin{minipage}[t]{`r Taxi_out_times_layout1[2]`\textwidth}
 ```{r TXOT-MONTHLY-LAYOUT, eval=params$apdf == "Y", echo=FALSE, fig.align='center', out.height=paste0(Taxi_out_times_height1, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Taxi_Out_Times_Monthly_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("Taxi_Out_Times_Monthly_", params$icao, ".png")))
 
 ```
 \end{minipage}
@@ -627,14 +627,14 @@ cat("# Turnaround times")
 \begin{minipage}[t]{`r Turnaround_times_layout1[1]`\textwidth}
 ```{r annual-turn-time, eval=params$apdf == "Y", echo=FALSE, fig.align='center', out.height=paste0(Turnaround_times_height1, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Turn_Time_Yearly_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("Turn_Time_Yearly_", params$icao, ".png")))
 
 ```
 \end{minipage}
 \begin{minipage}[t]{`r Turnaround_times_layout1[2]`\textwidth}
 ```{r monthly-turn-time, eval=params$apdf == "Y", echo=FALSE, fig.align='center', out.height=paste0(Turnaround_times_height1, "px")}
 
-include_graphics(here("R", "Factsheet", "Figures", paste0("Turn_Time_Monthly_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("Turn_Time_Monthly_", params$icao, ".png")))
 
 ```
 \end{minipage}

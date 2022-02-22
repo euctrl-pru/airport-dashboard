@@ -104,7 +104,7 @@ MED_CDO_CCO_ALT_PLOT_fig = ggplot(data=MED_CDO_CCO_ALT_PLOT_curr_year) +
   #       plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
   labs(x="", y="Median CDO/CCO altitude (feet)\n", title="")
 
-ggsave(here("R", "Factsheet", "Figures", paste0("Med_CDO_CCO_alt_", params$icao, ".png")), 
+ggsave(here("media", "factsheet", paste0("Med_CDO_CCO_alt_", params$icao, ".png")), 
        plot=MED_CDO_CCO_ALT_PLOT_fig, width = VFE_layout1[2]*Page_width, height = VFE_height1, 
        units = "cm", dpi=100, limitsize = FALSE)
 

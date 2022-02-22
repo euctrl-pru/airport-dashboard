@@ -46,6 +46,6 @@ APT_DF %>%
       rmarkdown::render(
         input       = here("factsheet_render.Rmd"),
         params      = prepare_params(icao),
-        output_file = here("docs", paste0("Factsheet_", icao, ".pdf")))
+        output_file = here("docs", "pdf", paste0("Factsheet_", icao, ".pdf")))
       cat(paste0("==>", icao, "...end\n"))
     })
