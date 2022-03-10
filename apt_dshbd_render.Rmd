@@ -1521,9 +1521,11 @@ cat("## Row -----------------------------------------------------------")
 
 ```
 
-<!--
+
   
 ```{r Turnaround-times-title3, results='asis', eval=params$apdf == "Y", echo = FALSE}
+# <!--
+# -->
 
 cat("### DDI-G and TDI (Source: APDF)")
 
@@ -1657,7 +1659,6 @@ plot_ly(TURN_OVER,
           modeBarButtonsToRemove = config_bar_remove_buttons)
 ```
 
--->
 
 # About
 
