@@ -38,6 +38,9 @@ ARR_ATFM_delay_country_apts=ARR_ATFM_delay_country_apts %>%
          AIRPORT=factor(AIRPORT, levels=ARR_ATFM_delay_country_apts$AIRPORT))
 
 if (nrow(ARR_ATFM_delay_country_apts)>1) {
+  
+  if (sum(ARR_ATFM_delay_country_apts$DLY_APT_ARR_TOT)>0) {
+    
   ARR_ATFM_delay_country_apts_fig=ggplot(ARR_ATFM_delay_country_apts, aes(area = DLY_APT_ARR_TOT, fill = AIRPORT, label = label)) +
     geom_treemap() +
     geom_treemap_text(colour = "white",
@@ -46,6 +49,17 @@ if (nrow(ARR_ATFM_delay_country_apts)>1) {
                       grow = TRUE) +
     theme_factsheet() +
     theme(legend.position = "none")
+  } else {
+    
+    ARR_ATFM_delay_country_apts_fig = ggplot() +
+      geom_rect(aes(xmin=0, xmax=1, ymin=0, ymax=1), fill="blue") +
+      geom_text(aes(x=0.5, y=1, label=paste0("No Arrival ATFM Delay in ", Last_complete_year)), 
+                position = position_stack(vjust = 0.5), size=60, colour="white") +
+      theme_factsheet() +
+      theme_void()
+    
+  }
+  
 } else {
   
   if (ARR_ATFM_delay_country_apts$DLY_APT_ARR_TOT[1]>0) {
