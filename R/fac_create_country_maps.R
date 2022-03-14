@@ -18,6 +18,12 @@ Sys.setenv("APPDATA"=paste0("C:\\Users\\", Sys.getenv("USERNAME"), "\\dev"))
 # only needed the first time you run this script on a new machine
 # webshot::install_phantomjs(force=TRUE)
 
+if (!file.exists(here("media", "airport_maps"))) {
+  
+  dir.create(here("media", "airport_maps"))
+  
+}
+
 APT_DF <- read_csv2(here("data","APT_DSHBD_AIRPORT.csv"))
 
 apt <- APT_DF %>%
