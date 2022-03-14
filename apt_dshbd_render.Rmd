@@ -300,7 +300,7 @@ if (nrow(params$tfcvar) < 1) {
       yaxis = list(
         title = "% change from 2019",
         titlefont = list(size = 11),
-        tickformat = "%"
+        tickformat = ".0%"
       )
       ##############################################################################
       # , annotations = list(
