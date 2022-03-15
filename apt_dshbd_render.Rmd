@@ -1748,4 +1748,11 @@ For more information please visit https://ansperformance.eu/methodology/addition
 For more information please visit https://ansperformance.eu/definition/additional-taxi-out-time/
 *	Pre-departure delay is the delay in the off-block time with respect to the schedule time for departure. It provides for the airspace user reported delay reasoning in case of departures blocking off late. Delay codes have to be provided for delays >= 4 minutes. Most airports per se do not validate these delay codes, however, effort is underway to ensure appropriateness of the reported delay codes.Delay reasons are reported according to the IATA delay codes https://ansperformance.eu/library/iata-delay-codes.pdf 
 Delay reported associated to code 89 is used for the calculation of the ATC pre-departure delay https://ansperformance.eu/definition/atc-pre-departure-delay/ 
-*	Turnaround shows the time elapsing between an aircraft blocking in and blocking off for the next flight from the same parking stand on the same day and the sample is treated to filter out.
+*	Turnaround shows the time elapsing between an aircraft blocking in and blocking off
+  for the next flight from the same parking stand on the same day and the sample is
+  treated to filter out (https://ansperformance.eu/definition/turnaround/)<br>
+  Other indicators provide additional information on the turnaround performance:
+  - DDI-G: https://ansperformance.eu/acronym/ddi-g/
+  - GTO: https://ansperformance.eu/acronym/gto/
+  - TDI: https://ansperformance.eu/acronym/tdi/ 
+
