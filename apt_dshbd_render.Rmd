@@ -543,6 +543,43 @@ if (nrow(params$atfm) > 0) {
 
 ```{r atfm-ytd}
 if (nrow(params$atfm) > 0) {
+    atfm_pm <- params$atfm %>%
+    select(
+      YEAR,
+      MONTH_NUM,
+      FLT_ARR_1,
+      DLY_APT_ARR_1,
+      AD_DISRUPTION,
+      AD_CAPACITY,
+      AD_WEATHER,
+      AD_DISRUPTION_ATC,
+      AD_CAPACITY_ATC,
+      AD_STAFFING_ATC,
+      AD_EVENTS
+    ) %>%
+    group_by(YEAR, MONTH_NUM) %>%
+    summarise(
+      FLT_ARR_TOT       = sum(FLT_ARR_1, na.rm = TRUE),
+      DLY_APT_ARR_TOT   = sum(DLY_APT_ARR_1, na.rm = TRUE),
+      AD_DISRUPTION     = sum(AD_DISRUPTION, na.rm = TRUE),
+      AD_CAPACITY       = sum(AD_CAPACITY, na.rm = TRUE),
+      AD_WEATHER        = sum(AD_WEATHER, na.rm = TRUE),
+      AD_DISRUPTION_ATC = sum(AD_DISRUPTION_ATC, na.rm = TRUE),
+      AD_CAPACITY_ATC   = sum(AD_CAPACITY_ATC, na.rm = TRUE),
+      AD_STAFFING_ATC   = sum(AD_STAFFING_ATC, na.rm = TRUE),
+      AD_EVENTS         = sum(AD_EVENTS, na.rm = TRUE)
+    ) %>%
+    ungroup() %>%
+    tidyr::pivot_longer(
+      cols      = starts_with("AD_"),
+      names_to  = "REG_REASON",
+      values_to = "DLY"
+    ) %>%
+    mutate(
+      AVG_ARR_ATFM_DLY = DLY_APT_ARR_TOT / FLT_ARR_TOT,
+      AVG_ARR_ATFM_REG = DLY / FLT_ARR_TOT
+    )
+
   atfm_max_year <- atfm_pm %>%
     pull(YEAR) %>%
     max() %>%
@@ -1209,7 +1246,7 @@ cat("## Row -----------------------------------------------------------")
 
 ### Monthly Pre-Departure Delay Trend
 
-```{r Monthly-pre-dep-delay, results='asis', eval=params$apdf == "Y", echo = FALSE}
+```{r Monthly-pre-dep-delay, results='asis', eval=params$apdf == "Y", echo = FALSE, eval=FALSE}
 
 
 TMP <- PDDLY_MM %>%
