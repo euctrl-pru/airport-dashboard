@@ -22,10 +22,16 @@ params:
    punc_arr_mm:  $punc_arr_mm
    asma_yy:      $asma_yy
    asma_mm:      $asma_mm
+   asmarwy_yy:   $asmarwy_yy
+   asmarwy_mm:   $asmarwy_mm   
    txot_yy:      $txot_yy
    txot_mm:      $txot_mm
+   txotrwy_yy:   $txotrwy_yy
+   txotrwy_mm:   $txotrwy_mm   
    txin_yy:      $txin_yy
    txin_mm:      $txin_mm
+   txinrwy_yy:   $txinrwy_yy
+   txinrwy_mm:   $txinrwy_mm   
    pddly_yy:     $pddly_yy
    pddly_mm:     $pddly_mm  
    pddly_yy_avg: $pddly_yy_avg
@@ -337,13 +343,13 @@ if (nrow(params$tfcvar) < 1) {
 
 ### Annual Traffic (Source: Network Manager)
 
-```{r annual-traffic, file='R/fig_annual_traffic.R'}
+```{r annual-traffic, code=readLines('R/fig_annual_traffic.R')}
 
 ```
 
 ### Monthly Traffic (Source: Network Manager)
 
-```{r monthly-traffic, file='R/fig_monthly_traffic.R'}
+```{r monthly-traffic, code=readLines('R/fig_monthly_traffic.R')}
 
 ```
 
@@ -418,14 +424,14 @@ pbox_group
 
 ### Share of Market Segment (Source: Network Manager)
 
-```{r market-segment, file='R/fig_market_segment.R'}
+```{r market-segment, code=readLines('R/fig_market_segment.R')}
 
 ```
 
 
 ### Average Weekday Hourly Throughput (Source: Network Manager)
 
-```{r Avg-weekday-hourly-throughput, file='R/fig_avg_weekday_hourly_throughput.R'}
+```{r Avg-weekday-hourly-throughput, code=readLines('R/fig_avg_weekday_hourly_throughput.R')}
 
 ```
 
@@ -436,13 +442,13 @@ pbox_group
 ### Annual Arrival ATFM Delay (Source: Network Manager)
 
 
-```{r atfm-pa, file='R/fig_annual_arr_atfm_delay.R'}
+```{r atfm-pa, code=readLines('R/fig_annual_arr_atfm_delay.R')}
 
 ```
 
 ### Monthly Arrival ATFM Delay (Source: Network Manager)
 
-```{r atfm-pm, file='R/fig_monthly_arr_atfm_delay.R'}
+```{r atfm-pm, code=readLines('R/fig_monthly_arr_atfm_delay.R')}
 
 ```
 
@@ -817,13 +823,13 @@ SLOT_MM_PLOT1 %>%
 
 ### Annual ATFM Slot Adherence (Source: Network Manager)
 
-```{r ANNUAL-ATFM-SLOT2, file='R/fig_annual_atfm_slot.R'}
+```{r ANNUAL-ATFM-SLOT2, code=readLines('R/fig_annual_atfm_slot.R')}
 
 ```
 
 ### Monthly ATFM Slot Adherence (Source: Network Manager)
 
-```{r MONTHLY-ATFM-SLOT2, file='R/fig_monthly_atfm_slot.R'}
+```{r MONTHLY-ATFM-SLOT2, code=readLines('R/fig_monthly_atfm_slot.R')}
 
 ```
 
@@ -851,7 +857,7 @@ cat("### Average time flown level per flight (Source: AIU analysis)")
 
   
 
-```{r Avg-time-lvl, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE, file='R/fig_avg_time_lvl.R'}
+```{r Avg-time-lvl, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE, code=readLines('R/fig_avg_time_lvl.R')}
 
 ```
 
@@ -864,7 +870,7 @@ cat("### Median CDO/CCO altitudes (Source: AIU analysis)")
 
 
 
-```{r Med-CDO-CCO-alt, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE, file='R/fig_med_cdo_cco_alt.R'}
+```{r Med-CDO-CCO-alt, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE, code=readLines('R/fig_med_cdo_cco_alt.R')}
 
 ```
 
@@ -884,7 +890,7 @@ cat("### Share of CDO/CCO flights (Source: AIU analysis)")
 
 
 
-```{r Share-unimpeded, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE, file='R/fig_share_unimpeded_cdo_cco.R'}
+```{r Share-unimpeded, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE, code=readLines('R/fig_share_unimpeded_cdo_cco.R')}
 
 ```
 
@@ -975,7 +981,7 @@ cat("### Annual ASMA Time (Source: APDF)")
 ```
 
 
-```{r ASMA-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, file='R/fig_asma_yearly.R'}
+```{r ASMA-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_asma_yearly.R')}
 
 ```
 
@@ -987,7 +993,7 @@ cat("### Monthly ASMA Time (Source: APDF)")
 ```
 
 
-```{r ASMA-MONTHLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, file='R/fig_asma_monthly.R'}
+```{r ASMA-MONTHLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_asma_monthly.R')}
 
 ```
 
@@ -999,57 +1005,28 @@ cat("## Row -----------------------------------------------------------")
 ```
 
 
-<!-- 
-
-
 ```{r ASMA-time-title3, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-cat("### Monthly ASMA Trend (current Year)")
+#cat("### Annual ASMA Time per Runway (Source: APDF)")
 
 ```
 
 
-```{r ASMA-TREND-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
-
-TMP <- params$asma_mm %>% 
-mutate( DATE_YM = paste0(YEAR,"-",MONTH_NUM),
-DATE_YM = lubridate::parse_date_time(DATE_YM, "ym"))
-
-TMP %>% 
-plot_ly(x    = ~DATE_YM, 
-y    = ~AVG_ADD_TIME, 
-type = 'scatter',
-mode = 'lines', 
-line = list(shape = "hvh", 
-width = 1)) %>%
-layout( hoverformat = ".2f",
-xaxis = list(title = "", 
-rangeselector = list(buttons = list(list(count = 3,
-label = "3 mo",
-step = "month",
-stepmode = "backward"),
-list(count = 6,
-label = "6 mo",
-step = "month",
-stepmode = "backward"),
-list(count = 1,
-label = "1 yr",
-step = "year",
-stepmode = "backward"),
-list(count = 1,
-label = "YTD",
-step = "year",
-stepmode = "todate"),
-list(step = "all"))),
-rangeslider = list(type = "date")), 
-yaxis = list(title = "Additional Average ASMA time [min/arr]",
-titlefont = list(size = 11))) %>% 
-config( displaylogo = FALSE,
-modeBarButtonsToRemove = config_bar_remove_buttons)
+```{r ASMA-RWY-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, file = 'R/fig_asma_rwy_yearly.R'}
 
 ```
 
--->
+  
+```{r ASMA-time-title4, results='asis', eval=params$apdf == "Y", echo = FALSE}
+
+#cat("### Monthly ASMA Time per Runway (Source: APDF)")
+
+```
+
+
+```{r ASMA-RWY-MONTHLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, file = 'R/fig_asma_rwy_monthly.R'}
+
+```
 
 
 # Taxi-Out Time
@@ -1079,7 +1056,7 @@ cat("### Annual Taxi-Out Time (Source: APDF)")
 ```
 
 
-```{r TXOT-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, file='R/fig_taxi_out_yearly.R'}
+```{r TXOT-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_taxi_out_yearly.R')}
 
 ```
 
@@ -1091,7 +1068,7 @@ cat("### Monthly Taxi-Out Time (Source: APDF)")
 ```
 
 
-```{r TAXI-OUT-MONTHLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, file='R/fig_taxi_out_monthly.R'}
+```{r TAXI-OUT-MONTHLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_taxi_out_monthly.R')}
 
 ```
 
@@ -1102,6 +1079,28 @@ cat("## Row -----------------------------------------------------------")
 
 ```
 
+```{r Taxi-out-time-title3, results='asis', eval=params$txotrwy_yy == "Y", echo = FALSE}
+
+#cat("### Annual Taxi-Out Time per Runway (Source: APDF)")
+
+```
+
+
+```{r TAXI-OUT-RWY-YEARLY-LAYOUT, results='asis', eval=params$txotrwy_yy  == "Y", echo = FALSE, file = 'R/fig_taxi_out_rwy_yearly.R'}
+
+```
+
+
+```{r Taxi-out-time-title4, results='asis', eval=params$txotrwy_mm == "Y", echo = FALSE}
+
+#cat("### Monthly Taxi-Out Time per Runway (Source: APDF)")
+
+```
+
+
+```{r TAXI-OUT-RWY-MONHTLY-LAYOUT, results='asis', eval=params$txotrwy_mm == "Y", echo = FALSE, file = 'R/fig_taxi_out_rwy_monhtly.R'}
+
+```
 
 
 # Taxi-In Time
@@ -1131,7 +1130,7 @@ cat("### Annual Taxi-In Time (Source: APDF)")
 ```
 
 
-```{r TXIN-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, file='R/fig_taxi_in_yearly.R'}
+```{r TXIN-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_taxi_in_yearly.R')}
 
 ```
 
@@ -1143,7 +1142,7 @@ cat("### Monthly Taxi-In Time (Source: APDF)")
 ```
 
 
-```{r TAXI-IN-MONTHLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, file='R/fig_taxi_in_monthly.R'}
+```{r TAXI-IN-MONTHLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_taxi_in_monthly.R')}
 
 ```
 
@@ -1153,7 +1152,28 @@ cat("### Monthly Taxi-In Time (Source: APDF)")
 cat("## Row -----------------------------------------------------------")
 
 ```
+```{r Taxi-in-time-title3, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
+#cat("### Annual Taxi-In Time per runway (Source: APDF)")
+
+```
+
+
+```{r TAXI-IN-RWY-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, file = 'R/fig_taxi_in_rwy_yearly.R'}
+
+```
+
+
+```{r Taxi-in-time-title4, results='asis', eval=params$apdf == "Y", echo = FALSE}
+
+#cat("### Monthly Taxi-In Time per runway (Source: APDF)")
+
+```
+
+
+```{r TAXI-IN-RWY-MONTHLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, file = 'R/fig_taxi_in_rwy_monthly.R'}
+
+```
 
 # Pre-Dep Delay
 
@@ -1182,7 +1202,7 @@ cat("### Annual Pre-Departure Delay (Source: APDF)")
 ```
 
 
-```{r pre-dep-dly-pa, results='asis', eval=params$apdf == "Y", echo = FALSE, file='R/fig_pre_departure_delay_yearly.R'}
+```{r pre-dep-dly-pa, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_pre_departure_delay_yearly.R')}
 
 ```
 
@@ -1194,7 +1214,7 @@ cat("### Monthly Pre-Departure Delay (Source: APDF)")
 ```
 
 
-```{r pre-dep-dly-month, results='asis', eval=params$apdf == "Y", echo = FALSE, file='R/fig_pre_departure_delay_monthly.R'}
+```{r pre-dep-dly-month, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_pre_departure_delay_monthly.R')}
 
 ```
 
@@ -1212,41 +1232,41 @@ cat("## Row -----------------------------------------------------------")
 ```{r Monthly-pre-dep-delay, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
 
-TMP <- PDDLY_MM %>%
-mutate( DATE_YM = paste0(YEAR,"-",MONTH_NUM),
-DATE_YM = lubridate::parse_date_time(DATE_YM, "ym") )
+#TMP <- PDDLY_MM %>%
+#mutate( DATE_YM = paste0(YEAR,"-",MONTH_NUM),
+#DATE_YM = lubridate::parse_date_time(DATE_YM, "ym") )
 
-TMP %>%
-plot_ly() %>%
-add_bars(x     = ~DATE_YM, 
-y     = ~DLY_DUR, 
-color = ~DLY_CAT,
-hovertemplate = "%{y:.r}") %>%
-layout(barmode = "stack",
-xaxis = list(title = "",
-rangeselector = list(buttons = list(list(count    = 3,
-label    = "3 mo",
-step     = "month",
-stepmode = "backward"),
-list(count    = 6,
-label    = "6 mo",
-step     = "month",
-stepmode = "backward"),
-list(count    = 1,
-label    = "1 yr",
-step     = "year",
-stepmode = "backward"),
-list(count    = 1,
-label    = "YTD",
-step     = "year",
-stepmode = "todate"),
-list(step     = "all"))),
-rangeslider = list(type = "date")
-), 
-yaxis = list( title = "Pre-Departure delay [min]",
-titlefont = list(size = 11))) %>% 
-config( displaylogo = FALSE,
-modeBarButtonsToRemove = config_bar_remove_buttons)
+#TMP %>%
+#plot_ly() %>%
+#add_bars(x     = ~DATE_YM, 
+#y     = ~DLY_DUR, 
+#color = ~DLY_CAT,
+#hovertemplate = "%{y:.r}") %>%
+#layout(barmode = "stack",
+#xaxis = list(title = "",
+#rangeselector = list(buttons = list(list(count    = 3,
+#label    = "3 mo",
+#step     = "month",
+#stepmode = "backward"),
+#list(count    = 6,
+#label    = "6 mo",
+#step     = "month",
+#stepmode = "backward"),
+#list(count    = 1,
+#label    = "1 yr",
+#step     = "year",
+#stepmode = "backward"),
+#list(count    = 1,
+#label    = "YTD",
+#step     = "year",
+#stepmode = "todate"),
+#list(step     = "all"))),
+#rangeslider = list(type = "date")
+#), 
+#yaxis = list( title = "Pre-Departure delay [min]",
+#titlefont = list(size = 11))) %>% 
+#config( displaylogo = FALSE,
+#modeBarButtonsToRemove = config_bar_remove_buttons)
 
 
 ```
@@ -1425,7 +1445,7 @@ cat("### Annual Departure Punctuality (Source: APDF)")
 ```
 
   
-```{r Punctuality-DEP-YEARLY-LAYOUT, results='asis', eval=params$punc == "Y", echo = FALSE, file='R/fig_punctuality_dep_yearly_layout.R'}
+```{r Punctuality-DEP-YEARLY-LAYOUT, results='asis', eval=params$punc == "Y", echo = FALSE, code=readLines('R/fig_punctuality_dep_yearly_layout.R')}
 
 ```
 
@@ -1437,7 +1457,7 @@ cat("### Monthly Departure Punctuality (Source: APDF)")
 ```
 
 
-```{r Punctuality-DEP-MONHTLY-LAYOUT, results='asis', eval=params$punc == "Y", echo = FALSE, file='R/fig_punctuality_dep_monthly_layout.R'}
+```{r Punctuality-DEP-MONHTLY-LAYOUT, results='asis', eval=params$punc == "Y", echo = FALSE, code=readLines('R/fig_punctuality_dep_monthly_layout.R')}
 
 ```
 
@@ -1456,7 +1476,7 @@ cat("### Annual Arrival Punctuality (Source: APDF)")
 ```
 
 
-```{r Punctuality-ARR-YEARLY-LAYOUT, results='asis', eval=params$punc == "Y", echo = FALSE, file='R/fig_punctuality_arr_yearly_layout.R'}
+```{r Punctuality-ARR-YEARLY-LAYOUT, results='asis', eval=params$punc == "Y", echo = FALSE, code=readLines('R/fig_punctuality_arr_yearly_layout.R')}
 
 ```
 
@@ -1468,7 +1488,7 @@ cat("### Monthly Arrival Punctuality (Source: APDF)")
 ```
 
 
-```{r Punctuality-ARR-MONHTLY-LAYOUT, results='asis', eval=params$punc == "Y", echo = FALSE, file='R/fig_punctuality_arr_monthly_layout.R'}
+```{r Punctuality-ARR-MONHTLY-LAYOUT, results='asis', eval=params$punc == "Y", echo = FALSE, code=readLines('R/fig_punctuality_arr_monthly_layout.R')}
 
 ```
 
@@ -1501,7 +1521,7 @@ cat("### Annual Actual Turnaround Time (Source: APDF)")
 ```
 
 
-```{r annual-turn-time, results='asis', eval=params$apdf == "Y", echo = FALSE, file='R/fig_turn_time_yearly.R'}
+```{r annual-turn-time, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_turn_time_yearly.R')}
 
 ```
 
@@ -1513,7 +1533,7 @@ cat("### Monthly Turnaround Times (Source: APDF)")
 ```
 
 
-```{r monthly-turn-time, results='asis', eval=params$apdf == "Y", echo = FALSE, file='R/fig_turn_time_monthly.R'}
+```{r monthly-turn-time, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_turn_time_monthly.R')}
 
 ```
 
