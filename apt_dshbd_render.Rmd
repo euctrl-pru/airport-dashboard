@@ -306,7 +306,7 @@ if (nrow(params$tfcvar) < 1) {
       yaxis = list(
         title = "% change from 2019",
         titlefont = list(size = 11),
-        tickformat = "%"
+        tickformat = ".0%"
       )
       ##############################################################################
       # , annotations = list(
@@ -549,6 +549,43 @@ if (nrow(params$atfm) > 0) {
 
 ```{r atfm-ytd}
 if (nrow(params$atfm) > 0) {
+    atfm_pm <- params$atfm %>%
+    select(
+      YEAR,
+      MONTH_NUM,
+      FLT_ARR_1,
+      DLY_APT_ARR_1,
+      AD_DISRUPTION,
+      AD_CAPACITY,
+      AD_WEATHER,
+      AD_DISRUPTION_ATC,
+      AD_CAPACITY_ATC,
+      AD_STAFFING_ATC,
+      AD_EVENTS
+    ) %>%
+    group_by(YEAR, MONTH_NUM) %>%
+    summarise(
+      FLT_ARR_TOT       = sum(FLT_ARR_1, na.rm = TRUE),
+      DLY_APT_ARR_TOT   = sum(DLY_APT_ARR_1, na.rm = TRUE),
+      AD_DISRUPTION     = sum(AD_DISRUPTION, na.rm = TRUE),
+      AD_CAPACITY       = sum(AD_CAPACITY, na.rm = TRUE),
+      AD_WEATHER        = sum(AD_WEATHER, na.rm = TRUE),
+      AD_DISRUPTION_ATC = sum(AD_DISRUPTION_ATC, na.rm = TRUE),
+      AD_CAPACITY_ATC   = sum(AD_CAPACITY_ATC, na.rm = TRUE),
+      AD_STAFFING_ATC   = sum(AD_STAFFING_ATC, na.rm = TRUE),
+      AD_EVENTS         = sum(AD_EVENTS, na.rm = TRUE)
+    ) %>%
+    ungroup() %>%
+    tidyr::pivot_longer(
+      cols      = starts_with("AD_"),
+      names_to  = "REG_REASON",
+      values_to = "DLY"
+    ) %>%
+    mutate(
+      AVG_ARR_ATFM_DLY = DLY_APT_ARR_TOT / FLT_ARR_TOT,
+      AVG_ARR_ATFM_REG = DLY / FLT_ARR_TOT
+    )
+
   atfm_max_year <- atfm_pm %>%
     pull(YEAR) %>%
     max() %>%
@@ -1229,7 +1266,7 @@ cat("## Row -----------------------------------------------------------")
 
 ### Monthly Pre-Departure Delay Trend
 
-```{r Monthly-pre-dep-delay, results='asis', eval=params$apdf == "Y", echo = FALSE}
+```{r Monthly-pre-dep-delay, results='asis', eval=params$apdf == "Y", echo = FALSE, eval=FALSE}
 
 
 #TMP <- PDDLY_MM %>%
@@ -1721,14 +1758,43 @@ All other airport related data is collected through the Airport Operator Data Fl
 
 **Data and metrics are shown based on availability at the moment of publication**    
 
-* Traffic data comprises all IFR flown flight plans for the airport (arrivals and departures) based on NM data.
-*	ATFM delay data captures the arrival ATFM delay triggered by constraints at the airport based on NM data (_no post ops adjustments_).
-*	ATFM delays are grouped according to the regulation reason as described in https://ansperformance.eu/definition/atfm-delay-codes/
-* CDO/CCO performance is calculated by identifying level segments during the climb and descent. These level segments are considered to be inefficient. For more information please visit https://ansperformance.eu/efficiency/vfe/
-*	Additional ASMA time measures the difference between an observed travel time elapsing from entering the 40NM radius around the airport to landing. This time is compared against a reference time to the respective entry sector, aircraft type, and landing runway.
-For more information please visit https://ansperformance.eu/methodology/additional-asma-time-pi/
-*	In analogy, additional taxi-times are measured for the taxi-out and taxi-in phase. The observed taxi times are compared with a respective reference time. The reference time considers the parking position and runway used by the departure/arrival.
-For more information please visit https://ansperformance.eu/definition/additional-taxi-out-time/
-*	Pre-departure delay is the delay in the off-block time with respect to the schedule time for departure. It provides for the airspace user reported delay reasoning in case of departures blocking off late. Delay codes have to be provided for delays >= 4 minutes. Most airports per se do not validate these delay codes, however, effort is underway to ensure appropriateness of the reported delay codes.Delay reasons are reported according to the IATA delay codes https://ansperformance.eu/library/iata-delay-codes.pdf 
-Delay reported associated to code 89 is used for the calculation of the ATC pre-departure delay https://ansperformance.eu/definition/atc-pre-departure-delay/ 
-*	Turnaround shows the time elapsing between an aircraft blocking in and blocking off for the next flight from the same parking stand on the same day and the sample is treated to filter out.
+* Traffic data comprises all IFR flown flight plans for the airport (arrivals
+  and departures) based on NM data.
+* ATFM delay data captures the arrival ATFM delay triggered by constraints at
+  the airport based on NM data (_no post ops adjustments_).
+* ATFM delays are grouped according to the regulation reason as described in
+  https://ansperformance.eu/definition/atfm-delay-codes/
+* CDO/CCO performance is calculated by identifying level segments during the
+  climb and descent.
+  These level segments are considered to be inefficient.
+  For more information please visit https://ansperformance.eu/efficiency/vfe/
+*	Additional ASMA time measures the difference between an observed travel time
+  elapsing from entering the 40NM radius around the airport to landing.
+  This time is compared against a reference time to the respective entry sector,
+  aircraft type, and landing runway.
+  For more information please visit
+  https://ansperformance.eu/methodology/additional-asma-time-pi/
+*	In analogy, additional taxi-times are measured for the taxi-out and taxi-in phase.
+  The observed taxi times are compared with a respective reference time.
+  The reference time considers the parking position and runway used by the departure/arrival.
+  For more information please visit
+  https://ansperformance.eu/definition/additional-taxi-out-time/
+*	Pre-departure delay is the delay in the off-block time with respect to the
+  schedule time for departure.
+  It provides for the airspace user reported delay reasoning in case of departures
+  blocking off late.
+  Delay codes have to be provided for delays >= 4 minutes.
+  Most airports per se do not validate these delay codes, however, effort is
+  underway to ensure appropriateness of the reported delay codes.<br>
+  Delay reasons are reported according to the IATA delay codes
+  https://ansperformance.eu/library/iata-delay-codes.pdf <br>
+  Delay reported associated to code 89 is used for the calculation of the
+  ATC pre-departure delay https://ansperformance.eu/definition/atc-pre-departure-delay/ 
+*	Turnaround shows the time elapsing between an aircraft blocking in and blocking off
+  for the next flight from the same parking stand on the same day and the sample is
+  treated to filter out (https://ansperformance.eu/definition/turnaround/)<br>
+  Other indicators provide additional information on the turnaround performance:
+  
+      - DDI-G: https://ansperformance.eu/acronym/ddi-g/
+      - GTO: https://ansperformance.eu/acronym/gto/
+      - TDI: https://ansperformance.eu/acronym/tdi/ 
