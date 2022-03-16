@@ -22,10 +22,16 @@ params:
    punc_arr_mm:  $punc_arr_mm
    asma_yy:      $asma_yy
    asma_mm:      $asma_mm
+   asmarwy_yy:   $asmarwy_yy
+   asmarwy_mm:   $asmarwy_mm   
    txot_yy:      $txot_yy
    txot_mm:      $txot_mm
+   txotrwy_yy:   $txotrwy_yy
+   txotrwy_mm:   $txotrwy_mm   
    txin_yy:      $txin_yy
    txin_mm:      $txin_mm
+   txinrwy_yy:   $txinrwy_yy
+   txinrwy_mm:   $txinrwy_mm   
    pddly_yy:     $pddly_yy
    pddly_mm:     $pddly_mm  
    pddly_yy_avg: $pddly_yy_avg
@@ -68,8 +74,8 @@ library(plotly)
 library(magick)
 library(here)
 library(stringr)
+library(treemapify)
 ```
-
 
 ```{r plotly-utility}
 tick_yr <- list(
@@ -300,7 +306,7 @@ if (nrow(params$tfcvar) < 1) {
       yaxis = list(
         title = "% change from 2019",
         titlefont = list(size = 11),
-        tickformat = "%"
+        tickformat = ".0%"
       )
       ##############################################################################
       # , annotations = list(
@@ -337,174 +343,14 @@ if (nrow(params$tfcvar) < 1) {
 
 ### Annual Traffic (Source: Network Manager)
 
-```{r annual-traffic}
-mvts_pa <- params$tfc %>%
-  select(YEAR, FLT_TOT) %>%
-  group_by(YEAR) %>%
-  summarise(FLT_TOT = sum(FLT_TOT, na.rm = TRUE)) %>%
-  ungroup()
+```{r annual-traffic, code=readLines('R/fig_annual_traffic.R')}
 
-cum_mvts <- params$tfc %>%
-  select(YEAR, MONTH_NUM, FLT_DATE, FLT_TOT) %>%
-  mutate(across(c(YEAR, MONTH_NUM), as.numeric)) %>%
-  filter(YEAR %in% c(max(YEAR), max(YEAR) - 1))
-
-this_year_max_month <- cum_mvts %>%
-  filter(YEAR == max(YEAR)) %>%
-  pull(MONTH_NUM) %>%
-  max() %>%
-  unique()
-
-cum_mvts <- cum_mvts %>%
-  filter(MONTH_NUM <= this_year_max_month) %>%
-  group_by(YEAR) %>%
-  summarise(FLT_TOT = sum(FLT_TOT, na.rm = TRUE)) %>%
-  ungroup() %>%
-  mutate(CHANGE = (FLT_TOT - lag(FLT_TOT)) / lag(FLT_TOT))
-
-msg_tmpl <- "<b>Change Jan-{mnt}<br>{yr2} vs {yr1}:<br>{pct}% </b>"
-
-msg <- str_glue(msg_tmpl,
-  mnt = pick_mth[this_year_max_month],
-  yr1 = cum_mvts$YEAR[1],
-  yr2 = cum_mvts$YEAR[2],
-  pct = round(100 * cum_mvts[2, "CHANGE"], 2)
-)
-
-ALL_YEAR <- mvts_pa %>%
-  pull(YEAR) %>%
-  unique()
-
-msg_y <- mvts_pa %>%
-  filter(YEAR == as.integer(max(YEAR)) - 1) %>%
-  mutate(FLT_TOT = 0.7 * FLT_TOT) %>%
-  pull(FLT_TOT)
-
-key_msg <- list(
-  x = length(ALL_YEAR) - 1,
-  y = msg_y,
-  text = msg,
-  size = 14,
-  showarrow = FALSE
-)
-
-xax <- list(title = "")
-
-yax <- list(
-  title = "Number of flights",
-  titlefont = list(size = 11)
-)
-
-mvts_pa <- mvts_pa %>%
-  mutate(YEAR = as.character(YEAR))
-
-mvts_pa %>%
-  plot_ly(
-    x = ~YEAR,
-    y = ~FLT_TOT
-  ) %>%
-  add_trace(
-    type = "bar",
-    name = "Traffic",
-    hoverinfo = "text",
-    hovertemplate = paste("Year: %{x}", "<br>Flights: %{y:.r}")
-  ) %>%
-  layout(
-    xaxis = xax,
-    yaxis = yax,
-    annotations = key_msg
-  ) %>%
-  # add_annotations(x         = 1, 
-  #                 y         = -0.1, 
-  #                 text      = "Source: Network Manager", 
-  #                 showarrow = F, 
-  #                 xref      = 'paper', 
-  #                 yref      = 'paper', 
-  #                 xanchor   = 'right', 
-  #                 yanchor   = 'auto', 
-  #                 xshift    = 0, 
-  #                 yshift    = -10,
-  #                 font      = list(size=12)
-  # ) %>%
-  config(
-    displaylogo = FALSE,
-    modeBarButtonsToRemove = config_bar_remove_buttons
-  )
 ```
 
 ### Monthly Traffic (Source: Network Manager)
 
-```{r monthly-traffic}
-mvts_pm <- params$tfc %>%
-  select(YEAR, MONTH_NUM, FLT_TOT) %>%
-  group_by(YEAR, MONTH_NUM) %>%
-  summarise(FLT_TOT = sum(FLT_TOT, na.rm = TRUE)) %>%
-  ungroup()
+```{r monthly-traffic, code=readLines('R/fig_monthly_traffic.R')}
 
-mvts_pm_max <- mvts_pm %>% filter(FLT_TOT == max(FLT_TOT))
-
-msg <- paste0(
-  "<b>Busiest month <br>(last 5 years): <br>",
-  mvts_pm_max$MONTH_NUM, "-",
-  mvts_pm_max$YEAR,
-  "<br>", mvts_pm_max$FLT_TOT, "</b>"
-)
-
-xax <- tick_yr_no_title
-
-yax <- list(
-  title = "Number of flights",
-  rangemode = "tozero",
-  titlefont = list(size = 11)
-)
-
-mvts_pm <- mvts_pm %>%
-  mutate(YEAR = as.character(YEAR))
-
-mvts_pm %>%
-  plot_ly(
-    x = ~MONTH_NUM,
-    y = ~FLT_TOT,
-    group = ~YEAR,
-    color = ~YEAR
-  ) %>%
-  add_trace(
-    type = "scatter",
-    mode = "markers+lines",
-    hovertemplate = "%{y:.r}"
-  ) %>%
-  add_annotations(
-    text = msg,
-    x = mvts_pm_max$MONTH_NUM,
-    y = mvts_pm_max$FLT_TOT,
-    showarrow = TRUE,
-    ax = 50,
-    ay = 100
-  ) %>%
-  layout(
-    xaxis = xax,
-    yaxis = yax,
-    hovermode = "x unified"
-    ##############################################################################
-    # , annotations = list(
-    #   x = 1,
-    #   y = -0.1,
-    #   text = "Source: Network Manager",
-    #   showarrow = FALSE,
-    #   xref = "paper",
-    #   yref = "paper",
-    #   xanchor = "right",
-    #   yanchor = "auto",
-    #   xshift = 0,
-    #   yshift = -5,
-    #   font = list(size = 12)
-    # )
-    ##############################################################################
-  ) %>%
-  config(
-    displaylogo = FALSE,
-    modeBarButtonsToRemove = config_bar_remove_buttons
-  )
 ```
 
 
@@ -578,168 +424,15 @@ pbox_group
 
 ### Share of Market Segment (Source: Network Manager)
 
-```{r market-segment}
-
-market_max_year <- params$market %>%
-    pull(YEAR) %>%
-    max() %>%
-    unique()
-
-  share_market <- params$market %>%
-    filter(YEAR == market_max_year) %>%
-    group_by(RULE_NAME) %>%
-    summarise(
-      FLT_TOT = sum(NB_FLIGHT, na.rm = TRUE)
-    ) %>%
-    ungroup() %>%
-    mutate(
-      FLIGHT_TOT   = sum(FLT_TOT, na.rm = TRUE),
-      FLIGHT_SHARE = round(FLT_TOT / FLIGHT_TOT, 2),
-      LABELS    = paste0(RULE_NAME, "<br>", FLIGHT_SHARE, "%")
-    ) 
-   # %>%
-   # filter(FLIGHT_SHARE > 0)
-
-  center_text <- paste0("<b>", market_max_year, "</b>")
-
-  share_market %>%
-    plot_ly(
-      labels = ~RULE_NAME,
-      values = ~FLIGHT_SHARE
-    ) %>%
-    add_pie(
-      hole         = 0.4,
-      textposition = "outside"
-    ) %>%
-    add_annotations(
-      text      = center_text,
-      font      = list(size = 18),
-      x         = 0.5,
-      y         = 0.5,
-      showarrow = FALSE
-    ) %>%
-    config(
-      displaylogo = FALSE,
-      modeBarButtonsToRemove = config_bar_remove_buttons
-    )
+```{r market-segment, code=readLines('R/fig_market_segment.R')}
 
 ```
 
 
 ### Average Weekday Hourly Throughput (Source: Network Manager)
 
-```{r Avg-weekday-hourly-throughput}
-thru <- params$thru %>%
-  filter(
-    TIME >= hm("05:55"),
-    TIME <= hm("23:05")
-  ) %>%
-  mutate(PHASE = factor(PHASE,
-    levels = c("DEP", "ARR"),
-    labels = c("Departures", "Arrivals")
-  ))
+```{r Avg-weekday-hourly-throughput, code=readLines('R/fig_avg_weekday_hourly_throughput.R')}
 
-thru_yr <- unique(thru$YEAR)
-
-thru_mth <- unique(thru$MONTH_NUM)
-
-thru_tot <- thru %>%
-  group_by(TIME) %>%
-  summarise(ROLLING_HOUR_MVT = sum(ROLLING_HOUR_MVT, na.rm = TRUE)) %>%
-  mutate(PHASE = "Total") %>%
-  ungroup()
-
-thru_max <- thru %>%
-  group_by(TIME) %>%
-  summarise(ROLLING_HOUR_MVT = mean(PCT99_RHM, na.rm = TRUE)) %>%
-  mutate(PHASE = "Peak Service Rate<br>(2016-2021)") %>%
-  ungroup()
-
-thru <- thru %>%
-  bind_rows(thru_tot) %>%
-  bind_rows(thru_max) %>%
-  mutate(TIME = as.character(TIME), TIME = strtrim(TIME, 5))
-
-phase_grps <- c(  "Departures",  "Arrivals",  "Total",  "Peak Service Rate<br>(2016-2021)")
-
-phase_lbl  <- c(  "Departures",  "Arrivals",  "Total",  "Peak Service Rate<br>(2016-2021)")
-
-xax <- list(
-  title = "",
-  type = "category",
-  range = c("06:00", "23:00")
-)
-
-yax <- list(
-  title = "Average Throughput [flights/hour]",
-  titlefont = list(size = 11),
-  hoverformat = ".2f"
-)
-
-msg <- paste0(
-  "<b>Average 15-min rolling hour",
-  "<br>throughput-weekdays month ",
-  pick_mth[thru_mth],
-  thru_yr,
-  "</b>"
-)
-
-if (max(thru$ROLLING_HOUR_MVT) <= 20) {
-  msg_y <- 1.2 * max(thru$ROLLING_HOUR_MVT)
-} else {
-  msg_y <- 0.1 * max(thru$ROLLING_HOUR_MVT)
-}
-
-
-thru <- thru %>%
-  mutate(PHASE = factor(PHASE,
-                             levels = phase_grps,
-                             labels = phase_lbl
-  ))
-
-
-thru %>%
-  plot_ly(
-    x = ~TIME,
-    y = ~ROLLING_HOUR_MVT,
-    color = ~PHASE
-  ) %>%
-  group_by(PHASE) %>%
-  add_lines(type = "scatter") %>%
-  add_annotations(
-    text      = msg,
-    x         = 0.5,
-    xref      = "paper",
-    y         = msg_y,
-    showarrow = FALSE,
-    ax        = 0,
-    ay        = 0,
-    align     = "center"
-  ) %>%
-  layout(
-    xaxis       = xax,
-    yaxis       = yax,
-    hovermode   = "x unified"
-    ##############################################################################
-    # , annotations = list(
-    #   x         = 1,
-    #   y         = -0.1,
-    #   text      = "Source: Network Manager",
-    #   showarrow = FALSE,
-    #   xref      = "paper",
-    #   yref      = "paper",
-    #   xanchor   = "right",
-    #   yanchor   = "auto",
-    #   xshift    = 0,
-    #   yshift    = -35,
-    #   font      = list(size = 12)
-    # )
-    ##############################################################################
-  ) %>%
-  config(
-    displaylogo = FALSE,
-    modeBarButtonsToRemove = config_bar_remove_buttons
-  )
 ```
 
 
@@ -749,364 +442,14 @@ thru %>%
 ### Annual Arrival ATFM Delay (Source: Network Manager)
 
 
-```{r atfm-pa}
-if (nrow(params$atfm) > 0) {
-  atfm_pa <- params$atfm %>%
-    select(
-      YEAR, FLT_ARR_1, DLY_APT_ARR_1, AD_DISRUPTION, AD_CAPACITY, AD_WEATHER,
-      AD_DISRUPTION_ATC, AD_CAPACITY_ATC, AD_STAFFING_ATC, AD_EVENTS
-    ) %>%
-    group_by(YEAR) %>%
-    summarise(
-      FLT_ARR_TOT       = sum(FLT_ARR_1, na.rm = TRUE),
-      DLY_APT_ARR_TOT   = sum(DLY_APT_ARR_1, na.rm = TRUE),
-      AD_DISRUPTION     = sum(AD_DISRUPTION, na.rm = TRUE),
-      AD_CAPACITY       = sum(AD_CAPACITY, na.rm = TRUE),
-      AD_WEATHER        = sum(AD_WEATHER, na.rm = TRUE),
-      AD_DISRUPTION_ATC = sum(AD_DISRUPTION_ATC, na.rm = TRUE),
-      AD_CAPACITY_ATC   = sum(AD_CAPACITY_ATC, na.rm = TRUE),
-      AD_STAFFING_ATC   = sum(AD_STAFFING_ATC, na.rm = TRUE),
-      AD_EVENTS         = sum(AD_EVENTS, na.rm = TRUE)
-    ) %>%
-    ungroup() %>%
-    tidyr::pivot_longer(
-      cols      = starts_with("AD_"),
-      names_to  = "REG_REASON",
-      values_to = "DLY"
-    ) %>%
-    mutate(
-      AVG_ARR_ATFM_DLY = DLY_APT_ARR_TOT / FLT_ARR_TOT,
-      AVG_ARR_ATFM_REG = DLY / FLT_ARR_TOT
-    )
+```{r atfm-pa, code=readLines('R/fig_annual_arr_atfm_delay.R')}
 
-  # ------------------ ATFM Grouping and Colour Definition ------------------
-
-  atfm_col <- c(
-    "#595959", # rgb2hex(89,89,89)    # AD Events
-    "#B9CDE5", # rgb2hex(185,205,229) # AD Disruption
-    "#E6B9B8", # rgb2hex(230,185,184) # AD Capacity
-    "#9BBB59", # rgb2hex(155,187,89)  # AD Weather
-    "#4F81BD", # rgb2hex(79,129,189)  # AD Disruption ATC
-    "#F79646", # rgb2hex(247,150,70)  # Staffing ATC
-    "#C0504D" # rgb2hex(192,80,77)   # AD Capacity ATC
-  )
-
-  atfm_grps <- c(
-    "AD_EVENTS",
-    "AD_DISRUPTION",
-    "AD_CAPACITY",
-    "AD_WEATHER",
-    "AD_DISRUPTION_ATC",
-    "AD_STAFFING_ATC",
-    "AD_CAPACITY_ATC"
-  )
-
-  atfm_lbl <- c(
-    "Events",
-    "Disruption",
-    "Capacity",
-    "Weather",
-    "Disruption (ATC)",
-    "Staffing (ATC)",
-    "Capacity (ATC)"
-  )
-
-  # -------------------------------------------------------------------------
-
-  atfm_pa <- atfm_pa %>%
-    mutate(REG_REASON = factor(REG_REASON,
-      levels = atfm_grps,
-      labels = atfm_lbl
-    ))
-
-  atfm_pa %>%
-    plot_ly(
-      x      = ~YEAR,
-      y      = ~AVG_ARR_ATFM_REG,
-      color  = ~REG_REASON,
-      colors = atfm_col,
-      type   = "bar"
-    ) %>%
-    add_annotations(
-      data      = atfm_pa %>% select(YEAR, AVG_ARR_ATFM_DLY) %>% unique(),
-      x         = ~YEAR,
-      y         = ~ AVG_ARR_ATFM_DLY + 0.03,
-      text      = ~ round(AVG_ARR_ATFM_DLY, 2),
-      showarrow = FALSE
-    ) %>%
-    layout(
-      barmode   = "stack",
-      hovermode = "x unified",
-      xaxis     = list(title = ""),
-      yaxis     = list(
-        title       = "Average Arrival ATFM delay [min/arr]",
-        titlefont   = list(size = 11),
-        hoverformat = ".2f"
-      )
-      ##############################################################################
-      # , annotations = list(
-      #   x         = 1,
-      #   y         = -0.1,
-      #   text      = "Source: Network Manager",
-      #   showarrow = FALSE,
-      #   xref      = "paper",
-      #   yref      = "paper",
-      #   xanchor   = "right",
-      #   yanchor   = "auto",
-      #   xshift    = 0,
-      #   yshift    = -5,
-      #   font      = list(size = 12)
-      # )
-      ##############################################################################
-    ) %>%
-    config(
-      displaylogo = FALSE,
-      modeBarButtonsToRemove = config_bar_remove_buttons
-    )
-}
 ```
 
 ### Monthly Arrival ATFM Delay (Source: Network Manager)
 
-```{r atfm-pm}
-# monthly trend
+```{r atfm-pm, code=readLines('R/fig_monthly_arr_atfm_delay.R')}
 
-if (nrow(params$atfm) > 0) {
-  atfm_pm <- params$atfm %>%
-    select(
-      YEAR,
-      MONTH_NUM,
-      FLT_ARR_1,
-      DLY_APT_ARR_1,
-      AD_DISRUPTION,
-      AD_CAPACITY,
-      AD_WEATHER,
-      AD_DISRUPTION_ATC,
-      AD_CAPACITY_ATC,
-      AD_STAFFING_ATC,
-      AD_EVENTS
-    ) %>%
-    group_by(YEAR, MONTH_NUM) %>%
-    summarise(
-      FLT_ARR_TOT       = sum(FLT_ARR_1, na.rm = TRUE),
-      DLY_APT_ARR_TOT   = sum(DLY_APT_ARR_1, na.rm = TRUE),
-      AD_DISRUPTION     = sum(AD_DISRUPTION, na.rm = TRUE),
-      AD_CAPACITY       = sum(AD_CAPACITY, na.rm = TRUE),
-      AD_WEATHER        = sum(AD_WEATHER, na.rm = TRUE),
-      AD_DISRUPTION_ATC = sum(AD_DISRUPTION_ATC, na.rm = TRUE),
-      AD_CAPACITY_ATC   = sum(AD_CAPACITY_ATC, na.rm = TRUE),
-      AD_STAFFING_ATC   = sum(AD_STAFFING_ATC, na.rm = TRUE),
-      AD_EVENTS         = sum(AD_EVENTS, na.rm = TRUE)
-    ) %>%
-    ungroup() %>%
-    tidyr::pivot_longer(
-      cols      = starts_with("AD_"),
-      names_to  = "REG_REASON",
-      values_to = "DLY"
-    ) %>%
-    mutate(
-      AVG_ARR_ATFM_DLY = DLY_APT_ARR_TOT / FLT_ARR_TOT,
-      AVG_ARR_ATFM_REG = DLY / FLT_ARR_TOT
-    )
-
-
-  filter_years <- atfm_pm %>%
-    pull(YEAR) %>%
-    unique()
-
-  max_year <- max(filter_years)
-
-  ########################## KEY MESSAGE #########################################
-  
-  
-  MONTHLY_HIGH_ATFM <- atfm_pm %>%
-    select(YEAR, MONTH_NUM, REG_REASON, AVG_ARR_ATFM_DLY, AVG_ARR_ATFM_REG) %>%
-    group_by(YEAR) %>%
-    filter(AVG_ARR_ATFM_DLY != 0) %>%
-    filter(AVG_ARR_ATFM_REG != 0) %>%
-    filter(AVG_ARR_ATFM_DLY == max(AVG_ARR_ATFM_DLY)) %>%
-    filter(AVG_ARR_ATFM_REG == max(AVG_ARR_ATFM_REG)) %>% 
-    arrange(YEAR) %>% 
-    unique() %>% 
-    mutate(
-      REG_REASON = factor(REG_REASON,
-      levels     = atfm_grps,
-      labels     = atfm_lbl
-    ))
-  
-  ###########################################################################
-  
-  annotations = vector(mode = "list", length = length(filter_years))
-  for (i in 1:length(filter_years)) {
-    MONTHLY_HIGH_ATFM_temp=filter(MONTHLY_HIGH_ATFM, YEAR==filter_years[i])
-    if (nrow(MONTHLY_HIGH_ATFM_temp)>0) {
-      annotation <- list(x = MONTHLY_HIGH_ATFM_temp$MONTH_NUM,
-                         y = MONTHLY_HIGH_ATFM_temp$AVG_ARR_ATFM_DLY,
-                         xref='x',
-                         yref='y',
-                         text = paste0(
-                           "<b>Highest ATFM delay:<br>",
-                           round(MONTHLY_HIGH_ATFM_temp$AVG_ARR_ATFM_DLY, 2), " min/arr<br>(",
-                           round(MONTHLY_HIGH_ATFM_temp$AVG_ARR_ATFM_REG/
-                                   MONTHLY_HIGH_ATFM_temp$AVG_ARR_ATFM_DLY*100, 0),
-                           "% ", MONTHLY_HIGH_ATFM_temp$REG_REASON, ")</b>"),
-                         yshift=40,
-                         xshift = ifelse(MONTHLY_HIGH_ATFM_temp$MONTH_NUM==1,
-                                         40,
-                                         ifelse(MONTHLY_HIGH_ATFM_temp$MONTH_NUM==12, -40, 0)),
-                         align = ifelse(MONTHLY_HIGH_ATFM_temp$MONTH_NUM==1,
-                                        "left",
-                                        ifelse(MONTHLY_HIGH_ATFM_temp$MONTH_NUM==12, "right", "center")),
-                         showarrow = FALSE)
-    } else {
-      annotation <- list(x = 6,
-                         y = 1,
-                         xref='x',
-                         yref='y',
-                         text = "", #paste0("<b>No ATFM delay in ", filter_years[i], "</b>"),
-                         yshift=0,
-                         xshift = 0,
-                         align = "center",
-                         showarrow = FALSE)
-    }
-    
-    annotations[[i]] <- annotation
-    
-  }
-  
-  # source_annotation=list(x         = 1,
-  #                        y         = -0.1,
-  #                        text      = "Source: Network Manager",
-  #                        showarrow = F,
-  #                        xref      = 'paper',
-  #                        yref      = 'paper',
-  #                        xanchor   = 'right',
-  #                        yanchor   = 'auto',
-  #                        xshift    = 0,
-  #                        yshift    = -10,
-  #                        font      = list(size=12))
-  
-  button_list=vector(mode = "list", length = length(filter_years))
-  annot_list=vector(mode = "list", length = length(filter_years))
-  for(x in 1:length(filter_years)){
-    annot_list_temp=annot_list
-    annot_list_temp[[x]]=annotations[[x]]
-    if (!is.null(annotations[[x]])) {
-      bl=list(
-        label  = filter_years[x],
-        method = "update",
-        args   = list(list("transforms[0].value"=filter_years[x]),
-                      list(annotations=list(annot_list_temp[[x]]
-                                            # , source_annotation
-                                            )))
-      )
-    } else {
-      bl=list(
-        label  = filter_years[x],
-        method = "update",
-        args   = 
-          # list(
-          list("transforms[0].value"=filter_years[x])
-        # , list(annotations=list(source_annotation))
-        # )
-      )
-    }
-    button_list[[x]]=bl
-  }
-
-  button_type_list <- list(
-    type      = "buttons",
-    bgcolor   = "#c3c1e8",
-    active    = length(filter_years) - 1,
-    direction = "right",
-    xref      = "paper",
-    x         = 0.3,
-    xanchor   = "left",
-    yref      = "paper",
-    y         = 1.2,
-    yanchor   = "bottom",
-    buttons   = button_list
-  )
-
-  # set REG_REASON grouping and colors
-
-  atfm_pm <- atfm_pm %>%
-    mutate(
-      REG_REASON = factor(REG_REASON,
-      levels     = atfm_grps,
-      labels     = atfm_lbl
-    ))
-
-
-  atfm_pm_fig <- atfm_pm %>%
-    plot_ly(
-      x          = ~MONTH_NUM,
-      y          = ~AVG_ARR_ATFM_REG,
-      customdata = ~YEAR,
-      color      = ~REG_REASON,
-      colors     = atfm_col,
-      type       = "bar",
-      transforms = list(
-        list(
-          type      = "filter",
-          target    = "customdata",
-          operation = "=",
-          value     = max_year
-        )
-      )
-    ) %>%
-    # add_annotations(x         = 1,
-    #                 y         = -0.1,
-    #                 text      = "Source: Network Manager",
-    #                 showarrow = F,
-    #                 xref      = 'paper',
-    #                 yref      = 'paper',
-    #                 xanchor   = 'right',
-    #                 yanchor   = 'auto',
-    #                 xshift    = 0,
-    #                 yshift    = -10,
-    #                 font      = list(size=12)
-    # ) %>%
-    layout(
-      barmode   = "stack",
-      hovermode = "x unified",
-      xaxis     = tick_yr_no_title,
-      yaxis     = list(
-        title       = "Average Arrival ATFM delay [min/arr]",
-        titlefont   = list(size = 11),
-        hoverformat = ".2f",
-        rangemode   = "tozero"
-      ),
-      showlegend = TRUE,
-      # legend = list(
-      #   orientation = "h",
-      #   xanchor="center",
-      #   x = 0.5,
-      #   y = -0.2
-      # ),
-      updatemenus = list(button_type_list)
-    ) %>%
-    config(
-      displaylogo = FALSE,
-      modeBarButtonsToRemove = config_bar_remove_buttons
-    )
-  if (!is.null(annotations[[length(filter_years)]])) {
-    atfm_pm_fig=atfm_pm_fig %>% 
-      add_annotations(x         = annotations[[length(filter_years)]]$x,
-                      y         = annotations[[length(filter_years)]]$y,
-                      text      = annotations[[length(filter_years)]]$text,
-                      showarrow = annotations[[length(filter_years)]]$showarrow,
-                      xref      = annotations[[length(filter_years)]]$xref,
-                      yref      = annotations[[length(filter_years)]]$yref,
-                      yshift    = annotations[[length(filter_years)]]$yshift,
-                      xshift    = annotations[[length(filter_years)]]$xshift,
-                      align     = annotations[[length(filter_years)]]$align
-      )
-  }
-  
-  atfm_pm_fig
-  
-}
 ```
 
 
@@ -1206,6 +549,43 @@ if (nrow(params$atfm) > 0) {
 
 ```{r atfm-ytd}
 if (nrow(params$atfm) > 0) {
+    atfm_pm <- params$atfm %>%
+    select(
+      YEAR,
+      MONTH_NUM,
+      FLT_ARR_1,
+      DLY_APT_ARR_1,
+      AD_DISRUPTION,
+      AD_CAPACITY,
+      AD_WEATHER,
+      AD_DISRUPTION_ATC,
+      AD_CAPACITY_ATC,
+      AD_STAFFING_ATC,
+      AD_EVENTS
+    ) %>%
+    group_by(YEAR, MONTH_NUM) %>%
+    summarise(
+      FLT_ARR_TOT       = sum(FLT_ARR_1, na.rm = TRUE),
+      DLY_APT_ARR_TOT   = sum(DLY_APT_ARR_1, na.rm = TRUE),
+      AD_DISRUPTION     = sum(AD_DISRUPTION, na.rm = TRUE),
+      AD_CAPACITY       = sum(AD_CAPACITY, na.rm = TRUE),
+      AD_WEATHER        = sum(AD_WEATHER, na.rm = TRUE),
+      AD_DISRUPTION_ATC = sum(AD_DISRUPTION_ATC, na.rm = TRUE),
+      AD_CAPACITY_ATC   = sum(AD_CAPACITY_ATC, na.rm = TRUE),
+      AD_STAFFING_ATC   = sum(AD_STAFFING_ATC, na.rm = TRUE),
+      AD_EVENTS         = sum(AD_EVENTS, na.rm = TRUE)
+    ) %>%
+    ungroup() %>%
+    tidyr::pivot_longer(
+      cols      = starts_with("AD_"),
+      names_to  = "REG_REASON",
+      values_to = "DLY"
+    ) %>%
+    mutate(
+      AVG_ARR_ATFM_DLY = DLY_APT_ARR_TOT / FLT_ARR_TOT,
+      AVG_ARR_ATFM_REG = DLY / FLT_ARR_TOT
+    )
+
   atfm_max_year <- atfm_pm %>%
     pull(YEAR) %>%
     max() %>%
@@ -1480,191 +860,14 @@ SLOT_MM_PLOT1 %>%
 
 ### Annual ATFM Slot Adherence (Source: Network Manager)
 
-```{r ANNUAL-ATFM-SLOT2}
-SLOT_YY_PLOT2 <- params$slot_yy %>%
-  select(YEAR, TOT_FLT_DEP_OUT_LATE_1, TOT_FLT_DEP_OUT_EARLY_1, TOT_FLT_DEP_IN_1) %>%
-  tidyr::pivot_longer(
-    cols = c(TOT_FLT_DEP_OUT_LATE_1, TOT_FLT_DEP_OUT_EARLY_1, TOT_FLT_DEP_IN_1),
-    names_to  = "SLOT_CAT",
-    values_to = "NB_SLOT"
-  )
-
-slot_col <- c(
-  "#BDD7EE", # blue
-  "#C6E0B4", # green
-  "#F8CBAD"
-) # orange
-
-SLOT_YY_PLOT2$SLOT_CAT <- factor(SLOT_YY_PLOT2$SLOT_CAT,
-  levels = c(
-    "TOT_FLT_DEP_OUT_EARLY_1",
-    "TOT_FLT_DEP_IN_1",
-    "TOT_FLT_DEP_OUT_LATE_1"
-  ),
-  labels = c(
-    "Before the STW<br>(Early Take-Off Traffic)",
-    "Within the STW<br>[-5 minutes, +10 minutes]",
-    "After the STW<br>(Late Take-Off Traffic)"
-  )
-)
-
-SLOT_YY_PLOT2 <- SLOT_YY_PLOT2 %>%
-  mutate(YEAR = as.character(YEAR))
-
-SLOT_YY_PLOT2 %>%
-  plot_ly(
-    x             = ~YEAR,
-    y             = ~NB_SLOT,
-    type          = "bar",
-    color         = ~SLOT_CAT,
-    colors        = slot_col,
-    hovertemplate = "%{y:.r}"
-  ) %>%
-  layout(
-    barmode   = "stack",
-    hovermode = "x unified",
-    xaxis     = list(title = ""),
-    yaxis     = list(
-      title     = "Number of Regulated departures",
-      titlefont = list(size = 11)
-    )
-    ##############################################################################
-    # ,annotations = list(
-    #   x         = 1,
-    #   y         = -0.1,
-    #   text      = "Source: Network Manager",
-    #   showarrow = FALSE,
-    #   xref      = "paper",
-    #   yref      = "paper",
-    #   xanchor   = "right",
-    #   yanchor   = "auto",
-    #   xshift    = 0,
-    #   yshift    = -5,
-    #   font      = list(size = 12)
-    # )
-    ##############################################################################
-  ) %>%
-  config(
-    displaylogo = FALSE,
-    modeBarButtonsToRemove = config_bar_remove_buttons
-  )
-
+```{r ANNUAL-ATFM-SLOT2, code=readLines('R/fig_annual_atfm_slot.R')}
 
 ```
 
 ### Monthly ATFM Slot Adherence (Source: Network Manager)
 
-```{r MONTHLY-ATFM-SLOT2}
-SLOT_MM_PLOT2 <- params$slot_mm %>%
-  select(YEAR,
-         MONTH_NUM,
-         TOT_FLT_DEP_OUT_LATE_1,
-         TOT_FLT_DEP_OUT_EARLY_1,
-         TOT_FLT_DEP_IN_1) %>%
-  tidyr::pivot_longer(
-    cols = c(TOT_FLT_DEP_OUT_LATE_1, TOT_FLT_DEP_OUT_EARLY_1, TOT_FLT_DEP_IN_1),
-    names_to = "SLOT_CAT",
-    values_to = "NB_SLOT"
-  )
+```{r MONTHLY-ATFM-SLOT2, code=readLines('R/fig_monthly_atfm_slot.R')}
 
-slot_col <- c(
-  "#BDD7EE", # blue
-  "#C6E0B4", # green
-  "#F8CBAD"
-) # orange
-
-SLOT_MM_PLOT2$SLOT_CAT <- factor(SLOT_MM_PLOT2$SLOT_CAT,
-  levels = c(
-    "TOT_FLT_DEP_OUT_EARLY_1",
-    "TOT_FLT_DEP_IN_1",
-    "TOT_FLT_DEP_OUT_LATE_1"
-  ),
-  labels = c(
-    "Before the STW<br>(Early Take-Off Traffic)",
-    "Within the STW<br>[-5 minutes, +10 minutes]",
-    "After the STW<br>(Late Take-Off Traffic)"
-  )
-)
-
-filter_years <- SLOT_MM_PLOT2 %>%
-  pull(YEAR) %>%
-  unique()
-
-max_year <- max(filter_years)
-
-button_list <- lapply(
-  1:length(filter_years),
-  function(x) {
-    list(
-      method = "restyle",
-      args = list("transforms[0].value", filter_years[x]),
-      label = filter_years[x]
-    )
-  }
-)
-
-button_type_list <- list(
-  buttons   = button_list,
-  type      = "buttons",
-  bgcolor   = "#c3c1e8",
-  active    = length(filter_years) - 1,
-  direction = "right",
-  xref      = "paper",
-  x         = 0.3,
-  xanchor   = "left",
-  yref      = "paper",
-  y         = 1.2,
-  yanchor   = "bottom"
-)
-
-SLOT_MM_PLOT2 %>%
-  plot_ly(
-    x             = ~MONTH_NUM,
-    y             = ~NB_SLOT,
-    customdata    = ~YEAR,
-    color         = ~SLOT_CAT,
-    colors        = slot_col,
-    hovertemplate = "%{y:.r}",
-    type          = "bar",
-    transforms    = list(
-      list(
-        type        = "filter",
-        target      = "customdata",
-        operation   = "=",
-        value       = max_year
-      )
-    )
-  ) %>%
-  layout(
-    barmode   = "stack",
-    hovermode = "x unified",
-    xaxis     = tick_yr_no_title,
-    yaxis     = list(
-      title     = "Number of Regulated departures",
-      titlefont = list(size = 11)
-    ),
-    showlegend = TRUE,
-    updatemenus = list(button_type_list)
-    ##############################################################################
-    # ,annotations = list(
-    #   x         = 1,
-    #   y         = -0.1,
-    #   text      = "Source: Network Manager",
-    #   showarrow = FALSE,
-    #   xref      = "paper",
-    #   yref      = "paper",
-    #   xanchor   = "right",
-    #   yanchor   = "auto",
-    #   xshift    = 0,
-    #   yshift    = -10,
-    #   font      = list(size = 12)
-    # )
-    ##############################################################################
-  ) %>%
-  config(
-    displaylogo = FALSE,
-    modeBarButtonsToRemove = config_bar_remove_buttons
-  )
 ```
 
 # CDO/CCO
@@ -1690,174 +893,8 @@ cat("### Average time flown level per flight (Source: AIU analysis)")
 ```
 
   
-```{r Avg-time-lvl, eval=nrow(params$cdo_cco)>0, echo = FALSE}
 
-AVG_TIME_LVL_PLOT <- params$cdo_cco %>%
-  select(YEAR, MONTH_NUM, AVG_TIME_LVL_DESCENT, AVG_TIME_LVL_DESCENT_BLW_70, AVG_TIME_LVL_CLIMB, AVG_TIME_LVL_CLIMB_BLW_100)
-
-filter_years <- AVG_TIME_LVL_PLOT %>%
-  pull(YEAR) %>%
-  unique()
-
-max_year <- max(filter_years)
-
-AVG_TIME_LVL_min=group_by(AVG_TIME_LVL_PLOT, YEAR) %>% 
-  filter(AVG_TIME_LVL_DESCENT==min(AVG_TIME_LVL_DESCENT)) %>% 
-  arrange(YEAR)
-
-annotations = vector(mode = "list", length = length(filter_years))
-for (i in 1:length(filter_years)) {
-  AVG_TIME_LVL_min_temp=filter(AVG_TIME_LVL_min, YEAR==filter_years[i])
-  if (nrow(AVG_TIME_LVL_min_temp)>0) {
-    annotation <- list(x = AVG_TIME_LVL_min_temp$MONTH_NUM,
-                       y = AVG_TIME_LVL_min_temp$AVG_TIME_LVL_DESCENT/60,
-                       xref='x',
-                       yref='y',
-                       text = paste0(
-                         "<b>Lowest value<br>(descent - Fuel CDO):<br>",
-                         round(AVG_TIME_LVL_min_temp$AVG_TIME_LVL_DESCENT/60, 1), " min.</b>"),
-                       yshift=40,
-                       xshift = ifelse(AVG_TIME_LVL_min_temp$MONTH_NUM==1,
-                                       20,
-                                       ifelse(AVG_TIME_LVL_min_temp$MONTH_NUM==12, -20, 0)),
-                       align = ifelse(AVG_TIME_LVL_min_temp$MONTH_NUM==1,
-                                      "left",
-                                      ifelse(AVG_TIME_LVL_min_temp$MONTH_NUM==12, "right", "center")),
-                       showarrow = FALSE)
-  } else {
-    annotation <- list(x = 6,
-                       y = 1,
-                       xref='x',
-                       yref='y',
-                       text = "",
-                       yshift=0,
-                       xshift = 0,
-                       align = "center",
-                       showarrow = FALSE)
-  }
-  
-  annotations[[i]] <- annotation
-}
-
-# source_annotation=list(x         = 1, 
-#                        y         = -0.1, 
-#                        text      = "Source: AIU analysis", 
-#                        showarrow = F, 
-#                        xref      = 'paper', 
-#                        yref      = 'paper', 
-#                        xanchor   = 'right', 
-#                        yanchor   = 'auto', 
-#                        xshift    = 0, 
-#                        yshift    = -10,
-#                        font      = list(size=12))
-
-button_list=vector(mode = "list", length = length(filter_years))
-annot_list=vector(mode = "list", length = length(filter_years))
-for(x in 1:length(filter_years)){
-  annot_list_temp=annot_list
-  annot_list_temp[[x]]=annotations[[x]]
-  if (!is.null(annotations[[x]])) {
-      bl=list(
-        label  = filter_years[x],
-        method = "update",
-        args   = list(list("transforms[0].value"=filter_years[x]),
-                      list(annotations=list(annot_list_temp[[x]]
-                                            # , source_annotation
-                                            )))
-      )
-  } else {
-      bl=list(
-        label  = filter_years[x],
-        method = "update",
-        args   = 
-          # list(
-            list("transforms[0].value"=filter_years[x])
-            # ,list(annotations=list(source_annotation))
-            # )
-      )
-    }
-    button_list[[x]]=bl
-}
-   
-button_type_list <- list(
-  buttons   = button_list,
-  type      = "buttons",
-  bgcolor   = "#c3c1e8",
-  active    = length(filter_years) - 1,
-  direction = "right",
-  xref      = "paper",
-  x         = 0.3,
-  xanchor   = "left",
-  yref      = "paper",
-  y         = 1.2,
-  yanchor   = "bottom"
-)
-
-
-# AVG_TIME_LVL_PLOT=mutate(AVG_TIME_LVL_PLOT, YEAR = as.character(YEAR))
-
-avg_time_lvl_fig=plot_ly(AVG_TIME_LVL_PLOT, 
-        x = ~MONTH_NUM, 
-        y = ~AVG_TIME_LVL_DESCENT/60, 
-        customdata = ~YEAR, 
-        line = list(color = 'rgb(40, 120, 181)'),
-        hovertemplate = "%{y:.1f}",
-        type = 'scatter',
-        mode = 'lines',
-        name = 'Descent (Fuel CDO)',
-        transforms = list(list(type      = 'filter',
-                               target    = "customdata",
-                               operation = '=',
-                               value     = max_year)
-        )) %>% 
-  add_trace(y = ~AVG_TIME_LVL_CLIMB/60, 
-            line = list(color = 'rgb(106, 168, 82)'),
-            name = 'Climb (Fuel CCO)') %>%
-  add_trace(y = ~AVG_TIME_LVL_DESCENT_BLW_70/60, 
-            line = list(color = 'rgb(40, 120, 181)', dash = 'dash'),
-            name = 'Descent (Noise CDO)') %>% 
-  add_trace(y = ~AVG_TIME_LVL_CLIMB_BLW_100/60, 
-            line = list(color = 'rgb(106, 168, 82)', dash = 'dash'),
-            name = 'Climb (Noise CCO)') %>% 
-  # add_annotations(x         = 1, 
-  #                 y         = -0.1, 
-  #                 text      = "Source: AIU analysis", 
-  #                 showarrow = F, 
-  #                 xref      = 'paper', 
-  #                 yref      = 'paper', 
-  #                 xanchor   = 'right', 
-  #                 yanchor   = 'auto', 
-  #                 xshift    = 0, 
-  #                 yshift    = -10,
-  #                 font      = list(size=12)
-  # ) %>%
-  layout(barmode = 'group',
-         hovermode   = "x unified",
-         xaxis       = tick_yr_no_title,
-         yaxis       = list( title="Average time flown level per flight (min.)",
-                             titlefont = list(size = 11)),
-         showlegend  = TRUE,
-         updatemenus = list( button_type_list )
-         
-  ) %>% 
-  config( displaylogo = FALSE,
-          modeBarButtonsToRemove = config_bar_remove_buttons)
-
-if (!is.null(annotations[[length(filter_years)]])) {
-    avg_time_lvl_fig=avg_time_lvl_fig %>% 
-      add_annotations(x         = annotations[[length(filter_years)]]$x,
-                      y         = annotations[[length(filter_years)]]$y,
-                      text      = annotations[[length(filter_years)]]$text,
-                      showarrow = annotations[[length(filter_years)]]$showarrow,
-                      xref      = annotations[[length(filter_years)]]$xref,
-                      yref      = annotations[[length(filter_years)]]$yref,
-                      yshift    = annotations[[length(filter_years)]]$yshift,
-                      xshift    = annotations[[length(filter_years)]]$xshift,
-                      align     = annotations[[length(filter_years)]]$align
-      )
-}
-
-avg_time_lvl_fig
+```{r Avg-time-lvl, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE, code=readLines('R/fig_avg_time_lvl.R')}
 
 ```
 
@@ -1869,79 +906,8 @@ cat("### Median CDO/CCO altitudes (Source: AIU analysis)")
 ```
 
 
-```{r Med-CDO-CCO-alt, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE}
 
-MED_CDO_CCO_ALT_PLOT <- params$cdo_cco %>% 
-  select(YEAR, MONTH_NUM, MEDIAN_CDO_ALT, MEDIAN_CCO_ALT)
-
-button_list <- lapply(
-  1:length(filter_years),
-  function(x) {
-    list(
-      method = "restyle",
-      args = list("transforms[0].value", filter_years[x]),
-      label = filter_years[x]
-    )
-  }
-)
-
-button_type_list <- list(
-  buttons   = button_list,
-  type      = "buttons",
-  bgcolor   = "#c3c1e8",
-  active    = length(filter_years) - 1,
-  direction = "right",
-  xref      = "paper",
-  x         = 0.3,
-  xanchor   = "left",
-  yref      = "paper",
-  y         = 1.2,
-  yanchor   = "bottom"
-)
-
-plot_ly(MED_CDO_CCO_ALT_PLOT, 
-        x = ~MONTH_NUM, 
-        y = ~MEDIAN_CDO_ALT, 
-        customdata = ~YEAR, 
-        line = list(color = 'rgb(40, 120, 181)'),
-        hovertemplate = "%{y:.0f}",
-        type = 'scatter',
-        mode = 'lines',
-        name = 'Descent (Fuel CDO)',
-        transforms = list(list(type      = 'filter',
-                               target    = "customdata",
-                               operation = '=',
-                               value     = max_year)
-        )) %>% 
-  add_trace(y = ~MEDIAN_CCO_ALT, 
-            line = list(color = 'rgb(106, 168, 82)'),
-            name = 'Climb (Fuel CCO)') %>%
-  layout(barmode = 'group',
-         hovermode   = "x unified",
-         xaxis       = tick_yr_no_title,
-         yaxis       = list( title="Median CDO/CCO altitude (feet)",
-                             titlefont = list(size = 11),
-                             range = list(0, 40000)),
-         showlegend  = TRUE,
-         updatemenus = list( button_type_list )
-         ##############################################################################
-         # ,annotations = list(
-         #   x         = 1, 
-         #   y         = -0.1, 
-         #   text      = "Source: AIU analysis", 
-         #   showarrow = F, 
-         #   xref      = 'paper', 
-         #   yref      = 'paper', 
-         #   xanchor   = 'right', 
-         #   yanchor   = 'auto', 
-         #   xshift    = 0, 
-         #   yshift    = -10,
-         #   font      =list(size=12)
-         # )          
-         ##############################################################################
-  ) %>% 
-  config( displaylogo = FALSE,
-          modeBarButtonsToRemove = config_bar_remove_buttons)
+```{r Med-CDO-CCO-alt, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE, code=readLines('R/fig_med_cdo_cco_alt.R')}
 
 ```
 
@@ -1960,86 +926,8 @@ cat("### Share of CDO/CCO flights (Source: AIU analysis)")
 ```
 
 
-```{r Share-unimpeded, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE}
 
-SHARE_CDO_CCO_FLIGHTS_PLOT <- params$cdo_cco %>% 
-    select(YEAR, MONTH_NUM, SHARE_CDO_FLIGHTS, SHARE_CDO_FLIGHTS_BLW_70, SHARE_CCO_FLIGHTS, SHARE_CCO_FLIGHTS_BLW_100)
-  
-button_list <- lapply(
-  1:length(filter_years),
-  function(x) {
-    list(
-      method = "restyle",
-      args = list("transforms[0].value", filter_years[x]),
-      label = filter_years[x]
-    )
-  }
-)
-
-button_type_list <- list(
-  buttons   = button_list,
-  type      = "buttons",
-  bgcolor   = "#c3c1e8",
-  active    = length(filter_years) - 1,
-  direction = "right",
-  xref      = "paper",
-  x         = 0.3,
-  xanchor   = "left",
-  yref      = "paper",
-  y         = 1.2,
-  yanchor   = "bottom"
-)
-
-plot_ly(SHARE_CDO_CCO_FLIGHTS_PLOT, 
-        x = ~MONTH_NUM, 
-        y = ~SHARE_CDO_FLIGHTS*100, 
-        customdata = ~YEAR, 
-        line = list(color = 'rgb(40, 120, 181)'),
-        hovertemplate = "%{y:.1f}%",
-        type = 'scatter',
-        mode = 'lines', 
-        name = 'Descent (Fuel CDO)',
-        transforms = list(list(type      = 'filter',
-                               target    = "customdata",
-                               operation = '=',
-                               value     = max_year)
-        )) %>% 
-  add_trace(y = ~SHARE_CCO_FLIGHTS*100, 
-            line = list(color = 'rgb(106, 168, 82)'),
-            name = 'Climb (Fuel CCO)') %>%
-  add_trace(y = ~SHARE_CDO_FLIGHTS_BLW_70*100, 
-            line = list(color = 'rgb(40, 120, 181)', dash = 'dash'),
-            name = 'Descent (Noise CDO)') %>% 
-  add_trace(y = ~SHARE_CCO_FLIGHTS_BLW_100*100, 
-            line = list(color = 'rgb(106, 168, 82)', dash = 'dash'),
-            name = 'Climb (Noise CCO)') %>% 
-  layout(barmode = 'group',
-         hovermode   = "x unified",
-         xaxis       = tick_yr_no_title,
-         yaxis       = list( title="Share of CDO/CCO flights (%)",
-                             titlefont = list(size = 11),
-                             ticksuffix = "%",  
-                             range = c(0, 100)),
-         showlegend  = TRUE,
-         updatemenus = list( button_type_list )
-         ##############################################################################
-         # ,annotations = list(
-         #   x         = 1, 
-         #   y         = -0.1, 
-         #   text      = "Source: AIU analysis", 
-         #   showarrow = F, 
-         #   xref      = 'paper', 
-         #   yref      = 'paper', 
-         #   xanchor   = 'right', 
-         #   yanchor   = 'auto', 
-         #   xshift    = 0, 
-         #   yshift    = -10,
-         #   font      =list(size=12)
-         # )          
-         ##############################################################################
-  ) %>% 
-  config( displaylogo = FALSE,
-          modeBarButtonsToRemove = config_bar_remove_buttons)
+```{r Share-unimpeded, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE, code=readLines('R/fig_share_unimpeded_cdo_cco.R')}
 
 ```
 
@@ -2130,120 +1018,7 @@ cat("### Annual ASMA Time (Source: APDF)")
 ```
 
 
-```{r ASMA-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
-
-ASMA_YY <- params$asma_yy %>%
-  tidyr::pivot_longer(
-    cols = c("AVG_UNIMP_TIME", "AVG_ADD_TIME"),
-    names_to = "TYPE",
-    values_to = "TIME"
-  )
-
-ASMA_YY <- ASMA_YY %>%
-  mutate(TYPE = factor(TYPE,
-                       levels = c("AVG_UNIMP_TIME", "AVG_ADD_TIME"),
-                       labels = c("Avg. Reference time", "Avg. Additional time")
-  ))
-ASMA_YY <- ASMA_YY %>%
-  mutate(YEAR = as.character(YEAR))
-
-########################## KEY MESSAGE #########################################
-
-ASMA_VAR <- params$asma_mm %>%
-  filter(AVG_ADD_TIME != "NaN") %>%
-  select(YEAR, TOT_FLT, TOT_ADD_TIME) %>%
-  group_by(YEAR) %>%
-  summarise(
-    TOT_ADD_TIME = sum(TOT_ADD_TIME, na.rm = TRUE),
-    TOT_FLT = sum(TOT_FLT, na.rm = TRUE)
-  ) %>%
-  ungroup()
-
-CUM_ASMA <- params$asma_mm %>%
-  filter(AVG_ADD_TIME != "NaN") %>%
-  select(YEAR, MONTH_NUM, TOT_ADD_TIME, TOT_FLT) %>%
-  mutate(across(c(YEAR, MONTH_NUM), as.numeric)) %>%
-  filter(YEAR %in% c(max(YEAR), max(YEAR) - 1))
-
-YEAR_MAX_MONTH <- CUM_ASMA %>%
-  filter(YEAR == max(YEAR)) %>%
-  pull(MONTH_NUM) %>%
-  max() %>%
-  unique()
-
-CUM_ASMA <- CUM_ASMA %>%
-  filter(MONTH_NUM <= YEAR_MAX_MONTH) %>%
-  group_by(YEAR) %>%
-  summarise(TOT_ASMA = sum(TOT_ADD_TIME, na.rm = TRUE) / sum(TOT_FLT, na.rm = TRUE)) %>%
-  ungroup() %>%
-  mutate(CHANGE = (TOT_ASMA - lag(TOT_ASMA)) / lag(TOT_ASMA))
-
-msg_tmpl <- "<b>Add.Change Jan-{mnt}<br>{yr2} vs {yr1}:<br>{pct}% </b>"
-
-msg <- str_glue(msg_tmpl,
-                mnt = pick_mth[YEAR_MAX_MONTH],
-                yr1 = CUM_ASMA$YEAR[1],
-                yr2 = CUM_ASMA$YEAR[2],
-                pct = round(100 * CUM_ASMA[2, "CHANGE"], 2)
-)
-
-ALL_YEAR <- ASMA_YY %>%
-  filter(TIME != "NaN") %>%
-  pull(YEAR) %>%
-  unique()
-
-msg_y <- params$asma_yy %>%
-  filter(AVG_ADD_TIME != "NaN") %>%
-  filter(YEAR == as.integer(max(YEAR)) - 1) %>%
-  mutate(TOT_ASMA = 1.1 * (AVG_UNIMP_TIME + AVG_ADD_TIME)) %>%
-  pull(TOT_ASMA)
-
-key_msg <- list(
-  x = length(ALL_YEAR) - 1,
-  y = msg_y,
-  text = msg,
-  size = 14,
-  showarrow = FALSE
-)
-
-###########################################################################
-
-
-ASMA_YY %>%
-  plotly::plot_ly(
-    x          = ~YEAR,
-    y          = ~TIME,
-    type       = "bar",
-    showlegend = TRUE,
-    color      = ~TYPE
-  ) %>%
-  layout(
-    barmode   = "stack",
-    hovermode = "x unified",
-    xaxis     = list(title = ""),
-    yaxis     = list(
-      title       = "Average ASMA time [min/arr]",
-      titlefont   = list(size = 11),
-      hoverformat = ".2f"
-    ),
-    annotations = key_msg
-  ) %>%
-  # add_annotations(x         = 1, 
-  #                 y         = -0.1, 
-  #                 text      = "Source: APDF", 
-  #                 showarrow = F, 
-  #                 xref      = 'paper', 
-  #                 yref      = 'paper', 
-  #                 xanchor   = 'right', 
-  #                 yanchor   = 'auto', 
-  #                 xshift    = 0, 
-  #                 yshift    = -10,
-  #                 font      = list(size=12)
-  # ) %>%
-  config(
-    displaylogo = FALSE,
-    modeBarButtonsToRemove = config_bar_remove_buttons
-  )
+```{r ASMA-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_asma_yearly.R')}
 
 ```
 
@@ -2255,189 +1030,7 @@ cat("### Monthly ASMA Time (Source: APDF)")
 ```
 
 
-```{r ASMA-MONTHLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
-
-ASMA_MM <- params$asma_mm %>%
-  tidyr::pivot_longer(
-    cols      = c("AVG_UNIMP_TIME", "AVG_ADD_TIME"),
-    names_to  = "TYPE",
-    values_to = "TIME"
-  )
-
-ASMA_MM <- ASMA_MM %>%
-  mutate(
-    TYPE   = factor(TYPE,
-                    levels = c("AVG_UNIMP_TIME", "AVG_ADD_TIME"),
-                    labels = c("Avg. Reference time", "Avg. Additional time")
-    ))
-
-filter_years <- ASMA_MM %>%
-  pull(YEAR) %>%
-  unique()
-
-max_year <- max(filter_years)
-
-MONTHLY_HIGH_ASMA = ASMA_MM %>% 
-  filter(TYPE=="Avg. Additional time") %>% 
-  mutate(AVG_TIME=(TOT_UNIMP_TIME + TOT_ADD_TIME)/TOT_FLT) %>% 
-  select(YEAR, MONTH_NUM, TIME, AVG_TIME) %>% 
-  group_by(YEAR) %>% 
-  filter(TIME !=0) %>% 
-  filter(TIME==max(TIME)) %>% 
-  arrange(YEAR)
-
-annotations = vector(mode = "list", length = length(filter_years))
-for (i in 1:length(filter_years)) {
-  MONTHLY_HIGH_ASMA_temp=filter(MONTHLY_HIGH_ASMA, YEAR==filter_years[i])
-  if (nrow(MONTHLY_HIGH_ASMA_temp)>0) {
-    annotation <- list(x = MONTHLY_HIGH_ASMA_temp$MONTH_NUM,
-                       y = MONTHLY_HIGH_ASMA_temp$AVG_TIME,
-                       xref='x',
-                       yref='y',
-                       text = paste0(
-                         "<b>Highest average<br>additional ASMA time:<br>",
-                         round(MONTHLY_HIGH_ASMA_temp$TIME, 2), " min/arr</b>"),
-                       yshift=40,
-                       xshift = ifelse(MONTHLY_HIGH_ASMA_temp$MONTH_NUM==1,
-                                       45,
-                                       ifelse(MONTHLY_HIGH_ASMA_temp$MONTH_NUM==12, -45, 0)),
-                       align = ifelse(MONTHLY_HIGH_ASMA_temp$MONTH_NUM==1,
-                                      "left",
-                                      ifelse(MONTHLY_HIGH_ASMA_temp$MONTH_NUM==12, "right", "center")),
-                       showarrow = FALSE)
-  } else {
-    annotation <- list(x = 6,
-                       y = 1,
-                       xref='x',
-                       yref='y',
-                       text = "",
-                       yshift=0,
-                       xshift = 0,
-                       align = "center",
-                       showarrow = FALSE)
-  }
-  
-  annotations[[i]] <- annotation
-}
-
-# source_annotation=list(x         = 1, 
-#                        y         = -0.1, 
-#                        text      = "Source: APDF", 
-#                        showarrow = F, 
-#                        xref      = 'paper', 
-#                        yref      = 'paper', 
-#                        xanchor   = 'right', 
-#                        yanchor   = 'auto', 
-#                        xshift    = 0, 
-#                        yshift    = -10,
-#                        font      = list(size=12))
-
-button_list=vector(mode = "list", length = length(filter_years))
-annot_list=vector(mode = "list", length = length(filter_years))
-for(x in 1:length(filter_years)){
-  annot_list_temp=annot_list
-  annot_list_temp[[x]]=annotations[[x]]
-  if (!is.null(annotations[[x]])) {
-    bl=list(
-      label  = filter_years[x],
-      method = "update",
-      args   = list(list("transforms[0].value"=filter_years[x]),
-                    list(annotations=list(annot_list_temp[[x]]
-                                          # , source_annotation
-                                          )))
-    )
-  } else {
-    bl=list(
-      label  = filter_years[x],
-      method = "update",
-      args   = 
-        # list(
-        list("transforms[0].value"=filter_years[x])
-        # ,list(annotations=list(source_annotation))
-        # )
-    )
-  }
-  button_list[[x]]=bl
-}
-
-button_type_list <- list(
-  type      = "buttons",
-  bgcolor   = "#c3c1e8",
-  active    = length(filter_years) - 1,
-  direction = "right",
-  xref      = "paper",
-  x         = 0.3,
-  xanchor   = "left",
-  yref      = "paper",
-  y         = 1.2,
-  yanchor   = "bottom",
-  buttons   = button_list
-)
-
-asma_mm_fig = ASMA_MM %>%
-  plot_ly(
-    x          = ~MONTH_NUM,
-    y          = ~TIME,
-    customdata = ~YEAR,
-    color      = ~TYPE,
-    type       = "bar",
-    transforms = list(
-      list(
-        type      = "filter",
-        target    = "customdata",
-        operation = "=",
-        value     = max_year
-      )
-    )
-  ) %>%
-  # add_annotations(x         = 1, 
-  #                 y         = -0.1, 
-  #                 text      = "Source: APDF", 
-  #                 showarrow = F, 
-  #                 xref      = 'paper', 
-  #                 yref      = 'paper', 
-  #                 xanchor   = 'right', 
-  #                 yanchor   = 'auto', 
-  #                 xshift    = 0, 
-  #                 yshift    = -10,
-  #                 font      = list(size=12)
-  # ) %>%
-  layout(
-    barmode   = "stack",
-    hovermode = "x unified",
-    xaxis     = tick_yr_no_title,
-    yaxis     = list(
-      title       = "Average ASMA time [min/arr]",
-      titlefont   = list(size = 11),
-      hoverformat = ".2f"
-    ),
-    showlegend = TRUE,
-    legend = list(
-      orientation = "h",
-      xanchor="center",
-      x = 0.5
-    ),
-    updatemenus = list(button_type_list)
-  ) %>%
-  config(
-    displaylogo = FALSE,
-    modeBarButtonsToRemove = config_bar_remove_buttons
-  )
-if (!is.null(annotations[[length(filter_years)]])) {
-    asma_mm_fig=asma_mm_fig %>% 
-      add_annotations(x         = annotations[[length(filter_years)]]$x,
-                      y         = annotations[[length(filter_years)]]$y,
-                      text      = annotations[[length(filter_years)]]$text,
-                      showarrow = annotations[[length(filter_years)]]$showarrow,
-                      xref      = annotations[[length(filter_years)]]$xref,
-                      yref      = annotations[[length(filter_years)]]$yref,
-                      yshift    = annotations[[length(filter_years)]]$yshift,
-                      xshift    = annotations[[length(filter_years)]]$xshift,
-                      align     = annotations[[length(filter_years)]]$align
-      )
-  }
-  
-asma_mm_fig
+```{r ASMA-MONTHLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_asma_monthly.R')}
 
 ```
 
@@ -2449,57 +1042,28 @@ cat("## Row -----------------------------------------------------------")
 ```
 
 
-<!-- 
-
-
 ```{r ASMA-time-title3, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-cat("### Monthly ASMA Trend (current Year)")
+#cat("### Annual ASMA Time per Runway (Source: APDF)")
 
 ```
 
 
-```{r ASMA-TREND-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
-
-TMP <- params$asma_mm %>% 
-mutate( DATE_YM = paste0(YEAR,"-",MONTH_NUM),
-DATE_YM = lubridate::parse_date_time(DATE_YM, "ym"))
-
-TMP %>% 
-plot_ly(x    = ~DATE_YM, 
-y    = ~AVG_ADD_TIME, 
-type = 'scatter',
-mode = 'lines', 
-line = list(shape = "hvh", 
-width = 1)) %>%
-layout( hoverformat = ".2f",
-xaxis = list(title = "", 
-rangeselector = list(buttons = list(list(count = 3,
-label = "3 mo",
-step = "month",
-stepmode = "backward"),
-list(count = 6,
-label = "6 mo",
-step = "month",
-stepmode = "backward"),
-list(count = 1,
-label = "1 yr",
-step = "year",
-stepmode = "backward"),
-list(count = 1,
-label = "YTD",
-step = "year",
-stepmode = "todate"),
-list(step = "all"))),
-rangeslider = list(type = "date")), 
-yaxis = list(title = "Additional Average ASMA time [min/arr]",
-titlefont = list(size = 11))) %>% 
-config( displaylogo = FALSE,
-modeBarButtonsToRemove = config_bar_remove_buttons)
+```{r ASMA-RWY-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, file = 'R/fig_asma_rwy_yearly.R'}
 
 ```
 
--->
+  
+```{r ASMA-time-title4, results='asis', eval=params$apdf == "Y", echo = FALSE}
+
+#cat("### Monthly ASMA Time per Runway (Source: APDF)")
+
+```
+
+
+```{r ASMA-RWY-MONTHLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, file = 'R/fig_asma_rwy_monthly.R'}
+
+```
 
 
 # Taxi-Out Time
@@ -2529,132 +1093,7 @@ cat("### Annual Taxi-Out Time (Source: APDF)")
 ```
 
 
-```{r TXOT-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
-
-TXOT_YY <- params$txot_yy %>%
-  tidyr::pivot_longer(
-    cols      = c("AVG_UNIMP_TIME", "AVG_ADD_TIME"),
-    names_to  = "TYPE",
-    values_to = "TIME"
-  )
-
-TXOT_YY <- TXOT_YY %>%
-  mutate(
-    TYPE   = factor(TYPE,
-                    levels = c("AVG_UNIMP_TIME", "AVG_ADD_TIME"),
-                    labels = c("Avg. Reference time", "Avg. Additional time")
-    ))
-
-TXOT_YY <- TXOT_YY %>%
-  mutate(YEAR = as.character(YEAR))
-
-
-########################## KEY MESSAGE #########################################
-
-TXOT_VAR <- params$txot_mm %>%
-  filter(AVG_ADD_TIME != "NaN") %>%
-  select(YEAR, TOT_FLT, TOT_ADD_TIME) %>%
-  group_by(YEAR) %>%
-  summarise(
-    TOT_ADD_TIME = sum(TOT_ADD_TIME, na.rm = TRUE),
-    TOT_FLT = sum(TOT_FLT, na.rm = TRUE)
-  ) %>%
-  ungroup()
-
-CUM_TXOT <- params$txot_mm %>%
-  filter(AVG_ADD_TIME != "NaN") %>%
-  select(YEAR, MONTH_NUM, TOT_ADD_TIME, TOT_FLT) %>%
-  mutate(across(c(YEAR, MONTH_NUM), as.numeric)) %>%
-  filter(YEAR %in% c(max(YEAR), max(YEAR) - 1))
-
-YEAR_MAX_MONTH <- CUM_TXOT %>%
-  filter(YEAR == max(YEAR)) %>%
-  pull(MONTH_NUM) %>%
-  max() %>%
-  unique()
-
-CUM_TXOT <- CUM_TXOT %>%
-  filter(MONTH_NUM <= YEAR_MAX_MONTH) %>%
-  group_by(YEAR) %>%
-  summarise(TOT_TXOT = sum(TOT_ADD_TIME, na.rm = TRUE) / sum(TOT_FLT, na.rm = TRUE)) %>%
-  ungroup() %>%
-  mutate(CHANGE = (TOT_TXOT - lag(TOT_TXOT)) / lag(TOT_TXOT))
-
-msg_tmpl <- "<b>Add.Change Jan-{mnt}<br>{yr2} vs {yr1}:<br>{pct}% </b>"
-
-msg <- str_glue(msg_tmpl,
-                mnt = pick_mth[YEAR_MAX_MONTH],
-                yr1 = CUM_TXOT$YEAR[1],
-                yr2 = CUM_TXOT$YEAR[2],
-                pct = round(100 * CUM_TXOT[2, "CHANGE"], 2)
-)
-
-# msg <- paste0("<b>Change Jan-",
-#               pick_mth[YEAR_MAX_MONTH],
-#               "<br>",
-#               CUM_TXOT$YEAR[2],
-#               " vs ",
-#               CUM_TXOT$YEAR[1],
-#               ":<br>",
-#               round(100* CUM_TXOT[2,"CHANGE"], 2),"% </b>")
-
-ALL_YEAR <- TXOT_YY %>%
-  filter(TIME != "NaN") %>%
-  pull(YEAR) %>%
-  unique()
-
-msg_y <- params$txot_yy %>%
-  filter(AVG_ADD_TIME != "NaN") %>%
-  filter(YEAR == as.integer(max(YEAR)) - 1) %>%
-  mutate(TOT_TXOT = 1.1 * (AVG_UNIMP_TIME + AVG_ADD_TIME)) %>%
-  pull(TOT_TXOT)
-
-key_msg <- list(
-  x         = length(ALL_YEAR) - 1,
-  y         = msg_y,
-  text      = msg,
-  size      = 14,
-  showarrow = FALSE
-)
-
-################################################################################
-
-
-TXOT_YY %>%
-  plotly::plot_ly(
-    x          = ~YEAR,
-    y          = ~TIME,
-    type       = "bar",
-    showlegend = TRUE,
-    color      = ~TYPE
-  ) %>%
-  layout(
-    barmode   = "stack",
-    hovermode = "x unified",
-    xaxis     = list(title = ""),
-    yaxis     = list(
-      title       = "Average Taxi-out time [min/dep]",
-      titlefont   = list(size = 11),
-      hoverformat = ".2f"
-    ),
-    annotations = key_msg
-  ) %>%
-  # add_annotations(x         = 1, 
-  #                 y         = -0.1, 
-  #                 text      = "Source: APDF", 
-  #                 showarrow = F, 
-  #                 xref      = 'paper', 
-  #                 yref      = 'paper', 
-  #                 xanchor   = 'right', 
-  #                 yanchor   = 'auto', 
-  #                 xshift    = 0, 
-  #                 yshift    = -10,
-  #                 font      = list(size=12)
-  # ) %>%
-  config(
-    displaylogo = FALSE,
-    modeBarButtonsToRemove = config_bar_remove_buttons
-  )
+```{r TXOT-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_taxi_out_yearly.R')}
 
 ```
 
@@ -2666,189 +1105,7 @@ cat("### Monthly Taxi-Out Time (Source: APDF)")
 ```
 
 
-```{r TAXI-OUT-MONTHLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
-
-TXOT_MM <- params$txot_mm %>%
-  tidyr::pivot_longer(
-    cols      = c("AVG_UNIMP_TIME", "AVG_ADD_TIME"),
-    names_to  = "TYPE",
-    values_to = "TIME"
-  )
-
-TXOT_MM <- TXOT_MM %>%
-  mutate(TYPE = factor(
-    TYPE,
-    levels = c("AVG_UNIMP_TIME", "AVG_ADD_TIME"),
-    labels = c("Avg. Reference time", "Avg. Additional time")
-  ))
-
-filter_years <- TXOT_MM %>%
-  pull(YEAR) %>%
-  unique()
-
-max_year <- max(filter_years)
-
-MONTHLY_HIGH_TXOT = TXOT_MM %>% 
-  filter(TYPE=="Avg. Additional time") %>% 
-  mutate(AVG_TIME=(TOT_UNIMP_TIME + TOT_ADD_TIME)/TOT_FLT) %>% 
-  select(YEAR, MONTH_NUM, TIME, AVG_TIME) %>% 
-  group_by(YEAR) %>% 
-  filter(TIME !=0) %>% 
-  filter(TIME==max(TIME)) %>% 
-  arrange(YEAR)
-
-annotations = vector(mode = "list", length = length(filter_years))
-for (i in 1:length(filter_years)) {
-  MONTHLY_HIGH_TXOT_temp=filter(MONTHLY_HIGH_TXOT, YEAR==filter_years[i])
-  if (nrow(MONTHLY_HIGH_TXOT_temp)>0) {
-    annotation <- list(x = MONTHLY_HIGH_TXOT_temp$MONTH_NUM,
-                       y = MONTHLY_HIGH_TXOT_temp$AVG_TIME,
-                       xref='x',
-                       yref='y',
-                       text = paste0(
-                         "<b>Highest average<br>additional Taxi-Out time:<br>",
-                         round(MONTHLY_HIGH_TXOT_temp$TIME, 2), " min/arr</b>"),
-                       yshift=40,
-                       xshift = ifelse(MONTHLY_HIGH_TXOT_temp$MONTH_NUM==1,
-                                       55,
-                                       ifelse(MONTHLY_HIGH_TXOT_temp$MONTH_NUM==12, -55, 0)),
-                       align = ifelse(MONTHLY_HIGH_TXOT_temp$MONTH_NUM==1,
-                                      "left",
-                                      ifelse(MONTHLY_HIGH_TXOT_temp$MONTH_NUM==12, "right", "center")),
-                       showarrow = FALSE)
-  } else {
-      annotation <- list(x = 6,
-                         y = 1,
-                         xref='x',
-                         yref='y',
-                         text = "",
-                         yshift=0,
-                         xshift = 0,
-                         align = "center",
-                         showarrow = FALSE)
-    }
-    
-    annotations[[i]] <- annotation
-    
-}
-
-# source_annotation=list(x         = 1, 
-#                        y         = -0.1, 
-#                        text      = "Source: APDF", 
-#                        showarrow = F, 
-#                        xref      = 'paper', 
-#                        yref      = 'paper', 
-#                        xanchor   = 'right', 
-#                        yanchor   = 'auto', 
-#                        xshift    = 0, 
-#                        yshift    = -10,
-#                        font      = list(size=12))
-
-button_list=vector(mode = "list", length = length(filter_years))
-annot_list=vector(mode = "list", length = length(filter_years))
-for(x in 1:length(filter_years)){
-  annot_list_temp=annot_list
-  annot_list_temp[[x]]=annotations[[x]]
-  if (!is.null(annotations[[x]])) {
-    bl=list(
-      label  = filter_years[x],
-      method = "update",
-      args   = list(list("transforms[0].value"=filter_years[x]),
-                    list(annotations=list(annot_list_temp[[x]]
-                                          # , source_annotation
-                                          )))
-    )
-  } else {
-    bl=list(
-      label  = filter_years[x],
-      method = "update",
-      args   = 
-        # list(
-          list("transforms[0].value"=filter_years[x])
-          # ,list(annotations=list(source_annotation))
-          # )
-    )
-  }
-  button_list[[x]]=bl
-}
-
-button_type_list <- list(
-  type      = "buttons",
-  bgcolor   = "#c3c1e8",
-  active    = length(filter_years) - 1,
-  direction = "right",
-  xref      = "paper",
-  x         = 0.3,
-  xanchor   = "left",
-  yref      = "paper",
-  y         = 1.2,
-  yanchor   = "bottom",
-  buttons   = button_list
-)
-
-txot_mm_fig = TXOT_MM %>%
-  plot_ly(
-    x          = ~MONTH_NUM,
-    y          = ~TIME,
-    customdata = ~YEAR,
-    color      = ~TYPE,
-    type       = "bar",
-    transforms = list(
-      list(
-        type      = "filter",
-        target    = "customdata",
-        operation = "=",
-        value     = max_year
-      ))
-  ) %>%
-  # add_annotations(x         = 1, 
-  #                 y         = -0.1, 
-  #                 text      = "Source: APDF", 
-  #                 showarrow = F, 
-  #                 xref      = 'paper', 
-  #                 yref      = 'paper', 
-  #                 xanchor   = 'right', 
-  #                 yanchor   = 'auto', 
-  #                 xshift    = 0, 
-  #                 yshift    = -10,
-  #                 font      = list(size=12)
-  # ) %>%
-  layout(
-    barmode   = "stack",
-    hovermode = "x unified",
-    xaxis     = tick_yr_no_title,
-    yaxis     = list(
-      title       = "Average Taxi-out time [min/dep]",
-      titlefont   = list(size = 11),
-      hoverformat = ".2f"
-    ),
-    showlegend = TRUE,
-        legend = list(
-      orientation = "h",
-      xanchor="center",
-      x = 0.5
-    ),
-    updatemenus = list(button_type_list)
-  ) %>%
-  config(
-    displaylogo = FALSE,
-    modeBarButtonsToRemove = config_bar_remove_buttons
-  )
-if (!is.null(annotations[[length(filter_years)]])) {
-  txot_mm_fig=txot_mm_fig %>% 
-    add_annotations(x         = annotations[[length(filter_years)]]$x,
-                    y         = annotations[[length(filter_years)]]$y,
-                    text      = annotations[[length(filter_years)]]$text,
-                    showarrow = annotations[[length(filter_years)]]$showarrow,
-                    xref      = annotations[[length(filter_years)]]$xref,
-                    yref      = annotations[[length(filter_years)]]$yref,
-                    yshift    = annotations[[length(filter_years)]]$yshift,
-                    xshift    = annotations[[length(filter_years)]]$xshift,
-                    align     = annotations[[length(filter_years)]]$align
-    )
-}
-
-txot_mm_fig
+```{r TAXI-OUT-MONTHLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_taxi_out_monthly.R')}
 
 ```
 
@@ -2859,6 +1116,28 @@ cat("## Row -----------------------------------------------------------")
 
 ```
 
+```{r Taxi-out-time-title3, results='asis', eval=params$txotrwy_yy == "Y", echo = FALSE}
+
+#cat("### Annual Taxi-Out Time per Runway (Source: APDF)")
+
+```
+
+
+```{r TAXI-OUT-RWY-YEARLY-LAYOUT, results='asis', eval=params$txotrwy_yy  == "Y", echo = FALSE, file = 'R/fig_taxi_out_rwy_yearly.R'}
+
+```
+
+
+```{r Taxi-out-time-title4, results='asis', eval=params$txotrwy_mm == "Y", echo = FALSE}
+
+#cat("### Monthly Taxi-Out Time per Runway (Source: APDF)")
+
+```
+
+
+```{r TAXI-OUT-RWY-MONHTLY-LAYOUT, results='asis', eval=params$txotrwy_mm == "Y", echo = FALSE, file = 'R/fig_taxi_out_rwy_monhtly.R'}
+
+```
 
 
 # Taxi-In Time
@@ -2888,133 +1167,7 @@ cat("### Annual Taxi-In Time (Source: APDF)")
 ```
 
 
-```{r TXIN-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
-
-  TXIN_YY <- params$txin_yy %>%
-    tidyr::pivot_longer(
-      cols      = c("AVG_UNIMP_TIME", "AVG_ADD_TIME"),
-      names_to  = "TYPE",
-      values_to = "TIME"
-    )
-
-  TXIN_YY <- TXIN_YY %>%
-    mutate(TYPE = factor(
-      TYPE,
-      levels = c("AVG_UNIMP_TIME", "AVG_ADD_TIME"),
-      labels = c("Avg. Reference time", "Avg. Additional time")
-    ))
-
-  TXIN_YY <- TXIN_YY %>%
-    mutate(YEAR = as.character(YEAR))
-
-
-
-  ########################## KEY MESSAGE #########################################
-
-  TXIN_VAR <- params$txin_mm %>%
-    filter(AVG_ADD_TIME != "NaN") %>%
-    select(YEAR, TOT_FLT, TOT_ADD_TIME) %>%
-    group_by(YEAR) %>%
-    summarise(
-      TOT_ADD_TIME = sum(TOT_ADD_TIME, na.rm = TRUE),
-      TOT_FLT = sum(TOT_FLT, na.rm = TRUE)
-    ) %>%
-    ungroup()
-
-  CUM_TXIN <- params$txin_mm %>%
-    filter(AVG_ADD_TIME != "NaN") %>%
-    select(YEAR, MONTH_NUM, TOT_ADD_TIME, TOT_FLT) %>%
-    mutate(across(c(YEAR, MONTH_NUM), as.numeric)) %>%
-    filter(YEAR %in% c(max(YEAR), max(YEAR) - 1))
-
-  YEAR_MAX_MONTH <- CUM_TXIN %>%
-    filter(YEAR == max(YEAR)) %>%
-    pull(MONTH_NUM) %>%
-    max() %>%
-    unique()
-
-  CUM_TXIN <- CUM_TXIN %>%
-    filter(MONTH_NUM <= YEAR_MAX_MONTH) %>%
-    group_by(YEAR) %>%
-    summarise(TOT_TXIN = sum(TOT_ADD_TIME, na.rm = TRUE) / sum(TOT_FLT, na.rm = TRUE)) %>%
-    ungroup() %>%
-    mutate(CHANGE = (TOT_TXIN - lag(TOT_TXIN)) / lag(TOT_TXIN))
-
-  msg_tmpl <- "<b>Add.Change Jan-{mnt}<br>{yr2} vs {yr1}:<br>{pct}% </b>"
-
-  msg <- str_glue(msg_tmpl,
-    mnt = pick_mth[YEAR_MAX_MONTH],
-    yr1 = CUM_TXIN$YEAR[1],
-    yr2 = CUM_TXIN$YEAR[2],
-    pct = round(100 * CUM_TXIN[2, "CHANGE"], 2)
-  )
-
-  # msg <- paste0("<b>Change Jan-",
-  #               pick_mth[YEAR_MAX_MONTH],
-  #               "<br>",
-  #               CUM_TXIN$YEAR[2],
-  #               " vs ",
-  #               CUM_TXIN$YEAR[1],
-  #               ":<br>",
-  #               round(100* CUM_TXIN[2,"CHANGE"], 2),"% </b>")
-
-  ALL_YEAR <- TXIN_YY %>%
-    filter(TIME != "NaN") %>%
-    pull(YEAR) %>%
-    unique()
-
-  msg_y <- params$txin_yy %>%
-    filter(AVG_ADD_TIME != "NaN") %>%
-    filter(YEAR == as.integer(max(YEAR)) - 1) %>%
-    mutate(TOT_TXIN = 1.1 * (AVG_UNIMP_TIME + AVG_ADD_TIME)) %>%
-    pull(TOT_TXIN)
-
-  key_msg <- list(
-    x = length(ALL_YEAR) - 1,
-    y = msg_y,
-    text = msg,
-    size = 14,
-    showarrow = FALSE
-  )
-
-  ################################################################################
-
-
-  TXIN_YY %>%
-    plotly::plot_ly(
-      x          = ~YEAR,
-      y          = ~TIME,
-      type       = "bar",
-      showlegend = TRUE,
-      color      = ~TYPE
-    ) %>%
-    layout(
-      barmode   = "stack",
-      hovermode = "x unified",
-      xaxis     = list(title = ""),
-      yaxis     = list(
-        title       = "Average Taxi-in time [min/arr]",
-        titlefont   = list(size = 11),
-        hoverformat = ".2f"
-      ),
-      annotations = key_msg
-    ) %>%
-    # add_annotations(x         = 1, 
-    #                 y         = -0.1, 
-    #                 text      = "Source: APDF", 
-    #                 showarrow = F, 
-    #                 xref      = 'paper', 
-    #                 yref      = 'paper', 
-    #                 xanchor   = 'right', 
-    #                 yanchor   = 'auto', 
-    #                 xshift    = 0, 
-    #                 yshift    = -10,
-    #                 font      = list(size=12)
-    # ) %>%
-    config(
-      displaylogo = FALSE,
-      modeBarButtonsToRemove = config_bar_remove_buttons
-    )
+```{r TXIN-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_taxi_in_yearly.R')}
 
 ```
 
@@ -3026,188 +1179,7 @@ cat("### Monthly Taxi-In Time (Source: APDF)")
 ```
 
 
-```{r TAXI-IN-MONTHLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE}
-
-  TXIN_MM <- params$txin_mm %>%
-    tidyr::pivot_longer(
-      cols      = c("AVG_UNIMP_TIME", "AVG_ADD_TIME"),
-      names_to  = "TYPE",
-      values_to = "TIME"
-    )
-
-  TXIN_MM <- TXIN_MM %>%
-    mutate(TYPE = factor(TYPE,
-      levels = c("AVG_UNIMP_TIME", "AVG_ADD_TIME"),
-      labels = c("Avg. Reference time", "Avg. Additional time")
-    ))
-
-  filter_years <- TXIN_MM %>%
-    pull(YEAR) %>%
-    unique()
-
-  max_year <- max(filter_years)
-
-  MONTHLY_HIGH_TXIN = TXIN_MM %>% 
-    filter(TYPE=="Avg. Additional time") %>% 
-    mutate(AVG_TIME=(TOT_UNIMP_TIME + TOT_ADD_TIME)/TOT_FLT) %>% 
-    select(YEAR, MONTH_NUM, TIME, AVG_TIME) %>% 
-    group_by(YEAR) %>% 
-    filter(TIME !=0) %>% 
-    filter(TIME==max(TIME)) %>% 
-    arrange(YEAR)
-  
-  annotations = vector(mode = "list", length = length(filter_years))
-  for (i in 1:length(filter_years)) {
-    MONTHLY_HIGH_TXIN_temp=filter(MONTHLY_HIGH_TXIN, YEAR==filter_years[i])
-    if (nrow(MONTHLY_HIGH_TXIN_temp)>0) {
-      annotation <- list(x = MONTHLY_HIGH_TXIN_temp$MONTH_NUM,
-                         y = MONTHLY_HIGH_TXIN_temp$AVG_TIME,
-                         xref='x',
-                         yref='y',
-                         text = paste0(
-                           "<b>Highest average<br>additional Taxi-In time:<br>",
-                           round(MONTHLY_HIGH_TXIN_temp$TIME, 2), " min/arr</b>"),
-                         yshift=40,
-                         xshift = ifelse(MONTHLY_HIGH_TXIN_temp$MONTH_NUM==1,
-                                         55,
-                                         ifelse(MONTHLY_HIGH_TXIN_temp$MONTH_NUM==12, -55, 0)),
-                         align = ifelse(MONTHLY_HIGH_TXIN_temp$MONTH_NUM==1,
-                                        "left",
-                                        ifelse(MONTHLY_HIGH_TXIN_temp$MONTH_NUM==12, "right", "center")),
-                         showarrow = FALSE)
-    }else {
-      annotation <- list(x = 6,
-                         y = 1,
-                         xref='x',
-                         yref='y',
-                         text = "",
-                         yshift=0,
-                         xshift = 0,
-                         align = "center",
-                         showarrow = FALSE)
-    }
-    
-    annotations[[i]] <- annotation
-  }
-  
-  # source_annotation=list(x         = 1, 
-  #                        y         = -0.1, 
-  #                        text      = "Source: APDF", 
-  #                        showarrow = F, 
-  #                        xref      = 'paper', 
-  #                        yref      = 'paper', 
-  #                        xanchor   = 'right', 
-  #                        yanchor   = 'auto', 
-  #                        xshift    = 0, 
-  #                        yshift    = -10,
-  #                        font      = list(size=12))
-  
-  button_list=vector(mode = "list", length = length(filter_years))
-  annot_list=vector(mode = "list", length = length(filter_years))
-  for(x in 1:length(filter_years)){
-    annot_list_temp=annot_list
-    annot_list_temp[[x]]=annotations[[x]]
-    if (!is.null(annotations[[x]])) {
-      bl=list(
-        label  = filter_years[x],
-        method = "update",
-        args   = list(list("transforms[0].value"=filter_years[x]),
-                      list(annotations=list(annot_list_temp[[x]]
-                                            # , source_annotation
-                                            )))
-      )
-    } else {
-      bl=list(
-        label  = filter_years[x],
-        method = "update",
-        args   = 
-          # list(
-            list("transforms[0].value"=filter_years[x])
-            # , list(annotations=list(source_annotation))
-            # )
-      )
-    }
-    button_list[[x]]=bl
-  }
-  
-  button_type_list <- list(
-    type      = "buttons",
-    bgcolor   = "#c3c1e8",
-    active    = length(filter_years) - 1,
-    direction = "right",
-    xref      = "paper",
-    x         = 0.3,
-    xanchor   = "left",
-    yref      = "paper",
-    y         = 1.2,
-    yanchor   = "bottom",
-    buttons   = button_list
-  )
-  
-  txin_mm_fig = TXIN_MM %>%
-    plot_ly(
-      x          = ~MONTH_NUM,
-      y          = ~TIME,
-      customdata = ~YEAR,
-      color      = ~TYPE,
-      type       = "bar",
-      transforms = list(
-        list(
-          type      = "filter",
-          target    = "customdata",
-          operation = "=",
-          value     = max_year
-        )
-      )
-    ) %>%
-    # add_annotations(x         = 1, 
-    #                 y         = -0.1, 
-    #                 text      = "Source: APDF", 
-    #                 showarrow = F, 
-    #                 xref      = 'paper', 
-    #                 yref      = 'paper', 
-    #                 xanchor   = 'right', 
-    #                 yanchor   = 'auto', 
-    #                 xshift    = 0, 
-    #                 yshift    = -10,
-    #                 font      = list(size=12)
-    # ) %>%
-    layout(
-      barmode   = "stack",
-      hovermode = "x unified",
-      xaxis     = tick_yr_no_title,
-      yaxis     = list(
-        title       = "Average Taxi-in time [min/arr]",
-        titlefont   = list(size = 11),
-        hoverformat = ".2f"
-      ),
-      showlegend  = TRUE,
-      legend = list(
-        orientation = "h",
-        xanchor="center",
-        x = 0.5
-      ),
-      updatemenus = list(button_type_list)
-    ) %>%
-    config(
-      displaylogo = FALSE,
-      modeBarButtonsToRemove = config_bar_remove_buttons
-    )
-  if (!is.null(annotations[[length(filter_years)]])) {
-    txin_mm_fig=txin_mm_fig %>% 
-      add_annotations(x         = annotations[[length(filter_years)]]$x,
-                      y         = annotations[[length(filter_years)]]$y,
-                      text      = annotations[[length(filter_years)]]$text,
-                      showarrow = annotations[[length(filter_years)]]$showarrow,
-                      xref      = annotations[[length(filter_years)]]$xref,
-                      yref      = annotations[[length(filter_years)]]$yref,
-                      yshift    = annotations[[length(filter_years)]]$yshift,
-                      xshift    = annotations[[length(filter_years)]]$xshift,
-                      align     = annotations[[length(filter_years)]]$align
-      )
-  }
-  
-  txin_mm_fig
+```{r TAXI-IN-MONTHLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_taxi_in_monthly.R')}
 
 ```
 
@@ -3217,7 +1189,28 @@ cat("### Monthly Taxi-In Time (Source: APDF)")
 cat("## Row -----------------------------------------------------------")
 
 ```
+```{r Taxi-in-time-title3, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
+#cat("### Annual Taxi-In Time per runway (Source: APDF)")
+
+```
+
+
+```{r TAXI-IN-RWY-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, file = 'R/fig_taxi_in_rwy_yearly.R'}
+
+```
+
+
+```{r Taxi-in-time-title4, results='asis', eval=params$apdf == "Y", echo = FALSE}
+
+#cat("### Monthly Taxi-In Time per runway (Source: APDF)")
+
+```
+
+
+```{r TAXI-IN-RWY-MONTHLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, file = 'R/fig_taxi_in_rwy_monthly.R'}
+
+```
 
 # Pre-Dep Delay
 
@@ -3246,145 +1239,7 @@ cat("### Annual Pre-Departure Delay (Source: APDF)")
 ```
 
 
-```{r pre-dep-dly-pa, results='asis', eval=params$apdf == "Y", echo = FALSE}
-
-#PDDLY_YY <- params$pddly_yy %>%
-#  select(YEAR, TOT_DLY_89, TOT_DLY_OTHER, TOT_DLY_UNID) %>%
-#  tidyr::pivot_longer(
-#    cols      = starts_with("TOT_DLY_"),
-#    names_to  = "DLY_CAT",
-#    values_to = "DLY_DUR"
-#  )
-#
-#predep_col <- c(
-#  "#F8CBAD", # RGB 248,203,173 # Unidentified
-#  "#BDD7EE", # RGB 189,215,238 # Other reasons
-#  "#4682B4"
-#) # RGB 198,224,180 # ATC Pre-Departure delay (code 89)
-#
-#PDDLY_YY$DLY_CAT <- factor(PDDLY_YY$DLY_CAT,
-#                           levels = c("TOT_DLY_UNID", "TOT_DLY_OTHER", "TOT_DLY_89"),
-#                           labels = c("Unidentified", "Other reasons", "ATC Pre-Departure <br>delay (code 89)")
-#)
-#
-# PDDLY_YY <- PDDLY_YY %>%
-#   mutate(YEAR = as.character(YEAR))
-#
-#PDDLY_YY_annot=group_by(PDDLY_YY, YEAR) %>% 
-#  summarise(DLY_DUR_TOT=sum(DLY_DUR, na.rm = TRUE))
-#
-#PDDLY_YY=left_join(PDDLY_YY, PDDLY_YY_annot)
-#
-#PDDLY_YY %>%
-#  plot_ly(
-#    x             = ~YEAR,
-#    y             = ~DLY_DUR,
-#    type          = "bar",
-#    color         = ~DLY_CAT,
-#    colors        = predep_col,
-#    # legendgroup = ~DLY_CAT,
-#    hovertemplate = "%{y:.r}"
-#  ) %>%
-#  add_annotations(
-#      data      = PDDLY_YY %>% select(YEAR, DLY_DUR_TOT) %>% unique(),
-#      x         = ~ YEAR,
-#      y         = ~ DLY_DUR_TOT + 100000,
-#      text      = ~ paste0(round(DLY_DUR_TOT/1000000, 2), "M"),
-#      showarrow = FALSE
-#    ) %>%
-#  layout(
-#    barmode   = "stack",
-#    hovermode = "x unified",
-#    xaxis     = list(title = ""),
-#    yaxis     = list(
-#      title     = "Pre-Departure delay [min]",
-#      titlefont = list(size = 11)
-#    )
-#    ##############################################################################
-#    # ,annotations = list(
-#    #   x         = 1,
-#    #   y         = -0.1,
-#    #   text      = "Source: APDF",
-#    #   showarrow = FALSE,
-#    #   xref      = "paper",
-#    #   yref      = "paper",
-#    #   xanchor   = "right",
-#    #   yanchor   = "auto",
-#    #   xshift    = 0,
-#    #   yshift    = -5,
-#    #   font      = list(size = 12)
-#    # )
-#    ##############################################################################
-#  ) %>%
-#  config(
-#    displaylogo = FALSE,
-#    modeBarButtonsToRemove = config_bar_remove_buttons
-#  )
-
-
-DLY_YY <- params$dly_yy %>%
-  select(YEAR, TOT_DLY_AIRLINE, 
-               TOT_DLY_WEATHER, 
-               TOT_DLY_EN_ROUTE, 
-               TOT_DLY_SECURITY_AND_IMMIGRATION, 
-               TOT_DLY_AIRPORT,
-               TOT_DLY_REACTIONARY,
-               TOT_DLY_MISCELLANEOUS,
-               TOT_DLY_UNIDENTIFIED, 
-               TOT_DLY_OTHER) %>%
-  tidyr::pivot_longer(
-    cols      = starts_with("TOT_DLY_"),
-    names_to  = "DLY_CAT",
-    values_to = "DLY_DUR"
-  )
-
-DLY_YY$DLY_CAT <- factor(DLY_YY$DLY_CAT,
-                  levels = c( "TOT_DLY_AIRLINE",
-                              "TOT_DLY_WEATHER",
-                              "TOT_DLY_EN_ROUTE",
-                              "TOT_DLY_SECURITY_AND_IMMIGRATION", 
-                              "TOT_DLY_AIRPORT",
-                              "TOT_DLY_REACTIONARY",
-                              "TOT_DLY_MISCELLANEOUS",
-                              "TOT_DLY_UNIDENTIFIED", 
-                              "TOT_DLY_OTHER"),
-                  labels = c("Airline","Weather", "En-Route", "Security&Immig.","Airport","Reactionnary","Miscel.","Unidentified","Other"))
-
-DLY_YY_annot=group_by(DLY_YY, YEAR) %>% 
-  summarise(DLY_DUR_TOT=sum(DLY_DUR, na.rm = TRUE))
-
-DLY_YY=left_join(DLY_YY, DLY_YY_annot)
-
-DLY_YY %>%
-  plot_ly(
-    x             = ~YEAR,
-    y             = ~DLY_DUR,
-    type          = "bar",
-    color         = ~DLY_CAT,
-    #colors        = predep_col,
-    # legendgroup = ~DLY_CAT,
-    hovertemplate = "%{y:.r}"
-  ) %>%
-  add_annotations(
-      data      = DLY_YY %>% select(YEAR, DLY_DUR_TOT) %>% unique(),
-      x         = ~ YEAR,
-      y         = ~ DLY_DUR_TOT + 100000,
-      text      = ~ paste0(round(DLY_DUR_TOT/1000000, 2), "M"),
-      showarrow = FALSE
-    ) %>%
-  layout(
-    barmode   = "stack",
-    hovermode = "x unified",
-    xaxis     = list(title = ""),
-    yaxis     = list(
-      title     = "Pre-Departure delay [min]",
-      titlefont = list(size = 11)
-    )
-  ) %>%
-  config(
-    displaylogo = FALSE,
-    modeBarButtonsToRemove = config_bar_remove_buttons
-  )
+```{r pre-dep-dly-pa, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_pre_departure_delay_yearly.R')}
 
 ```
 
@@ -3396,145 +1251,7 @@ cat("### Monthly Pre-Departure Delay (Source: APDF)")
 ```
 
 
-```{r pre-dep-dly-month, results='asis', eval=params$apdf == "Y", echo = FALSE}
-
-PDDLY_MM <- params$pddly_mm %>%
-  select(
-    YEAR,
-    MONTH_NUM,
-    TOT_DLY_89,
-    TOT_DLY_OTHER,
-    TOT_DLY_UNID
-  ) %>%
-  tidyr::pivot_longer(
-    cols      = starts_with("TOT_DLY_"),
-    names_to  = "DLY_CAT",
-    values_to = "DLY_DUR"
-  )
-
-#PDDLY_MM$DLY_CAT <- factor(
-#  PDDLY_MM$DLY_CAT,
-#  levels = c("TOT_DLY_UNID", "TOT_DLY_OTHER", "TOT_DLY_89"),
-#  labels = c("Unidentified", "Other reasons", "ATC Pre-Departure <br> delay (code 89)")
-#)
-
-#predep_col <- c(
-#  "#F8CBAD", # RGB 248,203,173 # Unidentified
-#  "#BDD7EE", # RGB 189,215,238 # Other reasons
-#  "#4682B4"
-#) # RGB 198,224,180 # ATC Pre-Departure delay (code 89)
-
-DLY_MM <- params$dly_mm %>%
-  select( YEAR, MONTH,
-               TOT_DLY_AIRLINE, 
-               TOT_DLY_WEATHER, 
-               TOT_DLY_EN_ROUTE, 
-               TOT_DLY_SECURITY_AND_IMMIGRATION, 
-               TOT_DLY_AIRPORT,
-               TOT_DLY_REACTIONARY,
-               TOT_DLY_MISCELLANEOUS,
-               TOT_DLY_UNIDENTIFIED, 
-               TOT_DLY_OTHER
-  ) %>%
-  tidyr::pivot_longer(
-    cols      = starts_with("TOT_DLY_"),
-    names_to  = "DLY_CAT",
-    values_to = "DLY_DUR"
-  )
-
-
-DLY_MM$DLY_CAT <- factor(DLY_MM$DLY_CAT,
-                  levels = c( "TOT_DLY_AIRLINE",
-                              "TOT_DLY_WEATHER",
-                              "TOT_DLY_EN_ROUTE",
-                              "TOT_DLY_SECURITY_AND_IMMIGRATION", 
-                              "TOT_DLY_AIRPORT",
-                              "TOT_DLY_REACTIONARY",
-                              "TOT_DLY_MISCELLANEOUS",
-                              "TOT_DLY_UNIDENTIFIED", 
-                              "TOT_DLY_OTHER"),
-                  labels = c("Airline","Weather", "En-Route", "Security&Immig.","Airport","Reactionnary","Miscel.","Unidentified","Other"))
-
-filter_years <- DLY_MM %>%
-  pull(YEAR) %>%
-  unique()
-
-max_year <- max(filter_years)
-
-button_list <- lapply(
-  1:length(filter_years),
-  function(x) {
-    list(
-      method = "restyle",
-      args = list("transforms[0].value", filter_years[x]),
-      label = filter_years[x]
-    )
-  }
-)
-
-button_type_list <- list(
-  buttons   = button_list,
-  type      = "buttons",
-  bgcolor   = "#c3c1e8",
-  active    = length(filter_years) - 1,
-  direction = "right",
-  xref      = "paper",
-  x         = 0.3,
-  xanchor   = "left",
-  yref      = "paper",
-  y         = 1.2,
-  yanchor   = "bottom"
-)
-
-DLY_MM %>%
-  plot_ly(
-    x             = ~MONTH,
-    y             = ~DLY_DUR,
-    type          = "bar",
-    color         = ~DLY_CAT,
-    #colors        = predep_col,
-    # legendgroup = ~DLY_CAT,
-    hovertemplate = "%{y:.r}",
-    customdata    = ~YEAR,
-    transforms    = list(
-      list(
-        type        = "filter",
-        target      = "customdata",
-        operation   = "=",
-        value       = max_year
-      )
-    )
-  ) %>%
-  layout(
-    barmode     = "stack",
-    xaxis       = tick_yr_no_title,
-    yaxis       = list(
-      title     = "Pre-Departure delay [min]",
-      titlefont = list(size = 11)
-    ),
-    showlegend = TRUE,
-    updatemenus = list(button_type_list)
-    ##############################################################################
-    # ,annotations = list(
-    #   x         = 1,
-    #   y         = -0.1,
-    #   text      = "Source: APDF",
-    #   showarrow = FALSE,
-    #   xref      = "paper",
-    #   yref      = "paper",
-    #   xanchor   = "right",
-    #   yanchor   = "auto",
-    #   xshift    = 0,
-    #   yshift    = -10,
-    #   font      = list(size = 12)
-    # )
-    ##############################################################################
-  ) %>%
-  config(
-    displaylogo = FALSE,
-    modeBarButtonsToRemove = config_bar_remove_buttons
-  )
-
+```{r pre-dep-dly-month, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_pre_departure_delay_monthly.R')}
 
 ```
 
@@ -3549,44 +1266,44 @@ cat("## Row -----------------------------------------------------------")
 
 ### Monthly Pre-Departure Delay Trend
 
-```{r Monthly-pre-dep-delay, results='asis', eval=params$apdf == "Y", echo = FALSE}
+```{r Monthly-pre-dep-delay, results='asis', eval=params$apdf == "Y", echo = FALSE, eval=FALSE}
 
 
-TMP <- PDDLY_MM %>%
-mutate( DATE_YM = paste0(YEAR,"-",MONTH_NUM),
-DATE_YM = lubridate::parse_date_time(DATE_YM, "ym") )
+#TMP <- PDDLY_MM %>%
+#mutate( DATE_YM = paste0(YEAR,"-",MONTH_NUM),
+#DATE_YM = lubridate::parse_date_time(DATE_YM, "ym") )
 
-TMP %>%
-plot_ly() %>%
-add_bars(x     = ~DATE_YM, 
-y     = ~DLY_DUR, 
-color = ~DLY_CAT,
-hovertemplate = "%{y:.r}") %>%
-layout(barmode = "stack",
-xaxis = list(title = "",
-rangeselector = list(buttons = list(list(count    = 3,
-label    = "3 mo",
-step     = "month",
-stepmode = "backward"),
-list(count    = 6,
-label    = "6 mo",
-step     = "month",
-stepmode = "backward"),
-list(count    = 1,
-label    = "1 yr",
-step     = "year",
-stepmode = "backward"),
-list(count    = 1,
-label    = "YTD",
-step     = "year",
-stepmode = "todate"),
-list(step     = "all"))),
-rangeslider = list(type = "date")
-), 
-yaxis = list( title = "Pre-Departure delay [min]",
-titlefont = list(size = 11))) %>% 
-config( displaylogo = FALSE,
-modeBarButtonsToRemove = config_bar_remove_buttons)
+#TMP %>%
+#plot_ly() %>%
+#add_bars(x     = ~DATE_YM, 
+#y     = ~DLY_DUR, 
+#color = ~DLY_CAT,
+#hovertemplate = "%{y:.r}") %>%
+#layout(barmode = "stack",
+#xaxis = list(title = "",
+#rangeselector = list(buttons = list(list(count    = 3,
+#label    = "3 mo",
+#step     = "month",
+#stepmode = "backward"),
+#list(count    = 6,
+#label    = "6 mo",
+#step     = "month",
+#stepmode = "backward"),
+#list(count    = 1,
+#label    = "1 yr",
+#step     = "year",
+#stepmode = "backward"),
+#list(count    = 1,
+#label    = "YTD",
+#step     = "year",
+#stepmode = "todate"),
+#list(step     = "all"))),
+#rangeslider = list(type = "date")
+#), 
+#yaxis = list( title = "Pre-Departure delay [min]",
+#titlefont = list(size = 11))) %>% 
+#config( displaylogo = FALSE,
+#modeBarButtonsToRemove = config_bar_remove_buttons)
 
 
 ```
@@ -3765,85 +1482,7 @@ cat("### Annual Departure Punctuality (Source: APDF)")
 ```
 
   
-```{r Punctuality-DEP-YEARLY-LAYOUT, results='asis', eval=params$punc == "Y", echo = FALSE}
-
-pun_col <- c(
-  "#1f4e79", # EARLY >30		#rgb 31,78,121
-  "#8497b0", # EARLY 16-30	#rgb 132,151,176
-  "#c5e0b4", # EARLY 5-15	  #rgb 197,224,180
-  "#70ad47", # ON TIME -+4	#rgb 112,173,71
-  "#ffe699", # LATE 5-15		#rgb 255,230,153
-  "#e1c000", # LATE 16-30	  #rgb 225,192,0
-  "#ff0000", # LATE 31-60	  #rgb 255,0,0
-  "#c00000"  # LATE >60		  #rgb 192,0,0
-)           
-
-punc_dep_yy_plot <- params$punc_dep_yy
-
-#punc_dep_yy_plot$PUNCT_CAT <- factor(punc_dep_yy_plot$PUNCT_CAT,
-#                                     levels = c(
-#                                       "Early >30",
-#                                       "Early 16-30",
-#                                       "Early 5-15",
-#                                       "On Time -+4",
-#                                       "Late 5-15",
-#                                       "Late 16-30",
-#                                       "Late 31-60",
-#                                       "Late >60"
-#                                     )
-#)
-
-punc_dep_yy_plot$PUNCT_CAT <- factor(punc_dep_yy_plot$PUNCT_CAT,
-                                     levels = c(
-                                       "[<-30]",
-                                       "[-16, -30]",
-                                       "[- 5, -15]",
-                                       "[- 4, + 4]",
-                                       "[+ 5, +15]",
-                                       "[+16, +30]",
-                                       "[+31, +60]",
-                                       "[>+60]"
-                                      )
-)
-
-
-punc_dep_yy_plot %>%
-  plot_ly(
-    x      = ~YEAR,
-    y      = ~AVG_PER_CATEG,
-    type   = "bar",
-    color  = ~PUNCT_CAT,
-    colors = pun_col
-  ) %>%
-  layout(
-    barmode = "stack",
-    hovermode = "x unified",
-    xaxis = list(title = ""),
-    yaxis = list(
-      title = "Departure Punctuality repartition (%)",
-      titlefont = list(size = 11),
-      hoverformat = ".2f"
-    )#,
-    ##############################################################################
-#    annotations = list(
-#      x         = 1,
-#      y         = -0.1,
-#      text      = "Source: APDF",
-#      showarrow = FALSE,
-#      xref      = "paper",
-#      yref      = "paper",
-#      xanchor   = "right",
-#      yanchor   = "auto",
-#      xshift    = 0,
-#      yshift    = -5,
-#      font      = list(size = 12)
-#    )
-    ##############################################################################
-  ) %>%
-  config(
-    displaylogo = FALSE,
-    modeBarButtonsToRemove = config_bar_remove_buttons
-  )
+```{r Punctuality-DEP-YEARLY-LAYOUT, results='asis', eval=params$punc == "Y", echo = FALSE, code=readLines('R/fig_punctuality_dep_yearly_layout.R')}
 
 ```
 
@@ -3855,118 +1494,7 @@ cat("### Monthly Departure Punctuality (Source: APDF)")
 ```
 
 
-```{r Punctuality-DEP-MONHTLY-LAYOUT, results='asis', eval=params$punc == "Y", echo = FALSE}
-
-punc_dep_mm_plot <- params$punc_dep_mm
-
-#punc_dep_mm_plot$PUNCT_CAT <- factor(
-#  punc_dep_mm_plot$PUNCT_CAT,
-#  levels = c(
-#    "Early >30",
-#    "Early 16-30",
-#    "Early 5-15",
-#    "On Time -+4",
-#    "Late 5-15",
-#    "Late 16-30",
-#    "Late 31-60",
-#    "Late >60"))
-
-
-punc_dep_mm_plot$PUNCT_CAT <- factor(
-  punc_dep_mm_plot$PUNCT_CAT,
-levels = c(
-                                       "[<-30]",
-                                       "[-16, -30]",
-                                       "[- 5, -15]",
-                                       "[- 4, + 4]",
-                                       "[+ 5, +15]",
-                                       "[+16, +30]",
-                                       "[+31, +60]",
-                                       "[>+60]"
-                                      )
-)
-
-
-
-filter_years <- punc_dep_mm_plot %>%
-  pull(YEAR) %>%
-  unique()
-
-max_year <- max(filter_years)
-
-button_list <- lapply(
-  1:length(filter_years),
-  function(x) {
-    list(
-      method = "restyle",
-      args = list("transforms[0].value", filter_years[x]),
-      label = filter_years[x]
-    )
-  }
-)
-
-button_type_list <- list(
-  buttons   = button_list,
-  type      = "buttons",
-  bgcolor   = "#c3c1e8",
-  active    = length(filter_years) - 1,
-  direction = "right",
-  xref      = "paper",
-  x         = 0.3,
-  xanchor   = "left",
-  yref      = "paper",
-  y         = 1.2,
-  yanchor   = "bottom"
-)
-
-punc_dep_mm_plot %>%
-  plot_ly(
-    x          = ~MONTH_NUM,
-    y          = ~AVG_PER_CATEG,
-    customdata = ~YEAR,
-    color      = ~PUNCT_CAT,
-    colors     = pun_col,
-    type       = "bar",
-    transforms = list(
-      list(
-        type      = "filter",
-        target    = "customdata",
-        operation = "=",
-        value     = max_year
-      )
-    )
-  ) %>%
-  layout(
-    barmode   = "stack",
-    hovermode = "x unified",
-    xaxis     = tick_yr_no_title,
-    yaxis     = list(
-      title       = "Departure Punctuality repartition (%)",
-      titlefont   = list(size = 11),
-      hoverformat = ".2f"
-    ),
-    showlegend = TRUE,
-    updatemenus = list(button_type_list)#,
-    ##############################################################################
-#    annotations = list(
-#      x         = 1,
-#      y         = -0.1,
-#      text      = "Source: APDF",
-#      showarrow = FALSE,
-#      xref      = "paper",
-#      yref      = "paper",
-#      xanchor   = "right",
-#      yanchor   = "auto",
-#      xshift    = 0,
-#      yshift    = -10,
-#      font      = list(size = 12)
-#    )
-    ##############################################################################
-  ) %>%
-  config(
-    displaylogo = FALSE,
-    modeBarButtonsToRemove = config_bar_remove_buttons
-  )
+```{r Punctuality-DEP-MONHTLY-LAYOUT, results='asis', eval=params$punc == "Y", echo = FALSE, code=readLines('R/fig_punctuality_dep_monthly_layout.R')}
 
 ```
 
@@ -3985,78 +1513,7 @@ cat("### Annual Arrival Punctuality (Source: APDF)")
 ```
 
 
-```{r Punctuality-ARR-YEARLY-LAYOUT, results='asis', eval=params$punc == "Y", echo = FALSE}
-
-punc_arr_yy_plot <- params$punc_arr_yy
-
-#punc_arr_yy_plot$PUNCT_CAT <- factor(
-#  punc_arr_yy_plot$PUNCT_CAT,
-#  levels = c(
-#    "Early >30",
-#    "Early 16-30",
-#    "Early 5-15",
-#    "On Time -+4",
-#    "Late 5-15",
-#    "Late 16-30",
-#    "Late 31-60",
-#    "Late >60"
-#  )
-#)
-
-
-punc_arr_yy_plot$PUNCT_CAT <- factor(
-  punc_arr_yy_plot$PUNCT_CAT,
-levels = c(
-                                       "[<-30]",
-                                       "[-16, -30]",
-                                       "[- 5, -15]",
-                                       "[- 4, + 4]",
-                                       "[+ 5, +15]",
-                                       "[+16, +30]",
-                                       "[+31, +60]",
-                                       "[>+60]"
-                                      )
-)
-
-
-
-punc_arr_yy_plot %>%
-  plot_ly(
-    x      = ~YEAR,
-    y      = ~AVG_PER_CATEG,
-    color  = ~PUNCT_CAT,
-    colors = pun_col,
-    type   = "bar"
-  ) %>%
-  layout(
-    barmode   = "stack",
-    hovermode = "x unified",
-    xaxis     = list(title = ""),
-    yaxis     = list(
-      title       = "Arrival Punctuality repartition (%)",
-      titlefont   = list(size = 11),
-      hoverformat = ".2f"
-    )#,
-    ##############################################################################
-#    annotations = list(
-#      x         = 1,
-#      y         = -0.1,
-#      text      = "Source: APDF",
-#      showarrow = FALSE,
-#      xref      = "paper",
-#      yref      = "paper",
-#      xanchor   = "right",
-#      yanchor   = "auto",
-#      xshift    = 0,
-#      yshift    = -5,
-#      font      = list(size = 12)
-#    )
-    ##############################################################################
-  ) %>%
-  config(
-    displaylogo = FALSE,
-    modeBarButtonsToRemove = config_bar_remove_buttons
-  )
+```{r Punctuality-ARR-YEARLY-LAYOUT, results='asis', eval=params$punc == "Y", echo = FALSE, code=readLines('R/fig_punctuality_arr_yearly_layout.R')}
 
 ```
 
@@ -4068,118 +1525,7 @@ cat("### Monthly Arrival Punctuality (Source: APDF)")
 ```
 
 
-```{r Punctuality-ARR-MONHTLY-LAYOUT, results='asis', eval=params$punc == "Y", echo = FALSE}
-
-punc_arr_mm_plot <- params$punc_arr_mm
-
-#punc_arr_mm_plot$PUNCT_CAT <- factor(punc_arr_mm_plot$PUNCT_CAT,
-#                                     levels = c(
-#                                       "Early >30",
-#                                       "Early 16-30",
-#                                       "Early 5-15",
-#                                       "On Time -+4",
-#                                       "Late 5-15",
-#                                       "Late 16-30",
-#                                       "Late 31-60",
-#                                       "Late >60"
-#                                     )
-#)
-
-
-punc_arr_mm_plot$PUNCT_CAT <- factor(punc_arr_mm_plot$PUNCT_CAT,
-levels = c(
-                                       "[<-30]",
-                                       "[-16, -30]",
-                                       "[- 5, -15]",
-                                       "[- 4, + 4]",
-                                       "[+ 5, +15]",
-                                       "[+16, +30]",
-                                       "[+31, +60]",
-                                       "[>+60]"
-                                      )
-)
-
-
-
-filter_years <- punc_arr_mm_plot %>%
-  pull(YEAR) %>%
-  unique()
-
-max_year <- max(filter_years)
-
-button_list <- lapply(
-  1:length(filter_years),
-  function(x) {
-    list(
-      method = "restyle",
-      args = list("transforms[0].value", filter_years[x]),
-      label = filter_years[x]
-    )
-  }
-)
-
-button_type_list <- list(
-  buttons   = button_list,
-  type      = "buttons",
-  bgcolor   = "#c3c1e8",
-  active    = length(filter_years) - 1,
-  direction = "right",
-  xref      = "paper",
-  x         = 0.3,
-  xanchor   = "left",
-  yref      = "paper",
-  y         = 1.2,
-  yanchor   = "bottom"
-)
-
-punc_arr_mm_plot %>%
-  plot_ly(
-    x          = ~MONTH_NUM,
-    y          = ~AVG_PER_CATEG,
-    color      = ~PUNCT_CAT,
-    colors     = pun_col,
-    type       = "bar",
-    customdata = ~YEAR,
-    transforms = list(
-      list(
-        type      = "filter",
-        target    = "customdata",
-        operation = "=",
-        value     = max_year
-      )
-    )
-  ) %>%
-  layout(
-    barmode   = "stack",
-    hovermode = "x unified",
-    xaxis     = tick_yr_no_title,
-    yaxis     = list(
-      title       = "Arrival Punctuality repartition (%)",
-      titlefont   = list(size = 11),
-      hoverformat = ".2f"
-    ),
-    showlegend = TRUE,
-    updatemenus = list(button_type_list)#,
-    ##############################################################################
-#    annotations = list(
-#      x         = 1,
-#      y         = -0.1,
-#      text      = "Source: APDF",
-#      showarrow = FALSE,
-#      xref      = "paper",
-#      yref      = "paper",
-#      xanchor   = "right",
-#      yanchor   = "auto",
-#      xshift    = 0,
-#      yshift    = -10,
-#      font      = list(size = 12)
-#    )
-    ##############################################################################
-  ) %>%
-  config(
-    displaylogo = FALSE,
-    modeBarButtonsToRemove = config_bar_remove_buttons
-  )
+```{r Punctuality-ARR-MONHTLY-LAYOUT, results='asis', eval=params$punc == "Y", echo = FALSE, code=readLines('R/fig_punctuality_arr_monthly_layout.R')}
 
 ```
 
@@ -4212,63 +1558,7 @@ cat("### Annual Actual Turnaround Time (Source: APDF)")
 ```
 
 
-```{r annual-turn-time, results='asis', eval=params$apdf == "Y", echo = FALSE}
-
-TURN_YY <- params$turn_yy %>%
-  select(YEAR, AC_CLASS, AVG_ACTT)
-
-turn_col <- c(
-  "#C6E0B4", # RGB 198,224,180 # Heavy
-  "#F8CBAD", # RGB 248,203,173 # Medium Jet
-  "#BDD7EE"
-) # RGB 189,215,238 # Medium Turboprop
-
-TURN_YY$AC_CLASS <- factor(TURN_YY$AC_CLASS,
-                           levels = c("H", "MJ", "MT"),
-                           labels = c("Heavy", "Medium Jet", "Medium Turboprop")
-)
-
-TURN_YY <- TURN_YY %>%
-  mutate(YEAR = as.character(YEAR))
-
-
-TURN_YY %>%
-  plot_ly(
-    x      = ~YEAR,
-    y      = ~AVG_ACTT,
-    type   = "bar",
-    color  = ~AC_CLASS,
-    colors = turn_col
-  ) %>%
-  layout(
-    barmode   = "group",
-    hovermode = "x unified",
-    xaxis     = list(title = ""),
-    yaxis     = list(
-      title       = "Average Actual Turnaround time [min/flight]",
-      titlefont   = list(size = 11),
-      hoverformat = ".2f"
-    )
-    ##############################################################################
-    # ,annotations = list(
-    #   x         = 1,
-    #   y         = -0.1,
-    #   text      = "Source: APDF",
-    #   showarrow = FALSE,
-    #   xref      = "paper",
-    #   yref      = "paper",
-    #   xanchor   = "right",
-    #   yanchor   = "auto",
-    #   xshift    = 0,
-    #   yshift    = -5,
-    #   font      = list(size = 12)
-    # )
-    ##############################################################################
-  ) %>%
-  config(
-    displaylogo = FALSE,
-    modeBarButtonsToRemove = config_bar_remove_buttons
-  )
+```{r annual-turn-time, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_turn_time_yearly.R')}
 
 ```
 
@@ -4280,128 +1570,7 @@ cat("### Monthly Turnaround Times (Source: APDF)")
 ```
 
 
-```{r monthly-turn-time, results='asis', eval=params$apdf == "Y", echo = FALSE}
-
-TURN_MM <- params$turn_mm %>%
-  select(YEAR, MONTH_NUM, TOT_TURN, AC_CLASS, AVG_ACTT, AVG_SDTT) %>%
-  mutate(
-    LBL_ACTUAL = paste0("Actual Turnaround ", AC_CLASS),
-    LBL_SCHED = paste0("Scheduled Turnaround ", AC_CLASS),
-    HOVERTEXTACTT = paste0(
-      "Class: ", AC_CLASS,
-      "<br>Avg. Turn:", round(AVG_ACTT, 2), "min",
-      "<br>Nb Turn. :", TOT_TURN
-    ),
-    HOVERTEXTSDTT = paste0(
-      "Class: ", AC_CLASS,
-      "<br>Avg. Turn:", round(AVG_SDTT, 2), "min",
-      "<br>Nb Turn. :", TOT_TURN
-    )
-  )
-
-filter_years <- TURN_MM %>%
-  pull(YEAR) %>%
-  unique()
-
-max_year <- max(filter_years)
-
-button_list <- lapply(
-  1:length(filter_years),
-  function(x) {
-    list(
-      method = "restyle",
-      args = list("transforms[0].value", filter_years[x]),
-      label = filter_years[x]
-    )
-  }
-)
-
-button_type_list <- list(
-  buttons   = button_list,
-  type      = "buttons",
-  bgcolor   = "#c3c1e8",
-  active    = length(filter_years) - 1,
-  direction = "right",
-  xref      = "paper",
-  x         = 0.3,
-  xanchor   = "left",
-  yref      = "paper",
-  y         = 1.2,
-  yanchor   = "bottom"
-)
-
-
-TURN_MM %>%
-  plot_ly() %>%
-  add_lines(
-    x          = ~MONTH_NUM,
-    y          = ~AVG_ACTT,
-    color      = ~AC_CLASS,
-    colors     = turn_col,
-    name       = ~LBL_ACTUAL,
-    customdata = ~YEAR,
-    transforms = list(
-      list(
-        type      = "filter",
-        target    = "customdata",
-        operation = "=",
-        value     = max_year
-      )
-    ),
-    text          = ~HOVERTEXTACTT,
-    hovertemplate = paste0("%{text}"),
-    legendgroup   = ~AC_CLASS,
-    showlegend    = TRUE
-  ) %>%
-  add_lines(
-    x          = ~MONTH_NUM,
-    y          = ~AVG_SDTT,
-    color      = ~AC_CLASS,
-    colors     = turn_col,
-    name       = ~LBL_SCHED,
-    line       = list(dash = "dash"),
-    customdata = ~YEAR,
-    transforms = list(
-      list(
-        type      = "filter",
-        target    = "customdata",
-        operation = "=",
-        value     = max_year
-      )
-    ),
-    text          = ~HOVERTEXTSDTT,
-    hovertemplate = paste0("%{text}"),
-    legendgroup = ~AC_CLASS,
-    showlegend = TRUE
-  ) %>%
-  layout(
-    updatemenus = list(button_type_list),
-    hovermode   = "x unified",
-    xaxis       = tick_yr_no_title,
-    yaxis       = list(
-      title     = "Average Turnaround times [min/flight]",
-      titlefont = list(size = 11)
-    )
-    ##############################################################################
-    # ,annotations = list(
-    #   x         = 1,
-    #   y         = -0.1,
-    #   text      = "Source: APDF",
-    #   showarrow = FALSE,
-    #   xref      = "paper",
-    #   yref      = "paper",
-    #   xanchor   = "right",
-    #   yanchor   = "auto",
-    #   xshift    = 0,
-    #   yshift    = -10,
-    #   font      = list(size = 12)
-    # )
-    ##############################################################################
-  ) %>%
-  config(
-    displaylogo = FALSE,
-    modeBarButtonsToRemove = config_bar_remove_buttons
-  )
+```{r monthly-turn-time, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_turn_time_monthly.R')}
 
 ```
 
@@ -4412,9 +1581,11 @@ cat("## Row -----------------------------------------------------------")
 
 ```
 
-<!--
+
   
 ```{r Turnaround-times-title3, results='asis', eval=params$apdf == "Y", echo = FALSE}
+# <!--
+# -->
 
 cat("### DDI-G and TDI (Source: APDF)")
 
@@ -4548,7 +1719,6 @@ plot_ly(TURN_OVER,
           modeBarButtonsToRemove = config_bar_remove_buttons)
 ```
 
--->
 
 # About
 
@@ -4588,14 +1758,43 @@ All other airport related data is collected through the Airport Operator Data Fl
 
 **Data and metrics are shown based on availability at the moment of publication**    
 
-* Traffic data comprises all IFR flown flight plans for the airport (arrivals and departures) based on NM data.
-*	ATFM delay data captures the arrival ATFM delay triggered by constraints at the airport based on NM data (_no post ops adjustments_).
-*	ATFM delays are grouped according to the regulation reason as described in https://ansperformance.eu/definition/atfm-delay-codes/
-* CDO/CCO performance is calculated by identifying level segments during the climb and descent. These level segments are considered to be inefficient. For more information please visit https://ansperformance.eu/efficiency/vfe/
-*	Additional ASMA time measures the difference between an observed travel time elapsing from entering the 40NM radius around the airport to landing. This time is compared against a reference time to the respective entry sector, aircraft type, and landing runway.
-For more information please visit https://ansperformance.eu/methodology/additional-asma-time-pi/
-*	In analogy, additional taxi-times are measured for the taxi-out and taxi-in phase. The observed taxi times are compared with a respective reference time. The reference time considers the parking position and runway used by the departure/arrival.
-For more information please visit https://ansperformance.eu/definition/additional-taxi-out-time/
-*	Pre-departure delay is the delay in the off-block time with respect to the schedule time for departure. It provides for the airspace user reported delay reasoning in case of departures blocking off late. Delay codes have to be provided for delays >= 4 minutes. Most airports per se do not validate these delay codes, however, effort is underway to ensure appropriateness of the reported delay codes.Delay reasons are reported according to the IATA delay codes https://ansperformance.eu/library/iata-delay-codes.pdf 
-Delay reported associated to code 89 is used for the calculation of the ATC pre-departure delay https://ansperformance.eu/definition/atc-pre-departure-delay/ 
-*	Turnaround shows the time elapsing between an aircraft blocking in and blocking off for the next flight from the same parking stand on the same day and the sample is treated to filter out.
+* Traffic data comprises all IFR flown flight plans for the airport (arrivals
+  and departures) based on NM data.
+* ATFM delay data captures the arrival ATFM delay triggered by constraints at
+  the airport based on NM data (_no post ops adjustments_).
+* ATFM delays are grouped according to the regulation reason as described in
+  https://ansperformance.eu/definition/atfm-delay-codes/
+* CDO/CCO performance is calculated by identifying level segments during the
+  climb and descent.
+  These level segments are considered to be inefficient.
+  For more information please visit https://ansperformance.eu/efficiency/vfe/
+*	Additional ASMA time measures the difference between an observed travel time
+  elapsing from entering the 40NM radius around the airport to landing.
+  This time is compared against a reference time to the respective entry sector,
+  aircraft type, and landing runway.
+  For more information please visit
+  https://ansperformance.eu/methodology/additional-asma-time-pi/
+*	In analogy, additional taxi-times are measured for the taxi-out and taxi-in phase.
+  The observed taxi times are compared with a respective reference time.
+  The reference time considers the parking position and runway used by the departure/arrival.
+  For more information please visit
+  https://ansperformance.eu/definition/additional-taxi-out-time/
+*	Pre-departure delay is the delay in the off-block time with respect to the
+  schedule time for departure.
+  It provides for the airspace user reported delay reasoning in case of departures
+  blocking off late.
+  Delay codes have to be provided for delays >= 4 minutes.
+  Most airports per se do not validate these delay codes, however, effort is
+  underway to ensure appropriateness of the reported delay codes.<br>
+  Delay reasons are reported according to the IATA delay codes
+  https://ansperformance.eu/library/iata-delay-codes.pdf <br>
+  Delay reported associated to code 89 is used for the calculation of the
+  ATC pre-departure delay https://ansperformance.eu/definition/atc-pre-departure-delay/ 
+*	Turnaround shows the time elapsing between an aircraft blocking in and blocking off
+  for the next flight from the same parking stand on the same day and the sample is
+  treated to filter out (https://ansperformance.eu/definition/turnaround/)<br>
+  Other indicators provide additional information on the turnaround performance:
+  
+      - DDI-G: https://ansperformance.eu/acronym/ddi-g/
+      - GTO: https://ansperformance.eu/acronym/gto/
+      - TDI: https://ansperformance.eu/acronym/tdi/ 

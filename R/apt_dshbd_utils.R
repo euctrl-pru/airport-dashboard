@@ -245,11 +245,20 @@ prepare_params <- function(apt_icao)
                 asma_yy   = filter_df_by_apt(ASMA_YY_DF,  .apt = apt_icao),
                 asma_mm   = filter_df_by_apt(ASMA_MM_DF,  .apt = apt_icao),
                 #
+                asmarwy_yy   = filter_df_by_apt(ASMA_RWY_YY_DF,  .apt = apt_icao),
+                asmarwy_mm   = filter_df_by_apt(ASMA_RWY_MM_DF,  .apt = apt_icao),
+                #
                 txot_yy   = filter_df_by_apt(TXOT_YY_DF,  .apt = apt_icao),
                 txot_mm   = filter_df_by_apt(TXOT_MM_DF,  .apt = apt_icao),
                 #
+                txotrwy_yy   = filter_df_by_apt(TXOT_RWY_YY_DF,  .apt = apt_icao),
+                txotrwy_mm   = filter_df_by_apt(TXOT_RWY_MM_DF,  .apt = apt_icao),
+                #
                 txin_yy   = filter_df_by_apt(TXIN_YY_DF,  .apt = apt_icao),
                 txin_mm   = filter_df_by_apt(TXIN_MM_DF,  .apt = apt_icao),
+                #
+                txinrwy_yy   = filter_df_by_apt(TXIN_RWY_YY_DF,  .apt = apt_icao),
+                txinrwy_mm   = filter_df_by_apt(TXIN_RWY_MM_DF,  .apt = apt_icao),
                 #
                 pddly_yy     = filter_df_by_apt(PDDLY_YY_DF    , .apt = apt_icao),
                 pddly_mm     = filter_df_by_apt(PDDLY_MM_DF    , .apt = apt_icao),

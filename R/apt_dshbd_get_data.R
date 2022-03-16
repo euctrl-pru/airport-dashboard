@@ -162,6 +162,33 @@ EXPORT_APT_DSHBD_DELAY_DATA() %>%
   readr::write_csv2(here::here("data", "APT_DSHBD_DELAY_DATA.csv"))
 
 
+EXPORT_APT_DSHBD_TXOT_RWY <- function() {
+  QUERY <- "SELECT * FROM PRU_AIRPORT.V_APT_DSHBD_TXOT_RWY"
+  EXPORT_QUERY("PRU_AIRPORT", QUERY)
+}
+
+EXPORT_APT_DSHBD_TXOT_RWY() %>%
+  readr::write_csv2(here::here("data", "APT_DSHBD_TXOT_RWY.csv"))
+
+
+EXPORT_APT_DSHBD_TXIN_RWY <- function() {
+  QUERY <- "SELECT * FROM PRU_AIRPORT.V_APT_DSHBD_TXIN_RWY"
+  EXPORT_QUERY("PRU_AIRPORT", QUERY)
+}
+
+EXPORT_APT_DSHBD_TXIN_RWY() %>%
+  readr::write_csv2(here::here("data", "APT_DSHBD_TXIN_RWY.csv"))
+
+
+EXPORT_APT_DSHBD_ASMA_RWY <- function() {
+  QUERY <- "SELECT * FROM PRU_AIRPORT.V_APT_DSHBD_ASMA_RWY"
+  EXPORT_QUERY("PRU_AIRPORT", QUERY)
+}
+
+EXPORT_APT_DSHBD_ASMA_RWY() %>%
+  readr::write_csv2(here::here("data", "APT_DSHBD_ASMA_RWY.csv"))
+
+
 #***********************************************************************
 # ---- APT TURNAROUND  ----
 #***********************************************************************

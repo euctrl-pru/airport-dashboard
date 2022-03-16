@@ -34,7 +34,9 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 # pkgdown site
-docs/
+
+# docs/
+
 ########## maxOS specific (macOS.gitignore)
 # from https://github.com/github/gitignore/
 # General
@@ -91,4 +93,9 @@ $RECYCLE.BIN/
 # .nfs files are created when an open file is removed but is still being accessed
 .nfs*
 #######---- other ----########
+
 .RDataTmp
+
+# Factsheet figures
+media/airport_maps/**
+media/factsheet/**
