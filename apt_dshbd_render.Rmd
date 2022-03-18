@@ -1049,7 +1049,7 @@ cat("## Row -----------------------------------------------------------")
 ```
 
 
-```{r ASMA-RWY-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, file = 'R/fig_asma_rwy_yearly.R'}
+```{r ASMA-RWY-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_asma_rwy_yearly.R')}
 
 ```
 
@@ -1061,7 +1061,7 @@ cat("## Row -----------------------------------------------------------")
 ```
 
 
-```{r ASMA-RWY-MONTHLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, file = 'R/fig_asma_rwy_monthly.R'}
+```{r ASMA-RWY-MONTHLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_asma_rwy_monthly.R')}
 
 ```
 
@@ -1123,7 +1123,7 @@ cat("## Row -----------------------------------------------------------")
 ```
 
 
-```{r TAXI-OUT-RWY-YEARLY-LAYOUT, results='asis', eval=params$txotrwy_yy  == "Y", echo = FALSE, file = 'R/fig_taxi_out_rwy_yearly.R'}
+```{r TAXI-OUT-RWY-YEARLY-LAYOUT, results='asis', eval=params$txotrwy_yy  == "Y", echo = FALSE, code=readLines('R/fig_taxi_out_rwy_yearly.R')}
 
 ```
 
@@ -1135,7 +1135,7 @@ cat("## Row -----------------------------------------------------------")
 ```
 
 
-```{r TAXI-OUT-RWY-MONHTLY-LAYOUT, results='asis', eval=params$txotrwy_mm == "Y", echo = FALSE, file = 'R/fig_taxi_out_rwy_monhtly.R'}
+```{r TAXI-OUT-RWY-MONHTLY-LAYOUT, results='asis', eval=params$txotrwy_mm == "Y", echo = FALSE, code=readLines('R/fig_taxi_out_rwy_monhtly.R')}
 
 ```
 
@@ -1196,7 +1196,7 @@ cat("## Row -----------------------------------------------------------")
 ```
 
 
-```{r TAXI-IN-RWY-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, file = 'R/fig_taxi_in_rwy_yearly.R'}
+```{r TAXI-IN-RWY-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_taxi_in_rwy_yearly.R')}
 
 ```
 
@@ -1208,7 +1208,7 @@ cat("## Row -----------------------------------------------------------")
 ```
 
 
-```{r TAXI-IN-RWY-MONTHLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, file = 'R/fig_taxi_in_rwy_monthly.R'}
+```{r TAXI-IN-RWY-MONTHLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_taxi_in_rwy_monthly.R')}
 
 ```
 
