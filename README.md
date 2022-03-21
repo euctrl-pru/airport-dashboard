@@ -76,8 +76,8 @@ for PR #1.
 ## Dashboard generation
 
 The dashboard is generated from a templated Rmd.
-As coded in `build.R`, there are potentially few steps to execute
-all coded in that script:
+As coded in **`build_dashboard.R`**, there are potentially few steps to execute; they are
+all coded in that script, more or less like follows:
 
 1. cleanup `docs/`: remove everything but (favicons and) `images/` and `index.html`
   
