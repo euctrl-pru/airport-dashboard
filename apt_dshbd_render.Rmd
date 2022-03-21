@@ -53,6 +53,8 @@ output:
     favicon     : 'favicon.png'
     lib_dir     : 'docs/libs'
     self_contained: FALSE
+    includes: 
+      in_header: ga_script.html
 ---
 
 <script>

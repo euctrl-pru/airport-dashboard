@@ -22,6 +22,17 @@ source(here("R","apt_dshbd_get_data.R"), encoding = "UTF8")
 # source(here("R","generate-apt-layout.R"), encoding = "UTF8")
 
 # 3. generate the various airport HTML pages
+#    NOTE: enable DEBUG_DSH and/or DEBUG_FAC for development
+#          You can also define the list of airports under debug
+RUN_DSH   <- TRUE
+DEBUG_DSH <- TRUE
+
+RUN_FAC   <- FALSE
+DEBUG_FAC <- TRUE
+
+DEBUG_APTS <- c("EBBR")
+# DEBUG_APTS <- c("EBBR", "EGLL", "LATI")
+
 source(here("R","apt_dshbd_render.R"), encoding = "UTF8")
 # source(here("R","apt_dshbd_index.R"), encoding = "UTF8")
 
