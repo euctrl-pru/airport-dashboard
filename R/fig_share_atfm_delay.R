@@ -61,14 +61,14 @@ if (nrow(params$atfm) > 0) {
   
   share_atfm %>%
     plot_ly(
-      labels = ~REG_REASON,
-      values = ~DLY,
-      text   = ~paste(DLY_SHARE*100, "%"),
-      textinfo='text',
-      sort = FALSE,
-      name="",
+      labels        = ~REG_REASON,
+      values        = ~DLY,
+      text          = ~paste0(DLY_SHARE*100, "%"),
+      textinfo      = 'text',
+      sort          = FALSE,
+      name          = "",
       hovertemplate = ~paste0(REG_REASON, ': ', DLY, ' min. (', DLY_SHARE*100, '%)'),
-      marker = list(colors = ~Colours),
+      marker        = list(colors = ~Colours),
       customdata    = ~YEAR,
       transforms    = list(
         list(
@@ -84,10 +84,10 @@ if (nrow(params$atfm) > 0) {
       textposition = "outside"
     ) %>%
     layout(
-      showlegend = TRUE,
+      showlegend  = TRUE,
       updatemenus = list(button_type_list)) %>%
     config(
-      displaylogo = FALSE,
+      displaylogo            = FALSE,
       modeBarButtonsToRemove = config_bar_remove_buttons
     )
   
