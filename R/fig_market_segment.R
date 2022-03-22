@@ -60,7 +60,7 @@ share_market %>%
     textinfo      = 'text',
     # sort          = FALSE,
     name          = "",
-    hovertemplate = ~LABELS,
+    hovertemplate = ~paste0(RULE_NAME, ': ', FLT_TOT, ' (', FLIGHT_SHARE*100, '%)'),
     # marker        = list(colors = ~Colours),
     customdata    = ~YEAR,
     transforms    = list(
