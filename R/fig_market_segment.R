@@ -5,39 +5,79 @@ market_max_year <- params$market %>%
   unique()
 
 share_market <- params$market %>%
-  filter(YEAR == market_max_year) %>%
-  group_by(RULE_NAME) %>%
+  group_by(RULE_NAME, YEAR) %>%
   summarise(
     FLT_TOT = sum(NB_FLIGHT, na.rm = TRUE)
   ) %>%
   ungroup() %>%
+  group_by(YEAR) %>% 
   mutate(
     FLIGHT_TOT   = sum(FLT_TOT, na.rm = TRUE),
     FLIGHT_SHARE = round(FLT_TOT / FLIGHT_TOT, 2),
-    LABELS       = paste0(RULE_NAME, "<br>", FLIGHT_SHARE, "%"),
+    LABELS       = paste0(RULE_NAME, ": ", FLIGHT_SHARE*100, "%"),
     label        = paste0(RULE_NAME, "\n", FLIGHT_SHARE*100, "%")
   ) 
 # %>%
 # filter(FLIGHT_SHARE > 0)
 
-center_text <- paste0("<b>", market_max_year, "</b>")
+filter_years <- share_market %>%
+  pull(YEAR) %>%
+  unique() %>% 
+  sort()
+
+# center_text <- paste0("<b>", market_max_year, "</b>")
+
+button_list <- lapply(
+  1:length(filter_years),
+  function(x) {
+    list(
+      method = "restyle",
+      args = list("transforms[0].value", filter_years[x]),
+      label = filter_years[x]
+    )
+  }
+)
+
+button_type_list <- list(
+  buttons   = button_list,
+  type      = "buttons",
+  bgcolor   = "#c3c1e8",
+  active    = length(filter_years) - 1,
+  direction = "right",
+  xref      = "paper",
+  x         = 0.3,
+  xanchor   = "left",
+  yref      = "paper",
+  y         = 1.2,
+  yanchor   = "bottom"
+)
 
 share_market %>%
   plot_ly(
-    labels = ~RULE_NAME,
-    values = ~FLIGHT_SHARE
-  ) %>%
+    labels        = ~RULE_NAME,
+    values        = ~FLIGHT_SHARE,
+    text          = ~label,
+    textinfo      = 'text',
+    # sort          = FALSE,
+    name          = "",
+    hovertemplate = ~LABELS,
+    # marker        = list(colors = ~Colours),
+    customdata    = ~YEAR,
+    transforms    = list(
+      list(
+        type        = "filter",
+        target      = "customdata",
+        operation   = "=",
+        value       = market_max_year
+      )
+    )) %>%
   add_pie(
     hole         = 0.4,
     textposition = "outside"
   ) %>%
-  add_annotations(
-    text      = center_text,
-    font      = list(size = 18),
-    x         = 0.5,
-    y         = 0.5,
-    showarrow = FALSE
-  ) %>%
+  layout(
+    showlegend  = TRUE,
+    updatemenus = list(button_type_list)) %>%
   config(
     displaylogo = FALSE,
     modeBarButtonsToRemove = config_bar_remove_buttons
