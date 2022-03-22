@@ -18,7 +18,7 @@ source(here("R", "fac_layout_setup.R"))
 
 APT_DF <- APT_DF %>% arrange(AIRPORT) %>% mutate(idx = row_number())
 
-if(RUN_DSH == TRUE) {
+if(BUILD_DSH == TRUE) {
   APT_DF %>%
     { if(DEBUG_DSH == TRUE) filter(., AIRPORT %in% DEBUG_APTS) else .} %>% 
     pull(AIRPORT) %>%
@@ -38,7 +38,7 @@ if(RUN_DSH == TRUE) {
 # Recreate the country maps if necessary
 # source(here("R", "fac_create_country_maps.R"), encoding = "UTF8")
 
-if(RUN_FAC == TRUE) {
+if(BUILD_FAC == TRUE) {
   APT_DF %>%
     { if(DEBUG_FAC == TRUE) filter(., AIRPORT %in% DEBUG_APTS) else .} %>% 
     pull(AIRPORT) %>%
