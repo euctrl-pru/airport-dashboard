@@ -4,10 +4,11 @@ library(stringr)
 
 # 0. cleanup: remove everything but (favicons and) `images/` 
 fs::dir_delete(here("docs", "libs"))
-fs::dir_ls(here("docs"), recurse = TRUE) %>%
+fs::dir_ls(here("docs"), recurse = TRUE, type = "file") %>%
   as_tibble() %>%
   filter(
     str_detect(value, pattern = "images", negate = TRUE),
+    str_detect(value, pattern = "pdf/", negate = TRUE),
     str_detect(value, pattern = "index.html", negate = TRUE)
   ) %>%
   dplyr::pull(value) %>%
@@ -22,6 +23,17 @@ source(here("R","apt_dshbd_get_data.R"), encoding = "UTF8")
 # source(here("R","generate-apt-layout.R"), encoding = "UTF8")
 
 # 3. generate the various airport HTML pages
+#    NOTE: enable DEBUG_DSH and/or DEBUG_FAC for development
+#          You can also define the list of airports under debug
+BUILD_DSH <- TRUE
+DEBUG_DSH <- TRUE
+
+BUILD_FAC <- TRUE
+DEBUG_FAC <- TRUE
+
+DEBUG_APTS <- c("EBBR")
+# DEBUG_APTS <- c("EBBR", "EGLL", "LATI")
+
 source(here("R","apt_dshbd_render.R"), encoding = "UTF8")
 # source(here("R","apt_dshbd_index.R"), encoding = "UTF8")
 
