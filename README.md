@@ -104,7 +104,10 @@ all coded in that script, more or less like follows:
     source(here("R","generate-apt-layout.R"), encoding = "UTF8")
     ```
 
+
 1. Generate the various airport HTML pages.
+  You can use the DEBUG_/BUILD_ variables to reduce the amount of generation
+  during development, see below for details.
   This is a **MANDATORY** step to generate the dashboard.
   
     ```
@@ -123,3 +126,28 @@ all coded in that script, more or less like follows:
     # remove Rmd
     fs::file_delete(path = here("docs", "index.Rmd"))
     ```
+
+
+### Generation under DEVELPMENT
+
+1.	execute the first steps to set the stage (clean the docs/ and pre pare the CSV)
+2.	set the DEBUG_ var as best for your development
+    ```
+    BUILD_DSH <- TRUE       # build dashboard?
+    DEBUG_DSH <- TRUE       # ... and eventually only dashboard for airports in DEBUG_APTS?
+    	
+    BUILD_FAC <- FALSE      # build factsheet?
+    DEBUG_FAC <- TRUE       # ... and eventually only factsheet for airports in DEBUG_APTS?
+    		
+    DEBUG_APTS <- c("EBBR") # subset of airports to consider
+    ```
+3.	commit only a minimum (EBBR or more if needed) of the airport dashboard/factsheet
+4.	whoever prepares for the release will set 
+    ```
+    BUILD_DSH <- TRUE       # build dashboard?
+    DEBUG_DSH <- FALSE      # ... and eventually only dashboard for airports in DEBUG_APTS?
+    	
+    BUILD_FAC <- TRUE       # build factsheet?
+    DEBUG_FAC <- FALSE      # ... and eventually only factsheet for airports in DEBUG_APTS?
+    ```
+  and build everything in docs/
