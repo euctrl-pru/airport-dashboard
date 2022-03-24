@@ -131,7 +131,7 @@ all coded in that script, more or less like follows:
 ### Generation under DEVELPMENT
 
 1.	execute the first steps to set the stage (clean the docs/ and pre pare the CSV)
-2.	set the DEBUG_ var as best for your development
+2.	set the `BUILD_`/`DEBUG_` var as best for your development
     ```
     BUILD_DSH <- TRUE       # build dashboard?
     DEBUG_DSH <- TRUE       # ... and eventually only dashboard for airports in DEBUG_APTS?
