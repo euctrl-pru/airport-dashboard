@@ -1049,9 +1049,6 @@ cat("## Row -----------------------------------------------------------")
 ```
 
 
-```{r ASMA-RWY-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_asma_rwy_yearly.R')}
-
-```
 
   
 ```{r ASMA-time-title4, results='asis', eval=params$apdf == "Y", echo = FALSE}
@@ -1061,9 +1058,6 @@ cat("## Row -----------------------------------------------------------")
 ```
 
 
-```{r ASMA-RWY-MONTHLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_asma_rwy_monthly.R')}
-
-```
 
 
 # Taxi-Out Time
@@ -1116,28 +1110,22 @@ cat("## Row -----------------------------------------------------------")
 
 ```
 
-```{r Taxi-out-time-title3, results='asis', eval=params$txotrwy_yy == "Y", echo = FALSE}
+```{r Taxi-out-time-title3, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
 #cat("### Annual Taxi-Out Time per Runway (Source: APDF)")
 
 ```
 
 
-```{r TAXI-OUT-RWY-YEARLY-LAYOUT, results='asis', eval=params$txotrwy_yy  == "Y", echo = FALSE, code=readLines('R/fig_taxi_out_rwy_yearly.R')}
-
-```
 
 
-```{r Taxi-out-time-title4, results='asis', eval=params$txotrwy_mm == "Y", echo = FALSE}
+```{r Taxi-out-time-title4, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
 #cat("### Monthly Taxi-Out Time per Runway (Source: APDF)")
 
 ```
 
 
-```{r TAXI-OUT-RWY-MONHTLY-LAYOUT, results='asis', eval=params$txotrwy_mm == "Y", echo = FALSE, code=readLines('R/fig_taxi_out_rwy_monhtly.R')}
-
-```
 
 
 # Taxi-In Time
@@ -1196,10 +1184,6 @@ cat("## Row -----------------------------------------------------------")
 ```
 
 
-```{r TAXI-IN-RWY-YEARLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_taxi_in_rwy_yearly.R')}
-
-```
-
 
 ```{r Taxi-in-time-title4, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
@@ -1207,10 +1191,6 @@ cat("## Row -----------------------------------------------------------")
 
 ```
 
-
-```{r TAXI-IN-RWY-MONTHLY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_taxi_in_rwy_monthly.R')}
-
-```
 
 # Pre-Dep Delay
 
