@@ -109,7 +109,7 @@ mvts_pa_fig = ggplot(data=mvts_pa) +
   #       axis.title=element_text(size=100),
   #       axis.title.x = element_blank(),
   #       plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
-  labs(x="", y="Total movements (thousands)\n") +
+  labs(x="", y="Total movements\n") +
   scale_y_continuous(labels = label_number(suffix = "k"))
 ggsave(here("media", "factsheet", paste0("Annual_mvmts_", params$icao, ".png")), plot=mvts_pa_fig, 
        width = Traffic_layout1[1]*Page_width, height = Traffic_height1, units = "cm", dpi=100, limitsize = FALSE)

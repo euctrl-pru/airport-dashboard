@@ -1,4 +1,6 @@
 
+library("ggrepel")
+
 mvts_pm <- params$tfc %>%
   select(YEAR, MONTH_NUM, FLT_TOT) %>%
   group_by(YEAR, MONTH_NUM) %>%
@@ -80,7 +82,13 @@ mvts_pm_fig = ggplot(mutate(mvts_pm,
                             MONTH_MON=toupper(month.abb[MONTH_NUM]),
                             MONTH_MON=factor(MONTH_MON, levels = toupper(month.abb)))) +
   geom_line(aes(x=MONTH_MON, y = FLT_TOT, group = YEAR, color = YEAR), size=linesize_factsheet) +
+  geom_text_repel(data=mvts_pm_max, aes(x=factor(toupper(month.abb[MONTH_NUM]), levels = toupper(month.abb)), y=FLT_TOT, 
+                                        label = paste0("Busiest month\n(last 5 years):\n", 
+                                                       MONTH_NUM, "-", YEAR, "\n", FLT_TOT)), 
+                  size = 50, nudge_y = -mvts_pm_max$FLT_TOT/4, segment.color = 'black', segment.size = 5,
+                  arrow = arrow(length = unit(0.015, "npc")))+ 
   theme_factsheet() +
+  theme(legend.position = "right") +
   # theme_bw() +
   # theme(plot.title = element_text(size=100, face="bold", hjust=0.5),
   #       legend.title=element_blank(),
@@ -90,7 +98,7 @@ mvts_pm_fig = ggplot(mutate(mvts_pm,
   #       axis.title=element_text(size=100),
   #       axis.title.x = element_blank(),
   #       plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
-  labs(x="", y="", title="Monthly movements")
+  labs(x="", y="", title="")
 ggsave(here("media", "factsheet", paste0("Monthly_mvmts_", params$icao, ".png")), 
        width = Traffic_layout1[2]*Page_width, height = Traffic_height1, units = "cm", dpi=100, limitsize = FALSE)
 

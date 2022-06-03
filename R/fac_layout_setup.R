@@ -9,8 +9,9 @@ theme_factsheet = function(){
   
   theme_bw() %+replace%
     theme(legend.title=element_blank(),
-          legend.text=element_text(size=100),
+          legend.text=element_text(size=size_general),
           legend.position = "bottom",
+          legend.key.size = unit(10,"line"),
           plot.margin = unit(c(5.5, 20, 5.5, 60), "pt"),
           plot.title = element_text(size   = size_general+10,           #set font size
                                     face   = 'bold',                    #bold typeface
@@ -28,7 +29,9 @@ theme_factsheet = function(){
           
           axis.text = element_text(size   = size_general),              #font size
           
-          axis.text.x = element_text(margin=margin(5, b = 10)))         #margin for axis text
+          axis.text.x = element_text(margin=margin(5, b = 10)),         #margin for axis text
+          
+          panel.grid.major.y = element_line(color = "black", size = 2))
   
   
   
@@ -43,7 +46,11 @@ theme_factsheet_line_figure=function(){
 
 Page_width<<-450
 
-General_layout<<-c(0.4, 0.3, 0.3)
+General_layout1<<-1
+General_height1<<-100
+
+General_layout2<<-c(0.5, 0.5)
+General_height2<<-150
 
 Traffic_layout1<<-c(0.2, 0.5, 0.3)
 Traffic_height1<<-100

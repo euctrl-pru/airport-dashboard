@@ -43,9 +43,9 @@ params:
    turn_mm:      $turn_mm
    turn_new:     $turn_new
    cdo_cco:      $cdo_cco
-title: "`r paste0('Factsheet for ', params$icao, ' (', params$name, ')')`"
+title: "`r paste0('Factsheet for ', params$name, ' (', params$icao, '/', params$iata, ')')`"
 author: Aviation Intelligence Unit, EUROCONTROL
-date: "`r format(Sys.time(), '%d/%m/%Y')`" 
+date: "`r paste0('Edition ', format(Sys.time(), '%B %Y'))`" 
 output: 
   bookdown::pdf_document2:
     fig_width: 6.3
@@ -53,7 +53,7 @@ output:
     fig_caption: false
     toc: false
     keep_tex: false
-  # extra_dependencies: "subfig"
+    # extra_dependencies: "subfigure"
     includes:
       in_header: preamble.tex
 editor_options: 
@@ -79,6 +79,7 @@ library("here")
 library("DT")
 library("patchwork")
 library("treemapify")
+library("kableExtra")
 
 knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE, error=FALSE, out.width = "\\textwidth")
 Sys.setenv(TZ = "UTC")
@@ -153,7 +154,10 @@ config_bar_remove_buttons <- c(
 
 ```{r Gen-info, include=FALSE}
 
-Last_complete_year<<-2020
+Last_complete_year<<-group_by(TFC_DF, YEAR) %>% 
+  filter(max(MONTH_NUM)==12) %>% 
+  select(YEAR) %>% 
+  max()
 drv <- dbDriver("Oracle")
 con <- dbConnect(drv, "PRUTEST", "test", dbname='//porape5.ops.cfmu.eurocontrol.be:1521/pe5')
 TOP_APTs<<-dbGetQuery(con, "SELECT * FROM SP_TOP_APTS") %>%
@@ -245,8 +249,7 @@ Top_ATFM_dly_cause_airport=filter(params$atfm, YEAR==Last_complete_year) %>%
 
 In `r paste0(Last_complete_year, ", ", params$name)` managed `r Traffic_share_in_country`% of the traffic at airports in `r params$state`, and their arrival delays accounted for `r Arr_ATFM_dly_share_in_country`% of the arrival ATFM minutes of delay, mainly due to `r Top_ATFM_dly_cause_airport`.
 
-\begin{minipage}[t]{`r General_layout[1]`\textwidth}
-```{r apt-info}
+```{r apt-info, out.height=paste0(Traffic_height1, "px")}
 
 ID_TBL <- tribble(
   ~ITEM, ~TEXT1, ~TEXT2,
@@ -271,23 +274,24 @@ RWY_CONFIG$ITEM[1] <- "Configurations in 2019"
 ID_TBL <- ID_TBL %>%
   bind_rows(RWY_CONFIG)
 
-pander(RWY_CONFIG, cols = NULL)
+# pander(RWY_CONFIG, cols = NULL)
+kbl(ID_TBL, booktabs = T, col.names = NULL) %>%
+  kable_styling(position = "center", latex_options = c("striped", "hold_position"))
 
 ```
 
-\end{minipage}
-\begin{minipage}[t]{`r General_layout[2]`\textwidth}
+\begin{minipage}[t]{`r General_layout2[1]`\textwidth}
 
-```{r APT-map, echo=FALSE, fig.align='center'}
+```{r APT-map, echo=FALSE, fig.align='center', out.height=paste0(General_height2, "px")}
 
 include_graphics(here("media", "airport_maps", paste0("APT_map_", params$icao, ".png")))
 
 ```
 
 \end{minipage}
-\begin{minipage}[t]{`r General_layout[3]`\textwidth}
+\begin{minipage}[t]{`r General_layout2[2]`\textwidth}
 
-```{r APT_layout, echo=FALSE, fig.align='center'}
+```{r APT_layout, echo=FALSE, fig.align='center', out.height=paste0(General_height2, "px")}
 
 include_graphics(here("layouts", paste0(params$icao, ".png")))
 
@@ -302,7 +306,9 @@ include_graphics(here("layouts", paste0(params$icao, ".png")))
 
 
 
-# Traffic
+# Traffic (Source: Network Manager)
+
+More data is available on the [Airport Dashboard](`r paste0("https://ansperformance.eu/dashboard/stakeholder/airport/db/", params$icao, ".html#traffic")`).
 
 ```{r traffic-setup}
 
@@ -360,13 +366,9 @@ include_graphics(here("media", "factsheet", paste0("Avg_weekday_hourly_throughpu
 
 
 
-# Data exchange with EUROCONTROL
+# Arrival ATFM Delay (Source: Network Manager)
 
-
-
-
-
-# Arrival ATFM Delay
+More data is available on the [Airport Dashboard](`r paste0("https://ansperformance.eu/dashboard/stakeholder/airport/db/", params$icao, ".html#atfm-delay")`).
 
 ```{r Arr-ATFM-Delay-country, code=readLines('R/fig_arr_atfm_delay_country_airports_treemap.R')}
 
@@ -398,7 +400,9 @@ include_graphics(here("media", "factsheet", paste0("ARR_ATFM_delay_country_treem
 
 
 
-# ATFM Slot Adherence
+# ATFM Slot Adherence (Source: Network Manager)
+
+More data is available on the [Airport Dashboard](`r paste0("https://ansperformance.eu/dashboard/stakeholder/airport/db/", params$icao, ".html#atfm-slot")`).
 
 ```{r ATFM-SLOT-Dep-outside-STW, code=readLines('R/fig_departures_outside_stw.R')}
 
@@ -432,9 +436,11 @@ include_graphics(here("media", "factsheet", paste0("Departures_outside_STW_", pa
 
 ```{r cdo-cco-title, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE}
 
-cat("# Vertical Flight Efficiency in Climb and Descent")
+cat("# Vertical Flight Efficiency in Climb and Descent (Source: AIU analysis)")
 
 ```
+
+More data is available on the [Airport Dashboard](`r paste0("https://ansperformance.eu/dashboard/stakeholder/airport/db/", params$icao, ".html#cdocco")`).
 
 \begin{minipage}[t]{`r VFE_layout1[1]`\textwidth}
 ```{r Avg-time-lvl, eval=nrow(params$cdo_cco)>0, echo=FALSE, fig.align='center', out.height=paste0(VFE_height1, "px")}
@@ -464,9 +470,11 @@ include_graphics(here("media", "factsheet", paste0("Share_CDO_CCO_flights_", par
 
 ```{r punctuality-title, results='asis', eval=params$punc == "Y", echo = FALSE}
 
-cat("# Punctuality")
+cat("# Punctuality (Source: APDF)")
 
 ```
+
+More data is available on the [Airport Dashboard](`r paste0("https://ansperformance.eu/dashboard/stakeholder/airport/db/", params$icao, ".html#punctuality")`).
 
 ```{r punctuality-dep-overall-share, results='asis', eval=params$punc == "Y", echo = FALSE, code=readLines('R/fig_punctuality_dep_overall_share.R')}
 
@@ -526,9 +534,11 @@ include_graphics(here("media", "factsheet", paste0("Punc_Arr_Overall_share_", pa
 
 ```{r ASMA-title, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-cat("# ASMA (Terminal airspace) Times")
+cat("# ASMA (Terminal airspace) Times (Source: APDF)")
 
 ```
+
+More data is available on the [Airport Dashboard](`r paste0("https://ansperformance.eu/dashboard/stakeholder/airport/db/", params$icao, ".html#asma-time")`).
 
 \begin{minipage}[t]{`r ASMA_layout1[1]`\textwidth}
 ```{r ASMA-YEARLY-LAYOUT, eval=params$apdf == "Y", echo=FALSE, fig.align='center', out.height=paste0(ASMA_height1, "px")}
@@ -551,9 +561,11 @@ include_graphics(here("media", "factsheet", paste0("ASMA_Monthly_", params$icao,
 
 ```{r Pre-dep-delay-title, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-cat("# Reported Pre-departure Delay")
+cat("# Reported Pre-departure Delay (Source: APDF)")
 
 ```
+
+More data is available on the [Airport Dashboard](`r paste0("https://ansperformance.eu/dashboard/stakeholder/airport/db/", params$icao, ".html#pre-dep-delay")`).
 
 \begin{minipage}[t]{`r Pre_dep_delay_layout1[1]`\textwidth}
 ```{r pre-dep-dly-pa, eval=params$apdf == "Y", echo=FALSE, fig.align='center', out.height=paste0(Pre_dep_delay_height1, "px")}
@@ -576,9 +588,11 @@ include_graphics(here("media", "factsheet", paste0("Pre_Departure_Delay_Monthly_
 
 ```{r Taxi-in-time-title, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-cat("# Taxi-In Times")
+cat("# Taxi-In Times (Source: APDF)")
 
 ```
+
+More data is available on the [Airport Dashboard](`r paste0("https://ansperformance.eu/dashboard/stakeholder/airport/db/", params$icao, ".html#taxi-in-time")`).
 
 \begin{minipage}[t]{`r Taxi_in_times_layout1[1]`\textwidth}
 ```{r TXIN-YEARLY-LAYOUT, eval=params$apdf == "Y", echo=FALSE, fig.align='center', out.height=paste0(Taxi_in_times_height1, "px")}
@@ -601,9 +615,11 @@ include_graphics(here("media", "factsheet", paste0("Taxi_In_Times_Monthly_", par
 
 ```{r Taxi-out-time-title, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-cat("# Taxi-Out Times")
+cat("# Taxi-Out Times (Source: APDF)")
 
 ```
+
+More data is available on the [Airport Dashboard](`r paste0("https://ansperformance.eu/dashboard/stakeholder/airport/db/", params$icao, ".html#taxi-out-time")`).
 
 \begin{minipage}[t]{`r Taxi_out_times_layout1[1]`\textwidth}
 ```{r TXOT-YEARLY-LAYOUT, eval=params$apdf == "Y", echo=FALSE, fig.align='center', out.height=paste0(Taxi_out_times_height1, "px")}
@@ -626,9 +642,11 @@ include_graphics(here("media", "factsheet", paste0("Taxi_Out_Times_Monthly_", pa
 
 ```{r Turnaround-times-title, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-cat("# Turnaround times")
+cat("# Turnaround times (Source: APDF)")
 
 ```
+
+More data is available on the [Airport Dashboard](`r paste0("https://ansperformance.eu/dashboard/stakeholder/airport/db/", params$icao, ".html#turnaround-times")`).
 
 \begin{minipage}[t]{`r Turnaround_times_layout1[1]`\textwidth}
 ```{r annual-turn-time, eval=params$apdf == "Y", echo=FALSE, fig.align='center', out.height=paste0(Turnaround_times_height1, "px")}
@@ -648,4 +666,4 @@ include_graphics(here("media", "factsheet", paste0("Turn_Time_Monthly_", params$
 
 # About this report
 
-
+Results based on Network Manager data are available up to and including `r format(Sys.time() - months(1), '%B %Y')`. Results based on APDF data are available up to and including `r format(Sys.time() - months(2), '%B %Y')`.
