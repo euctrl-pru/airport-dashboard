@@ -12,7 +12,7 @@ theme_factsheet = function(){
           legend.text=element_text(size=size_general),
           legend.position = "bottom",
           legend.key.size = unit(10,"line"),
-          plot.margin = unit(c(5.5, 20, 5.5, 60), "pt"),
+          plot.margin = unit(c(100, 20, 5.5, 60), "pt"),
           plot.title = element_text(size   = size_general+10,           #set font size
                                     face   = 'bold',                    #bold typeface
                                     hjust  = 0,                         #left align

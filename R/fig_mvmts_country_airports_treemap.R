@@ -1,17 +1,19 @@
 
-mvts_country_apts1 <- filter(TFC_DF, substr(AIRPORT, 1, 2)==substr(Airport, 1, 2) & YEAR==Last_complete_year)  %>%
-  select(FLT_TOT, AIRPORT) %>%
+Top_N=5
+
+mvts_country_apts1 <- filter(TOP_APTs, substr(AIRPORT, 1, 2)==substr(Airport, 1, 2) & YEAR==Last_complete_year)  %>%
+  select(NBR_MVMTS, AIRPORT) %>%
   group_by(AIRPORT) %>%
-  summarise(FLT_TOT = sum(FLT_TOT, na.rm = TRUE)) %>%
+  summarise(FLT_TOT = sum(NBR_MVMTS, na.rm = TRUE)) %>%
   arrange(-FLT_TOT) %>% 
   ungroup()
 
-if (nrow(mvts_country_apts1)>6) {
+if (nrow(mvts_country_apts1)>Top_N) {
   
-  mvts_country_apts_other=mvts_country_apts1[7:nrow(mvts_country_apts1),]
+  mvts_country_apts_other=mvts_country_apts1[Top_N+1:nrow(mvts_country_apts1),]
   
-  mvts_country_apts=rbind(head(mvts_country_apts1, 6), 
-                          cbind(AIRPORT="Other", FLT_TOT=sum(mvts_country_apts_other$FLT_TOT)))
+  mvts_country_apts=rbind(head(mvts_country_apts1, Top_N), 
+                          cbind(AIRPORT="Other", FLT_TOT=sum(mvts_country_apts_other$FLT_TOT, na.rm = TRUE)))
   
 } else {
   
@@ -33,7 +35,8 @@ if (nrow(mvts_country_apts)>1) {
                       size = 15,
                       grow = TRUE) +
     theme_factsheet() +
-    theme(legend.position = "none")
+    theme(legend.position = "none") +
+    labs(title = paste0("Traffic share at airports in ", params$state, " (", Last_complete_year, ")"))
 } else {
   mvts_country_apts_fig = ggplot(data=mvts_country_apts, aes(x=3, y=FLT_TOT, fill=AIRPORT)) +
     geom_col() +
@@ -43,7 +46,8 @@ if (nrow(mvts_country_apts)>1) {
     xlim(c(0.2, 3.5)) +
     theme_factsheet() +
     theme_void() +
-    theme(legend.position = "none")
+    theme(legend.position = "none") +
+    labs(title = paste0("Traffic share at airports in ", params$state, " (", Last_complete_year, ")"))
 }
 
 ggsave(here("media", "factsheet", paste0("Mvmts_country_treemap_", Airport, ".png")), plot=mvts_country_apts_fig, 
