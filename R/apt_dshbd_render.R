@@ -38,12 +38,8 @@ APT_DF %>%
 # source(here("R", "fac_create_country_maps.R"), encoding = "UTF8")
 
 APT_DF %>%
-<<<<<<< HEAD
-   # filter( AIRPORT %in% c("EBBR")) %>% #, "EGLL", "LATI")) %>%   # for debug
-=======
-   filter( AIRPORT %in% c("EBBR")) %>% #, "EGLL", "LATI")) %>%   # for debug
->>>>>>> apdf_per_rwy
-  pull(AIRPORT) %>%
+# filter( AIRPORT %in% c("EBBR", "EGLL", "LATI")) %>%   # for debug
+pull(AIRPORT) %>%
   purrr::walk(
     .f = function(icao) {
       cat(paste0("==>", icao, "...\n"))
