@@ -272,68 +272,8 @@ if (params$apdf == "Y") {
 
 ### Daily Traffic Variation snapshot (Source: Network Manager)
 
-```{r tfcvar-snapshot, results='asis'}
-if (nrow(params$tfcvar) < 1) {
-  cat("<p><b>Traffic evolution for this airport under development!</b>")
-} else {
-  fig1 <- params$tfcvar %>%
-    plot_ly() %>%
-    add_lines(
-      x = ~DAY,
-      y = ~FLTS,
-      name = "Flights"
-    ) %>%
-    add_lines(
-      x = ~DAY,
-      y = ~FLTS_2019,
-      name = "Flights 2019 (Reference)",
-      line = list(
-        dash = "dot",
-        color = "red"
-      )
-    ) %>%
-    layout(yaxis = list(title = "movements"))
+```{r tfcvar-snapshot, code=readLines('R/fig_traffic_variation_snapshot.R')}
 
-  fig2 <- params$tfcvar %>%
-    plot_ly() %>%
-    add_lines(
-      x = ~DAY,
-      y = ~MOV_AVG_WK,
-      name = " <br> % vs 2019 <br> (7-day Moving Average)"
-    ) %>%
-    layout(
-      xaxis = list(title = ""),
-      yaxis = list(
-        title = "% change from 2019",
-        titlefont = list(size = 11),
-        tickformat = ".0%"
-      )
-      ##############################################################################
-      # , annotations = list(
-      #   x = 1,
-      #   y = -0.1,
-      #   text = "Source: Network Manager",
-      #   showarrow = FALSE,
-      #   xref = "paper",
-      #   yref = "paper",
-      #   xanchor = "right",
-      #   yanchor = "auto",
-      #   xshift = 0,
-      #   yshift = -20,
-      #   font = list(size = 12)
-      # )
-      ##############################################################################
-    )
-
-  fig <- subplot(fig1, fig2, nrows = 2, shareX = TRUE) %>%
-    layout(hovermode = "x unified") %>%
-    config(
-      displaylogo = FALSE,
-      modeBarButtonsToRemove = config_bar_remove_buttons
-    )
-
-  fig
-}
 ```
 
 

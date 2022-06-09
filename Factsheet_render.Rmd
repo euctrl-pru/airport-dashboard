@@ -349,7 +349,7 @@ include_graphics(here("media", "factsheet", paste0("Mvmts_country_treemap_", par
 \begin{minipage}[t]{`r Traffic_layout2[2]`\textwidth}
 ```{r Daily-flights, echo=FALSE, fig.align='center', out.height=paste0(Traffic_height2, "px")}
 
-include_graphics(here("media", "factsheet", paste0("Monthly_mvmts_", params$icao, ".png")))
+include_graphics(here("media", "factsheet", paste0("Tfc_var_snapshot_", params$icao, ".png")))
 
 ```
 \end{minipage}
