@@ -48,7 +48,9 @@ if (nrow(ARR_ATFM_delay_country_apts)>1) {
                       size = 15,
                       grow = TRUE) +
     theme_factsheet() +
-    theme(legend.position = "none")
+    theme(legend.position = "none",
+          plot.margin = unit(c(140, 20, 5.5, 60), "pt")) +
+    labs(title=paste0("Arrival ATFM Delay at airports in ", State, " in ", Last_complete_year))
   } else {
     
     ARR_ATFM_delay_country_apts_fig = ggplot() +
@@ -72,7 +74,8 @@ if (nrow(ARR_ATFM_delay_country_apts)>1) {
       xlim(c(0.2, 3.5)) +
       theme_factsheet() +
       theme_void() +
-      theme(legend.position = "none")
+      theme(legend.position = "none") +
+      labs(title=paste0("Arrival ATFM Delay at airports in ", State, " in ", Last_complete_year))
     
   } else {
     

@@ -311,7 +311,6 @@ source(here("R", "fig_mvmts_country_airports_treemap.R"), encoding = "UTF8")
 
 ```
 
-````{=tex}
 \begin{minipage}[t]{`r Traffic_layout1[1]`\textwidth}
 ```{r Tot-mvmts-yearly, echo=FALSE, fig.align='center', out.height=paste0(Traffic_height1, "px")}
 
@@ -333,9 +332,8 @@ include_graphics(here("media", "factsheet", paste0("Market_segments_", params$ic
 
 ```
 \end{minipage}
-````
 
-````{=tex}
+
 \begin{minipage}[t]{`r Traffic_layout2[1]`\textwidth}
 ```{r Traffic-country-apts, echo=FALSE, fig.align='center', out.height=paste0(Traffic_height2, "px")}
 
@@ -350,7 +348,7 @@ include_graphics(here("media", "factsheet", paste0("Tfc_var_snapshot_", params$i
 
 ```
 \end{minipage}
-````
+
 
 ```{r Hourly-throughput, echo=FALSE, fig.align='center', out.height=paste0(Traffic_height3, "px")}
 
@@ -364,13 +362,12 @@ include_graphics(here("media", "factsheet", paste0("Avg_weekday_hourly_throughpu
 
 # Arrival ATFM Delay (Source: Network Manager)
 
-More data is available on the [Airport Dashboard](%60r%20paste0(%22https://ansperformance.eu/dashboard/stakeholder/airport/db/%22,%20params$icao,%20%22.html#atfm-delay%22)%60).
+More data is available on the [Airport Dashboard](`r paste0("https://ansperformance.eu/dashboard/stakeholder/airport/db/", params$icao, ".html#atfm-delay")`).
 
 ```{r Arr-ATFM-Delay-country, code=readLines('R/fig_arr_atfm_delay_country_airports_treemap.R')}
 
 ```
 
-````{=tex}
 \begin{minipage}[t]{`r Arr_ATFM_Delay_layout1[1]`\textwidth}
 ```{r Annual-Arr-ATFM-Delay, echo=FALSE, fig.align='center', out.height=paste0(Arr_ATFM_Delay_height1, "px")}
 
@@ -392,17 +389,16 @@ include_graphics(here("media", "factsheet", paste0("ARR_ATFM_delay_country_treem
 
 ```
 \end{minipage}
-````
+
 
 # ATFM Slot Adherence (Source: Network Manager)
 
-More data is available on the [Airport Dashboard](%60r%20paste0(%22https://ansperformance.eu/dashboard/stakeholder/airport/db/%22,%20params$icao,%20%22.html#atfm-slot%22)%60).
+More data is available on the [Airport Dashboard](`r paste0("https://ansperformance.eu/dashboard/stakeholder/airport/db/", params$icao, ".html#atfm-slot")`).
 
 ```{r ATFM-SLOT-Dep-outside-STW, code=readLines('R/fig_departures_outside_stw.R')}
 
 ```
 
-````{=tex}
 \begin{minipage}[t]{`r ATFM_Slot_Adherence_layout1[1]`\textwidth}
 ```{r Annual-ATFM-Slot, echo=FALSE, fig.align='center', out.height=paste0(ATFM_Slot_Adherence_height1, "px")}
 
@@ -424,7 +420,7 @@ include_graphics(here("media", "factsheet", paste0("Departures_outside_STW_", pa
 
 ```
 \end{minipage}
-````
+
 
 ```{r cdo-cco-title, results='asis', eval=nrow(params$cdo_cco)>0, echo = FALSE}
 
@@ -432,9 +428,8 @@ cat("# Vertical Flight Efficiency in Climb and Descent (Source: AIU analysis)")
 
 ```
 
-More data is available on the [Airport Dashboard](%60r%20paste0(%22https://ansperformance.eu/dashboard/stakeholder/airport/db/%22,%20params$icao,%20%22.html#cdocco%22)%60).
+More data is available on the [Airport Dashboard](`r paste0("https://ansperformance.eu/dashboard/stakeholder/airport/db/", params$icao, ".html#cdocco")`).
 
-````{=tex}
 \begin{minipage}[t]{`r VFE_layout1[1]`\textwidth}
 ```{r Avg-time-lvl, eval=nrow(params$cdo_cco)>0, echo=FALSE, fig.align='center', out.height=paste0(VFE_height1, "px")}
 
@@ -456,7 +451,7 @@ include_graphics(here("media", "factsheet", paste0("Share_CDO_CCO_flights_", par
 
 ```
 \end{minipage}
-````
+
 
 ```{r punctuality-title, results='asis', eval=params$punc == "Y", echo = FALSE}
 
@@ -464,7 +459,7 @@ cat("# Punctuality (Source: APDF)")
 
 ```
 
-More data is available on the [Airport Dashboard](%60r%20paste0(%22https://ansperformance.eu/dashboard/stakeholder/airport/db/%22,%20params$icao,%20%22.html#punctuality%22)%60).
+More data is available on the [Airport Dashboard](`r paste0("https://ansperformance.eu/dashboard/stakeholder/airport/db/", params$icao, ".html#punctuality")`).
 
 ```{r punctuality-dep-overall-share, results='asis', eval=params$punc == "Y", echo = FALSE, code=readLines('R/fig_punctuality_dep_overall_share.R')}
 
@@ -474,7 +469,6 @@ More data is available on the [Airport Dashboard](%60r%20paste0(%22https://anspe
 
 ```
 
-````{=tex}
 \begin{minipage}[t]{`r Punctuality_layout1[1]`\textwidth}
 ```{r Punctuality-DEP-YEARLY-LAYOUT, eval=params$punc == "Y", echo=FALSE, fig.align='center', out.height=paste0(Punctuality_height1, "px")}
 
@@ -496,9 +490,8 @@ include_graphics(here("media", "factsheet", paste0("Punc_Dep_Overall_share_", pa
 
 ```
 \end{minipage}
-````
 
-````{=tex}
+
 \begin{minipage}[t]{`r Punctuality_layout2[1]`\textwidth}
 ```{r Punctuality-ARR-YEARLY-LAYOUT, eval=params$punc == "Y", echo=FALSE, fig.align='center', out.height=paste0(Punctuality_height2, "px")}
 
@@ -520,7 +513,7 @@ include_graphics(here("media", "factsheet", paste0("Punc_Arr_Overall_share_", pa
 
 ```
 \end{minipage}
-````
+
 
 ```{r ASMA-title, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
@@ -528,9 +521,9 @@ cat("# ASMA (Terminal airspace) Times (Source: APDF)")
 
 ```
 
-More data is available on the [Airport Dashboard](%60r%20paste0(%22https://ansperformance.eu/dashboard/stakeholder/airport/db/%22,%20params$icao,%20%22.html#asma-time%22)%60).
+More data is available on the [Airport Dashboard](`r paste0("https://ansperformance.eu/dashboard/stakeholder/airport/db/", params$icao, ".html#asma-time")`).
 
-````{=tex}
+
 \begin{minipage}[t]{`r ASMA_layout1[1]`\textwidth}
 ```{r ASMA-YEARLY-LAYOUT, eval=params$apdf == "Y", echo=FALSE, fig.align='center', out.height=paste0(ASMA_height1, "px")}
 
@@ -545,7 +538,8 @@ include_graphics(here("media", "factsheet", paste0("ASMA_Monthly_", params$icao,
 
 ```
 \end{minipage}
-````
+
+
 
 ```{r Pre-dep-delay-title, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
@@ -553,9 +547,9 @@ cat("# Reported Pre-departure Delay (Source: APDF)")
 
 ```
 
-More data is available on the [Airport Dashboard](%60r%20paste0(%22https://ansperformance.eu/dashboard/stakeholder/airport/db/%22,%20params$icao,%20%22.html#pre-dep-delay%22)%60).
+More data is available on the [Airport Dashboard](`r paste0("https://ansperformance.eu/dashboard/stakeholder/airport/db/", params$icao, ".html#pre-dep-delay")`).
 
-````{=tex}
+
 \begin{minipage}[t]{`r Pre_dep_delay_layout1[1]`\textwidth}
 ```{r pre-dep-dly-pa, eval=params$apdf == "Y", echo=FALSE, fig.align='center', out.height=paste0(Pre_dep_delay_height1, "px")}
 
@@ -570,7 +564,7 @@ include_graphics(here("media", "factsheet", paste0("Pre_Departure_Delay_Monthly_
 
 ```
 \end{minipage}
-````
+
 
 ```{r Taxi-in-time-title, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
@@ -578,9 +572,9 @@ cat("# Taxi-In Times (Source: APDF)")
 
 ```
 
-More data is available on the [Airport Dashboard](%60r%20paste0(%22https://ansperformance.eu/dashboard/stakeholder/airport/db/%22,%20params$icao,%20%22.html#taxi-in-time%22)%60).
+More data is available on the [Airport Dashboard](`r paste0("https://ansperformance.eu/dashboard/stakeholder/airport/db/", params$icao, ".html#taxi-in-time")`).
 
-````{=tex}
+
 \begin{minipage}[t]{`r Taxi_in_times_layout1[1]`\textwidth}
 ```{r TXIN-YEARLY-LAYOUT, eval=params$apdf == "Y", echo=FALSE, fig.align='center', out.height=paste0(Taxi_in_times_height1, "px")}
 
@@ -595,7 +589,7 @@ include_graphics(here("media", "factsheet", paste0("Taxi_In_Times_Monthly_", par
 
 ```
 \end{minipage}
-````
+
 
 ```{r Taxi-out-time-title, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
@@ -603,9 +597,9 @@ cat("# Taxi-Out Times (Source: APDF)")
 
 ```
 
-More data is available on the [Airport Dashboard](%60r%20paste0(%22https://ansperformance.eu/dashboard/stakeholder/airport/db/%22,%20params$icao,%20%22.html#taxi-out-time%22)%60).
+More data is available on the [Airport Dashboard](`r paste0("https://ansperformance.eu/dashboard/stakeholder/airport/db/", params$icao, ".html#taxi-out-time")`).
 
-````{=tex}
+
 \begin{minipage}[t]{`r Taxi_out_times_layout1[1]`\textwidth}
 ```{r TXOT-YEARLY-LAYOUT, eval=params$apdf == "Y", echo=FALSE, fig.align='center', out.height=paste0(Taxi_out_times_height1, "px")}
 
@@ -620,7 +614,7 @@ include_graphics(here("media", "factsheet", paste0("Taxi_Out_Times_Monthly_", pa
 
 ```
 \end{minipage}
-````
+
 
 ```{r Turnaround-times-title, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
@@ -628,9 +622,9 @@ cat("# Turnaround times (Source: APDF)")
 
 ```
 
-More data is available on the [Airport Dashboard](%60r%20paste0(%22https://ansperformance.eu/dashboard/stakeholder/airport/db/%22,%20params$icao,%20%22.html#turnaround-times%22)%60).
+More data is available on the [Airport Dashboard](`r paste0("https://ansperformance.eu/dashboard/stakeholder/airport/db/", params$icao, ".html#turnaround-times")`).
 
-````{=tex}
+
 \begin{minipage}[t]{`r Turnaround_times_layout1[1]`\textwidth}
 ```{r annual-turn-time, eval=params$apdf == "Y", echo=FALSE, fig.align='center', out.height=paste0(Turnaround_times_height1, "px")}
 
@@ -645,8 +639,57 @@ include_graphics(here("media", "factsheet", paste0("Turn_Time_Monthly_", params$
 
 ```
 \end{minipage}
-````
+
 
 # About this report
+
+This data is published by the EUROCONTROL Performance Review Unit (PRU) in the interest of the exchange of information. It may be copied in whole or in part providing that this copyright notice © and disclaimer are included. The information may not be modified without prior written permission from the EUROCONTROL Performance Review Unit. The information does not necessarily reflect the official views or policy of EUROCONTROL, which makes no warranty, either implied or expressed, for the information contained in this document, including its accuracy, completeness or usefulness. Every effort has been made to ensure that the information and analysis contained on this website are as accurate and complete as possible. Despite these precautions, should you find any errors or inconsistencies or if you have any questions then please contact us at: [PRU-Support@eurocontrol.int](mailto:PRU-Support@eurocontrol.int).
+
+IFR traffic data and ATFM delay related data is extracted from the Network Manager.
+CDO/CCO data are calculated by the Aviation Intelligence Unit of EUROCONTROL based on Network Manager data.
+All other airport related data is collected through the Airport Operator Data Flow (APDF). Under the APDF airports are required to report flight-by-flight data on a monthly basis. The data is reported during the month following the month of operations. Thus, typically, APDF data becomes available the 2nd month following the month of operation.
+
+**Data and metrics are shown based on availability at the moment of publication**    
+
+* Traffic data comprises all IFR flown flight plans for the airport (arrivals
+  and departures) based on NM data.
+* ATFM delay data captures the arrival ATFM delay triggered by constraints at
+  the airport based on NM data (_no post ops adjustments_).
+* ATFM delays are grouped according to the regulation reason as described in
+  https://ansperformance.eu/definition/atfm-delay-codes/
+* CDO/CCO performance is calculated by identifying level segments during the
+  climb and descent.
+  These level segments are considered to be inefficient.
+  For more information please visit https://ansperformance.eu/efficiency/vfe/
+*	Additional ASMA time measures the difference between an observed travel time
+  elapsing from entering the 40NM radius around the airport to landing.
+  This time is compared against a reference time to the respective entry sector,
+  aircraft type, and landing runway.
+  For more information please visit
+  https://ansperformance.eu/methodology/additional-asma-time-pi/
+*	In analogy, additional taxi-times are measured for the taxi-out and taxi-in phase.
+  The observed taxi times are compared with a respective reference time.
+  The reference time considers the parking position and runway used by the departure/arrival.
+  For more information please visit
+  https://ansperformance.eu/definition/additional-taxi-out-time/
+*	Pre-departure delay is the delay in the off-block time with respect to the
+  schedule time for departure.
+  It provides for the airspace user reported delay reasoning in case of departures
+  blocking off late.
+  Delay codes have to be provided for delays >= 4 minutes.
+  Most airports per se do not validate these delay codes, however, effort is
+  underway to ensure appropriateness of the reported delay codes.<br>
+  Delay reasons are reported according to the IATA delay codes
+  https://ansperformance.eu/library/iata-delay-codes.pdf <br>
+  Delay reported associated to code 89 is used for the calculation of the
+  ATC pre-departure delay https://ansperformance.eu/definition/atc-pre-departure-delay/ 
+*	Turnaround shows the time elapsing between an aircraft blocking in and blocking off
+  for the next flight from the same parking stand on the same day and the sample is
+  treated to filter out (https://ansperformance.eu/definition/turnaround/)<br>
+  Other indicators provide additional information on the turnaround performance:
+  
+      - DDI-G: https://ansperformance.eu/acronym/ddi-g/
+      - GTO: https://ansperformance.eu/acronym/gto/
+      - TDI: https://ansperformance.eu/acronym/tdi/ 
 
 Results based on Network Manager data are available up to and including `r format(Sys.time() - months(1), '%B %Y')`. Results based on APDF data are available up to and including `r format(Sys.time() - months(2), '%B %Y')`.

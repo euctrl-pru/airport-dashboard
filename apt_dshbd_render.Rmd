@@ -124,6 +124,15 @@ config_bar_remove_buttons <- c(
 )
 ```
 
+```{r Last-complete-year, include=FALSE}
+
+Last_complete_year<<-group_by(TFC_DF, YEAR) %>% 
+  filter(max(MONTH_NUM)==12) %>% 
+  select(YEAR) %>% 
+  max()
+
+```
+
 # Overview {data-icon="fa-home"}
 
 ## Row ----------------------------------------------------------
@@ -272,155 +281,7 @@ if (params$apdf == "Y") {
 
 ### Daily Traffic Variation snapshot (Source: Network Manager)
 
-```{r tfcvar-snapshot}
-# , code=readLines('R/fig_traffic_variation_snapshot.R')
-
-if (nrow(params$atfm) > 0) {
-    atfm_pm <- params$atfm %>%
-    select(
-      YEAR,
-      MONTH_NUM,
-      FLT_ARR_1,
-      DLY_APT_ARR_1,
-      AD_DISRUPTION,
-      AD_CAPACITY,
-      AD_WEATHER,
-      AD_DISRUPTION_ATC,
-      AD_CAPACITY_ATC,
-      AD_STAFFING_ATC,
-      AD_EVENTS
-    ) %>%
-    group_by(YEAR, MONTH_NUM) %>%
-    summarise(
-      FLT_ARR_TOT       = sum(FLT_ARR_1, na.rm = TRUE),
-      DLY_APT_ARR_TOT   = sum(DLY_APT_ARR_1, na.rm = TRUE),
-      AD_DISRUPTION     = sum(AD_DISRUPTION, na.rm = TRUE),
-      AD_CAPACITY       = sum(AD_CAPACITY, na.rm = TRUE),
-      AD_WEATHER        = sum(AD_WEATHER, na.rm = TRUE),
-      AD_DISRUPTION_ATC = sum(AD_DISRUPTION_ATC, na.rm = TRUE),
-      AD_CAPACITY_ATC   = sum(AD_CAPACITY_ATC, na.rm = TRUE),
-      AD_STAFFING_ATC   = sum(AD_STAFFING_ATC, na.rm = TRUE),
-      AD_EVENTS         = sum(AD_EVENTS, na.rm = TRUE)
-    ) %>%
-    ungroup() %>%
-    tidyr::pivot_longer(
-      cols      = starts_with("AD_"),
-      names_to  = "REG_REASON",
-      values_to = "DLY"
-    ) %>%
-    mutate(
-      AVG_ARR_ATFM_DLY = DLY_APT_ARR_TOT / FLT_ARR_TOT,
-      AVG_ARR_ATFM_REG = DLY / FLT_ARR_TOT
-    )
-
-  atfm_max_year <- atfm_pm %>%
-    pull(YEAR) %>%
-    max() %>%
-    unique()
-
-  share_atfm <- atfm_pm %>%
-    filter(YEAR == atfm_max_year) %>%
-    group_by(REG_REASON) %>%
-    summarise(
-      FLT_ARR_TOT = sum(FLT_ARR_TOT, na.rm = TRUE),
-      DLY         = sum(DLY, na.rm = TRUE)
-    ) %>%
-    ungroup() %>%
-    mutate(
-      DLY_TOT   = sum(DLY, na.rm = TRUE),
-      DLY_SHARE = round(DLY / DLY_TOT, 2),
-      LABELS    = paste0(REG_REASON, "<br>", DLY_SHARE, "%")
-    ) %>%
-    filter(DLY_SHARE > 0)
-
-  center_text <- paste0("<b>", atfm_max_year, "</b>")
-
-  share_atfm %>%
-    plot_ly(
-      labels = ~REG_REASON,
-      values = ~DLY_SHARE
-    ) %>%
-    add_pie(
-      hole         = 0.4,
-      textposition = "outside"
-    ) %>%
-    add_annotations(
-      text      = center_text,
-      font      = list(size = 18),
-      x         = 0.5,
-      y         = 0.5,
-      showarrow = FALSE
-    ) %>%
-    config(
-      displaylogo = FALSE,
-      modeBarButtonsToRemove = config_bar_remove_buttons
-    )
-}
-# 
-# if (nrow(params$tfcvar) < 1) {
-#   cat("<p><b>Traffic evolution for this airport under development!</b>")
-# } else {
-#   fig1 <- params$tfcvar %>%
-#     plot_ly() %>%
-#     add_lines(
-#       x = ~DAY,
-#       y = ~FLTS,
-#       name = "Flights"
-#     )
-  # %>%
-  #   add_lines(
-  #     x = ~DAY,
-  #     y = ~FLTS_2019,
-  #     name = "Flights 2019 (Reference)",
-  #     line = list(
-  #       dash = "dot",
-  #       color = "red"
-  #     )
-  #   ) %>%
-  #   layout(yaxis = list(title = "movements"))
-  
-  # fig2 <- params$tfcvar %>%
-  #   plot_ly() %>%
-  #   add_lines(
-  #     x = ~DAY,
-  #     y = ~MOV_AVG_WK,
-  #     name = " <br> % vs 2019 <br> (7-day Moving Average)"
-  #   ) %>%
-  #   layout(
-  #     xaxis = list(title = ""),
-  #     yaxis = list(
-  #       title = "% change from 2019",
-  #       titlefont = list(size = 11),
-  #       tickformat = ".0%"
-  #     )
-  #     ##############################################################################
-  #     # , annotations = list(
-  #     #   x = 1,
-  #     #   y = -0.1,
-  #     #   text = "Source: Network Manager",
-  #     #   showarrow = FALSE,
-  #     #   xref = "paper",
-  #     #   yref = "paper",
-  #     #   xanchor = "right",
-  #     #   yanchor = "auto",
-  #     #   xshift = 0,
-  #     #   yshift = -20,
-  #     #   font = list(size = 12)
-  #     # )
-  #     ##############################################################################
-  #   )
-  
-  # fig <- subplot(fig1, fig2, nrows = 2, shareX = TRUE) %>%
-  #   layout(hovermode = "x unified") %>%
-  #   config(
-  #     displaylogo = FALSE,
-  #     modeBarButtonsToRemove = config_bar_remove_buttons
-  #   )
-  
-  # fig
-  
-#   fig1
-# }
+```{r tfcvar-snapshot , code=readLines('R/fig_traffic_variation_snapshot.R')}
 
 ```
 

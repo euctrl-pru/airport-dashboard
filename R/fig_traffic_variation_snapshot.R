@@ -86,7 +86,8 @@ Tfc_var_fig1 = ggplot(data=filter(Tfc_var1, variable %in% c("FLTS", "FLTS_2019")
   theme_factsheet() +
   theme(legend.position = "right",
         axis.text.x=element_blank(),
-        axis.ticks.x=element_blank()) +
+        axis.ticks.x=element_blank(),
+        plot.margin = unit(c(100, 20, 30, 60), "pt")) +
   labs(x="", y="")
 Tfc_var_fig2 = ggplot(data=filter(Tfc_var1, variable == "MOV_AVG_WK")) +
   geom_line(aes(x=DAY, y=value, linetype='% vs 2019\n(7-day Moving\nAverage)', group=variable2),

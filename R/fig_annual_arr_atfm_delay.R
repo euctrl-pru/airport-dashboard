@@ -64,8 +64,8 @@ if (nrow(params$atfm) > 0) {
   
   atfm_pa <- atfm_pa %>%
     mutate(REG_REASON = factor(REG_REASON,
-                               levels = atfm_grps,
-                               labels = atfm_lbl
+                               levels = rev(atfm_grps),
+                               labels = rev(atfm_lbl)
     ))
   
   atfm_pa %>%
@@ -122,17 +122,11 @@ if (nrow(params$atfm) > 0) {
 
 atfm_pa_fig = ggplot(data=atfm_pa) +
   geom_bar(aes(x=YEAR, y=AVG_ARR_ATFM_REG, fill=REG_REASON), stat="identity") +
-  scale_fill_manual(values=atfm_col) +
+  scale_fill_manual(values=rev(atfm_col)) +
   theme_factsheet() +
-  # theme_bw() +
-  # theme(plot.title = element_blank(),
-  #       legend.title=element_blank(),
-  #       legend.text=element_text(size=36),
-  #       legend.position = "bottom",
-  #       axis.text=element_text(size=100),
-  #       axis.title=element_text(size=100),
-  #       axis.title.x = element_blank(),
-  #       plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  scale_x_continuous(breaks = unique(atfm_pa$YEAR)) +
   labs(x="", y="Average arrival ATFM delay (min/arr)\n")
 ggsave(here("media", "factsheet", paste0("Annual_Arr_ATFM_Delay_", params$icao, ".png")), plot=atfm_pa_fig, 
        width = Arr_ATFM_Delay_layout1[1]*Page_width, height = Arr_ATFM_Delay_height1, units = "cm", dpi=100, limitsize = FALSE)
