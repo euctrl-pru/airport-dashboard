@@ -127,26 +127,24 @@ if (nrow(thru)>0) {
                                                    levels = phase_grps,
                                                    labels = phase_lbl2))) +
     geom_line(aes(x=TIME, y = ROLLING_HOUR_MVT, group = PHASE, color = PHASE), size=linesize_factsheet) +
+    geom_text(aes(x="14:30", y=msg_y,
+                  label=paste0(
+                    "Average 15-min rolling hour",
+                    "\nthroughput-weekdays month ",
+                    pick_mth[thru_mth], " ",
+                    thru_yr)), 
+              size=60, colour="black") +
     theme_factsheet() +
-    # theme_bw() +
-    # theme(plot.title = element_text(size=100, face="bold", hjust=0.5),
-    #       legend.title=element_blank(),
-    #       legend.text=element_text(size=100),
-    #       legend.position = "bottom",
-    #       axis.text=element_text(size=100),
-    #       axis.text.x=element_text(angle=270, vjust=0.5),
-    #       axis.title=element_text(size=100),
-    #       axis.title.x = element_blank(),
-    #       plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
-    scale_x_discrete(breaks = unique(thru$TIME)[c(TRUE, FALSE)]) +
-    labs(x="", y="Average Throughput\n[flights/hour]")
+    theme(legend.position = "right") +
+    scale_x_discrete(breaks = unique(thru$TIME)[c(TRUE, FALSE, FALSE, FALSE)]) +
+    labs(x="", y="Average Throughput\n[flights/hour]\n")
   
 } else {
   
   mvts_pm_fig = ggplot() +
     geom_rect(aes(xmin=0, xmax=1, ymin=0, ymax=1), colour='white', fill='white') +
     geom_text(aes(x=0.5, y=0.5,
-                  label=paste0("No data\navailable\nfor ", params$icao)), 
+                  label=paste0("No throughput data\navailable for ", params$icao)), 
               size=60, colour="black") +
     theme_void()
   

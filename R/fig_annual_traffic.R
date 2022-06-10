@@ -100,16 +100,8 @@ config(
 mvts_pa_fig = ggplot(data=mvts_pa) +
   geom_bar(aes(x=YEAR, y=FLT_TOT/1000), position = "dodge", stat="identity") +
   theme_factsheet() +
-  # theme_bw() +
-  # theme(plot.title = element_blank(),
-  #       legend.title=element_blank(),
-  #       legend.text=element_text(size=36),
-  #       legend.position = "bottom",
-  #       axis.text=element_text(size=100),
-  #       axis.title=element_text(size=100),
-  #       axis.title.x = element_blank(),
-  #       plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
   labs(x="", y="Total movements\n") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   scale_y_continuous(labels = label_number(suffix = "k"))
 ggsave(here("media", "factsheet", paste0("Annual_mvmts_", params$icao, ".png")), plot=mvts_pa_fig, 
        width = Traffic_layout1[1]*Page_width, height = Traffic_height1, units = "cm", dpi=100, limitsize = FALSE)
