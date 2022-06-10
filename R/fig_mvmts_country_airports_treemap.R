@@ -36,7 +36,7 @@ if (nrow(mvts_country_apts)>1) {
                       grow = TRUE) +
     theme_factsheet() +
     theme(legend.position = "none") +
-    labs(title = paste0("Traffic share at airports in ", params$state, " (", Last_complete_year, ")"))
+    labs(title = paste0("Traffic share at airports in ", State, " (", Last_complete_year, ")"))
 } else {
   mvts_country_apts_fig = ggplot(data=mvts_country_apts, aes(x=3, y=FLT_TOT, fill=AIRPORT)) +
     geom_col() +
@@ -47,7 +47,7 @@ if (nrow(mvts_country_apts)>1) {
     theme_factsheet() +
     theme_void() +
     theme(legend.position = "none") +
-    labs(title = paste0("Traffic share at airports in ", params$state, " (", Last_complete_year, ")"))
+    labs(title = paste0("Traffic share at airports in ", State, " (", Last_complete_year, ")"))
 }
 
 ggsave(here("media", "factsheet", paste0("Mvmts_country_treemap_", Airport, ".png")), plot=mvts_country_apts_fig, 

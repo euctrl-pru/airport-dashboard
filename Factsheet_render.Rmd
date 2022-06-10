@@ -154,10 +154,6 @@ config_bar_remove_buttons <- c(
 
 ```{r Gen-info, include=FALSE}
 
-Last_complete_year<<-group_by(TFC_DF, YEAR) %>% 
-  filter(max(MONTH_NUM)==12) %>% 
-  select(YEAR) %>% 
-  max()
 drv <- dbDriver("Oracle")
 con <- dbConnect(drv, "PRUTEST", "test", dbname='//porape5.ops.cfmu.eurocontrol.be:1521/pe5')
 TOP_APTs<<-dbGetQuery(con, "SELECT * FROM SP_TOP_APTS") %>%
@@ -277,7 +273,7 @@ kbl(ID_TBL, booktabs = T, col.names = NULL) %>%
 
 ```
 
-````{=tex}
+
 \begin{minipage}[t]{`r General_layout2[1]`\textwidth}
 
 ```{r APT-map, echo=FALSE, fig.align='center', out.height=paste0(General_height2, "px")}
@@ -296,7 +292,7 @@ include_graphics(here("layouts", paste0(params$icao, ".png")))
 ```
 
 \end{minipage}
-````
+
 
 <!-- \renewcommand{\cleardoublepage}{} -->
 
@@ -304,11 +300,12 @@ include_graphics(here("layouts", paste0(params$icao, ".png")))
 
 # Traffic (Source: Network Manager)
 
-More data is available on the [Airport Dashboard](%60r%20paste0(%22https://ansperformance.eu/dashboard/stakeholder/airport/db/%22,%20params$icao,%20%22.html#traffic%22)%60).
+More data is available on the [Airport Dashboard](`r paste0("https://ansperformance.eu/dashboard/stakeholder/airport/db/", params$icao, ".html#traffic")`).
 
 ```{r traffic-setup}
 
 Airport<<-params$icao
+State<<-params$state
 
 source(here("R", "fig_mvmts_country_airports_treemap.R"), encoding = "UTF8")
 
