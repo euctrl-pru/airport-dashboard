@@ -103,65 +103,101 @@ button_type_list <- list(
 
 # AVG_TIME_LVL_PLOT=mutate(AVG_TIME_LVL_PLOT, YEAR = as.character(YEAR))
 
-avg_time_lvl_fig=plot_ly(AVG_TIME_LVL_PLOT, 
-                         x = ~MONTH_NUM, 
-                         y = ~AVG_TIME_LVL_DESCENT/60, 
-                         customdata = ~YEAR, 
-                         line = list(color = 'rgb(40, 120, 181)'),
-                         marker = list(color = 'rgb(40, 120, 181)'),
-                         symbol = ~max_year,
-                         symbols = 'circle',
-                         hovertemplate = "%{y:.1f}",
-                         type = 'scatter',
-                         mode = ifelse(nrow(filter(AVG_TIME_LVL_PLOT, YEAR==max_year))>1, 'lines', 'lines+markers'),
-                         name = 'Descent (Fuel CDO)',
-                         transforms = list(list(type      = 'filter',
-                                                target    = "customdata",
-                                                operation = '=',
-                                                value     = max_year)
-                         )) %>% 
-  add_trace(y = ~AVG_TIME_LVL_CLIMB/60, 
-            mode = ifelse(nrow(filter(AVG_TIME_LVL_PLOT, YEAR==max_year))>1, 'lines', 'lines+markers'),
-            line = list(color = 'rgb(106, 168, 82)'),
-            marker = list(color = 'rgb(106, 168, 82)'),
-            symbol = ~max_year,
-            symbols = 'circle',
-            name = 'Climb (Fuel CCO)') %>%
-  add_trace(y = ~AVG_TIME_LVL_DESCENT_BLW_70/60, 
-            mode = ifelse(nrow(filter(AVG_TIME_LVL_PLOT, YEAR==max_year))>1, 'lines', 'lines+markers'),
-            line = list(color = 'rgb(40, 120, 181)', dash = 'dash'),
-            marker = list(color = 'rgb(40, 120, 181)'),
-            symbol = ~max_year+1,
-            symbols = 'triangle-up',
-            name = 'Descent (Noise CDO)') %>% 
-  add_trace(y = ~AVG_TIME_LVL_CLIMB_BLW_100/60, 
-            mode = ifelse(nrow(filter(AVG_TIME_LVL_PLOT, YEAR==max_year))>1, 'lines', 'lines+markers'),
-            line = list(color = 'rgb(106, 168, 82)', dash = 'dash'),
-            marker = list(color = 'rgb(106, 168, 82)'),
-            symbol = ~max_year+1,
-            symbols = 'triangle-up',
-            name = 'Climb (Noise CCO)') %>% 
-  # add_annotations(x         = 1, 
-  #                 y         = -0.1, 
-  #                 text      = "Source: AIU analysis", 
-  #                 showarrow = F, 
-  #                 xref      = 'paper', 
-  #                 yref      = 'paper', 
-  #                 xanchor   = 'right', 
-  #                 yanchor   = 'auto', 
-  #                 xshift    = 0, 
-  #                 yshift    = -10,
-  #                 font      = list(size=12)
-# ) %>%
-layout(barmode = 'group',
-       hovermode   = "x unified",
-       xaxis       = tick_yr_no_title,
-       yaxis       = list( title="Average time flown level per flight (min.)",
-                           titlefont = list(size = 11)),
-       showlegend  = TRUE,
-       updatemenus = list( button_type_list )
-       
-) %>% 
+if (nrow(filter(AVG_TIME_LVL_PLOT, YEAR==max_year))>1) {
+  
+  avg_time_lvl_fig=plot_ly(AVG_TIME_LVL_PLOT, 
+                           x = ~MONTH_NUM, 
+                           y = ~AVG_TIME_LVL_DESCENT/60, 
+                           customdata = ~YEAR, 
+                           line = list(color = 'rgb(40, 120, 181)'),
+                           hovertemplate = "%{y:.1f}",
+                           type = 'scatter',
+                           mode = 'lines',
+                           name = 'Descent (Fuel CDO)',
+                           transforms = list(list(type      = 'filter',
+                                                  target    = "customdata",
+                                                  operation = '=',
+                                                  value     = max_year)
+                           )) %>% 
+    add_trace(y = ~AVG_TIME_LVL_CLIMB/60, 
+              mode = 'lines',
+              line = list(color = 'rgb(106, 168, 82)'),
+              name = 'Climb (Fuel CCO)') %>%
+    add_trace(y = ~AVG_TIME_LVL_DESCENT_BLW_70/60, 
+              mode = 'lines',
+              line = list(color = 'rgb(40, 120, 181)', dash = 'dash'),
+              name = 'Descent (Noise CDO)') %>% 
+    add_trace(y = ~AVG_TIME_LVL_CLIMB_BLW_100/60, 
+              mode = 'lines',
+              line = list(color = 'rgb(106, 168, 82)', dash = 'dash'),
+              name = 'Climb (Noise CCO)')
+  
+} else {
+  
+  avg_time_lvl_fig=plot_ly(AVG_TIME_LVL_PLOT, 
+                           x = ~MONTH_NUM, 
+                           y = ~AVG_TIME_LVL_DESCENT/60, 
+                           customdata = ~YEAR, 
+                           line = list(color = 'rgb(40, 120, 181)'),
+                           marker = list(color = 'rgb(40, 120, 181)'),
+                           symbol = ~max_year,
+                           symbols = 'circle',
+                           hovertemplate = "%{y:.1f}",
+                           type = 'scatter',
+                           mode = ifelse(nrow(filter(AVG_TIME_LVL_PLOT, YEAR==max_year))>1, 'lines', 'lines+markers'),
+                           name = 'Descent (Fuel CDO)',
+                           transforms = list(list(type      = 'filter',
+                                                  target    = "customdata",
+                                                  operation = '=',
+                                                  value     = max_year)
+                           )) %>% 
+    add_trace(y = ~AVG_TIME_LVL_CLIMB/60, 
+              mode = ifelse(nrow(filter(AVG_TIME_LVL_PLOT, YEAR==max_year))>1, 'lines', 'lines+markers'),
+              line = list(color = 'rgb(106, 168, 82)'),
+              marker = list(color = 'rgb(106, 168, 82)'),
+              symbol = ~max_year,
+              symbols = 'circle',
+              name = 'Climb (Fuel CCO)') %>%
+    add_trace(y = ~AVG_TIME_LVL_DESCENT_BLW_70/60, 
+              mode = ifelse(nrow(filter(AVG_TIME_LVL_PLOT, YEAR==max_year))>1, 'lines', 'lines+markers'),
+              line = list(color = 'rgb(40, 120, 181)', dash = 'dash'),
+              marker = list(color = 'rgb(40, 120, 181)'),
+              symbol = ~max_year+1,
+              symbols = 'triangle-up',
+              name = 'Descent (Noise CDO)') %>% 
+    add_trace(y = ~AVG_TIME_LVL_CLIMB_BLW_100/60, 
+              mode = ifelse(nrow(filter(AVG_TIME_LVL_PLOT, YEAR==max_year))>1, 'lines', 'lines+markers'),
+              line = list(color = 'rgb(106, 168, 82)', dash = 'dash'),
+              marker = list(color = 'rgb(106, 168, 82)'),
+              symbol = ~max_year+1,
+              symbols = 'triangle-up',
+              name = 'Climb (Noise CCO)')
+}
+
+# %>% 
+# add_annotations(x         = 1, 
+#                 y         = -0.1, 
+#                 text      = "Source: AIU analysis", 
+#                 showarrow = F, 
+#                 xref      = 'paper', 
+#                 yref      = 'paper', 
+#                 xanchor   = 'right', 
+#                 yanchor   = 'auto', 
+#                 xshift    = 0, 
+#                 yshift    = -10,
+#                 font      = list(size=12)
+# ) 
+
+avg_time_lvl_fig=avg_time_lvl_fig %>%
+  layout(barmode = 'group',
+         hovermode   = "x unified",
+         xaxis       = tick_yr_no_title,
+         yaxis       = list( title="Average time flown level per flight (min.)",
+                             titlefont = list(size = 11)),
+         showlegend  = TRUE,
+         updatemenus = list( button_type_list )
+         
+  ) %>% 
   config( displaylogo = FALSE,
           modeBarButtonsToRemove = config_bar_remove_buttons)
 
@@ -222,7 +258,7 @@ if (nrow(filter(AVG_TIME_LVL_PLOT, YEAR==max_year))==1) {
   AVG_TIME_LVL_PLOT_fig = AVG_TIME_LVL_PLOT_fig +
     geom_point(aes(x=Month, y = Value/60, group=Metric, colour=Metric, shape=Metric), size=20) +
     scale_shape_manual(name="", values = c(16, 17, 16, 17),
-                          labels=c("Descent (Fuel CDO)", "Descent (Noise CDO)", "Climb (Fuel CCO)", "Climb (Noise CCO)")) +
+                       labels=c("Descent (Fuel CDO)", "Descent (Noise CDO)", "Climb (Fuel CCO)", "Climb (Noise CCO)")) +
     scale_colour_manual(name ="", values = AVG_TIME_LVL_PLOT_cols,
                         labels=c("Descent (Fuel CDO)", "Descent (Noise CDO)", "Climb (Fuel CCO)", "Climb (Noise CCO)"))
 }
