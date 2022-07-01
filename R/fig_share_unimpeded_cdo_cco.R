@@ -28,7 +28,7 @@ button_type_list <- list(
   yanchor   = "bottom"
 )
 
-if (nrow(filter(AVG_TIME_LVL_PLOT, YEAR==max_year))>1) {
+if (nrow(filter(SHARE_CDO_CCO_FLIGHTS_PLOT, YEAR==max_year))>1) {
   
   share_cdo_cdo_fig = plot_ly(SHARE_CDO_CCO_FLIGHTS_PLOT, 
         x = ~MONTH_NUM, 
