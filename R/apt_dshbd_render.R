@@ -37,6 +37,9 @@ APT_DF %>%
 # Recreate the country maps if necessary
 # source(here("R", "fac_create_country_maps.R"), encoding = "UTF8")
 
+# Create docs/pdf folder
+dir.create(here("docs", "pdf"))
+
 APT_DF %>%
 # filter( AIRPORT %in% c("EBBR", "EGLL", "LATI")) %>%   # for debug
 pull(AIRPORT) %>%
