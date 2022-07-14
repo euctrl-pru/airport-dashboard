@@ -1,7 +1,7 @@
 
 VFE_EMISSIONS_PLOT <- params$cdo_cco %>% 
-  select(YEAR, MONTH_NUM, NBR_FLIGHTS_DESCENT, TOT_DELTA_CO2_KG_DESCENT, TOT_DELTA_CO2_KG_DESCENT_BELOW_7000,
-         NBR_FLIGHTS_CLIMB, TOT_DELTA_CO2_KG_CLIMB, TOT_DELTA_CO2_KG_CLIMB_BELOW_10000)
+  select(YEAR, MONTH_NUM, NBR_FLIGHTS_DESCENT, TOT_DELTA_CO2_KG_DESCENT, TOT_DELTA_CO2_KG_DESC_BLW_70,
+         NBR_FLIGHTS_CLIMB, TOT_DELTA_CO2_KG_CLIMB, TOT_DELTA_CO2_KG_CLIMB_BLW_100)
 
 button_list <- lapply(
   1:length(filter_years),
@@ -35,7 +35,7 @@ if (nrow(filter(VFE_EMISSIONS_PLOT, YEAR==max_year))>1) {
                               y = ~TOT_DELTA_CO2_KG_DESCENT/1000, 
                               customdata = ~YEAR, 
                               line = list(color = 'rgb(40, 120, 181)'),
-                              hovertemplate = "%{y:.1f}%",
+                              hovertemplate = "%{y:.0f}",
                               type = 'scatter',
                               mode = 'lines', 
                               name = 'Descent (Fuel CDO)',
@@ -47,10 +47,10 @@ if (nrow(filter(VFE_EMISSIONS_PLOT, YEAR==max_year))>1) {
     add_trace(y = ~TOT_DELTA_CO2_KG_CLIMB/1000, 
               line = list(color = 'rgb(106, 168, 82)'),
               name = 'Climb (Fuel CCO)') %>%
-    add_trace(y = ~TOT_DELTA_CO2_KG_DESCENT_BELOW_7000/1000, 
+    add_trace(y = ~TOT_DELTA_CO2_KG_DESC_BLW_70/1000, 
               line = list(color = 'rgb(40, 120, 181)', dash = 'dash'),
               name = 'Descent (Noise CDO)') %>% 
-    add_trace(y = ~TOT_DELTA_CO2_KG_CLIMB_BELOW_10000/1000, 
+    add_trace(y = ~TOT_DELTA_CO2_KG_CLIMB_BLW_100/1000, 
               line = list(color = 'rgb(106, 168, 82)', dash = 'dash'),
               name = 'Climb (Noise CCO)')
   
@@ -64,7 +64,7 @@ if (nrow(filter(VFE_EMISSIONS_PLOT, YEAR==max_year))>1) {
                               marker = list(color = 'rgb(40, 120, 181)'),
                               symbol = ~max_year,
                               symbols = 'circle',
-                              hovertemplate = "%{y:.1f}%",
+                              hovertemplate = "%{y:.0f}",
                               type = 'scatter',
                               mode = 'lines', 
                               name = 'Descent (Fuel CDO)',
@@ -79,13 +79,13 @@ if (nrow(filter(VFE_EMISSIONS_PLOT, YEAR==max_year))>1) {
               symbol = ~max_year,
               symbols = 'circle',
               name = 'Climb (Fuel CCO)') %>%
-    add_trace(y = ~TOT_DELTA_CO2_KG_DESCENT_BELOW_7000/1000, 
+    add_trace(y = ~TOT_DELTA_CO2_KG_DESC_BLW_70/1000, 
               line = list(color = 'rgb(40, 120, 181)', dash = 'dash'),
               marker = list(color = 'rgb(40, 120, 181)'),
               symbol = ~max_year+1,
               symbols = 'triangle-up',
               name = 'Descent (Noise CDO)') %>% 
-    add_trace(y = ~TOT_DELTA_CO2_KG_CLIMB_BELOW_10000/1000, 
+    add_trace(y = ~TOT_DELTA_CO2_KG_CLIMB_BLW_100/1000, 
               line = list(color = 'rgb(106, 168, 82)', dash = 'dash'),
               marker = list(color = 'rgb(106, 168, 82)'),
               symbol = ~max_year+1,
@@ -102,21 +102,6 @@ vfe_emissions_fig = vfe_emissions_fig  %>%
                              titlefont = list(size = 11)),
          showlegend  = TRUE,
          updatemenus = list( button_type_list )
-         ##############################################################################
-         # ,annotations = list(
-         #   x         = 1, 
-         #   y         = -0.1, 
-         #   text      = "Source: AIU analysis", 
-         #   showarrow = F, 
-         #   xref      = 'paper', 
-         #   yref      = 'paper', 
-         #   xanchor   = 'right', 
-         #   yanchor   = 'auto', 
-         #   xshift    = 0, 
-         #   yshift    = -10,
-         #   font      =list(size=12)
-         # )          
-         ##############################################################################
   ) %>% 
   config( displaylogo = FALSE,
           modeBarButtonsToRemove = config_bar_remove_buttons)
@@ -135,7 +120,9 @@ VFE_EMISSIONS_PLOT_curr_year=filter(VFE_EMISSIONS_PLOT, YEAR==max_year) %>%
     names_to  = "Metric",
     values_to = "Value"
   ) %>% 
-  mutate(Month=factor(month.abb[MONTH_NUM], levels = month.abb)) %>% 
+  mutate(Month=factor(month.abb[MONTH_NUM], levels = month.abb),
+         Metric=factor(Metric, levels = c("TOT_DELTA_CO2_KG_DESCENT", "TOT_DELTA_CO2_KG_DESC_BLW_70",
+                                          "TOT_DELTA_CO2_KG_CLIMB", "TOT_DELTA_CO2_KG_CLIMB_BLW_100"))) %>% 
   arrange(YEAR, Month, Metric)
 
 
@@ -155,7 +142,7 @@ VFE_EMISSIONS_PLOT_fig = ggplot(data=VFE_EMISSIONS_PLOT_curr_year) +
   #       axis.title=element_text(size=100),
   #       axis.title.x = element_blank(),
   #       plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
-  labs(x="", y="Average time flown level per flight (min.)\n", title="")
+  labs(x="", y=expression(Total~Delta~CO[2]~emissions~(tonnes)), title="")
 
 if (nrow(filter(VFE_EMISSIONS_PLOT, YEAR==max_year))==1) {
   
