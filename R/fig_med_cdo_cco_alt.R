@@ -27,7 +27,9 @@ button_type_list <- list(
   yanchor   = "bottom"
 )
 
-plot_ly(MED_CDO_CCO_ALT_PLOT, 
+if (nrow(filter(MED_CDO_CCO_ALT_PLOT, YEAR==max_year))>1) {
+  
+  med_cdo_cco_fig = plot_ly(MED_CDO_CCO_ALT_PLOT, 
         x = ~MONTH_NUM, 
         y = ~MEDIAN_CDO_ALT, 
         customdata = ~YEAR, 
@@ -43,7 +45,36 @@ plot_ly(MED_CDO_CCO_ALT_PLOT,
         )) %>% 
   add_trace(y = ~MEDIAN_CCO_ALT, 
             line = list(color = 'rgb(106, 168, 82)'),
-            name = 'Climb (Fuel CCO)') %>%
+            name = 'Climb (Fuel CCO)')
+  
+} else {
+  
+  med_cdo_cco_fig = plot_ly(MED_CDO_CCO_ALT_PLOT, 
+                            x = ~MONTH_NUM, 
+                            y = ~MEDIAN_CDO_ALT, 
+                            customdata = ~YEAR, 
+                            line = list(color = 'rgb(40, 120, 181)'),
+                            marker = list(color = 'rgb(40, 120, 181)'),
+                            symbol = ~max_year,
+                            symbols = 'circle',
+                            hovertemplate = "%{y:.0f}",
+                            type = 'scatter',
+                            mode = 'lines',
+                            name = 'Descent (Fuel CDO)',
+                            transforms = list(list(type      = 'filter',
+                                                   target    = "customdata",
+                                                   operation = '=',
+                                                   value     = max_year)
+                            )) %>% 
+    add_trace(y = ~MEDIAN_CCO_ALT, 
+              line = list(color = 'rgb(106, 168, 82)'),
+              marker = list(color = 'rgb(106, 168, 82)'),
+              symbol = ~max_year,
+              symbols = 'circle',
+              name = 'Climb (Fuel CCO)')
+}
+  
+med_cdo_cco_fig=med_cdo_cco_fig %>%
   layout(barmode = 'group',
          hovermode   = "x unified",
          xaxis       = tick_yr_no_title,
@@ -71,7 +102,7 @@ plot_ly(MED_CDO_CCO_ALT_PLOT,
   config( displaylogo = FALSE,
           modeBarButtonsToRemove = config_bar_remove_buttons)
 
-
+med_cdo_cco_fig
 
 
 
@@ -103,6 +134,16 @@ MED_CDO_CCO_ALT_PLOT_fig = ggplot(data=MED_CDO_CCO_ALT_PLOT_curr_year) +
   #       axis.title.x = element_blank(),
   #       plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
   labs(x="", y="Median CDO/CCO altitude (feet)\n", title="")
+
+if (nrow(filter(MED_CDO_CCO_ALT_PLOT, YEAR==max_year))==1) {
+  
+  MED_CDO_CCO_ALT_PLOT_fig = MED_CDO_CCO_ALT_PLOT_fig +
+    geom_point(aes(x=Month, y = Value, group=Metric, colour=Metric, shape=Metric), size=20) +
+    scale_shape_manual(name="", values = c(16, 17, 16, 17),
+                       labels=c("Descent (Fuel CDO)", "Climb (Fuel CCO)")) +
+    scale_colour_manual(name ="", values = AVG_TIME_LVL_PLOT_cols,
+                        labels=c("Descent (Fuel CDO)", "Climb (Fuel CCO)"))
+}
 
 ggsave(here("media", "factsheet", paste0("Med_CDO_CCO_alt_", params$icao, ".png")), 
        plot=MED_CDO_CCO_ALT_PLOT_fig, width = VFE_layout1[2]*Page_width, height = VFE_height1, 
