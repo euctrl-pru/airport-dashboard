@@ -18,18 +18,22 @@ source(here("R", "fac_layout_setup.R"))
 
 APT_DF <- APT_DF %>% arrange(AIRPORT) %>% mutate(idx = row_number())
 
-APT_DF %>%
-  # filter( AIRPORT %in% c("EBBR", "EGLL", "LATI")) %>%   # for debug
-  pull(AIRPORT) %>%
-  purrr::walk(
-    .f = function(icao) {
-      cat(paste0("==>", icao, "...\n"))
-      rmarkdown::render(
-        input       = here("apt_dshbd_render.Rmd"),
-        params      = prepare_params(icao), 
-        output_file = here("docs", paste0(icao, ".html")))
-      cat(paste0("==>", icao, "...end\n"))
-    })
+# APT_DF %>%
+#   # filter( AIRPORT %in% c("EBBR", "EGLL", "LATI")) %>%   # for debug
+#   filter(
+#     # AIRPORT > "LOWW", 
+#     ! AIRPORT %in% c("LFML", "LLBG", "LMML", "LOWW")
+#     ) %>%   # for debug
+#   pull(AIRPORT) %>%
+#   purrr::walk(
+#     .f = function(icao) {
+#       cat(paste0("(HTML) ==>", icao, "...\n"))
+#       rmarkdown::render(
+#         input       = here("apt_dshbd_render.Rmd"),
+#         params      = prepare_params(icao), 
+#         output_file = here("docs", paste0(icao, ".html")))
+#       cat(paste0("(HTML) ==>", icao, "...end\n"))
+#     })
 
 
 # Create factsheets
@@ -41,14 +45,17 @@ APT_DF %>%
 dir.create(here("docs", "pdf"))
 
 APT_DF %>%
-# filter( AIRPORT %in% c("EBBR", "EGLL", "LATI")) %>%   # for debug
-pull(AIRPORT) %>%
-  purrr::walk(
-    .f = function(icao) {
-      cat(paste0("==>", icao, "...\n"))
-      rmarkdown::render(
-        input       = here("factsheet_render.Rmd"),
-        params      = prepare_params(icao),
-        output_file = here("docs", "pdf", paste0("Factsheet_", icao, ".pdf")))
-      cat(paste0("==>", icao, "...end\n"))
-    })
+  filter(
+    # AIRPORT > "LOWW",
+    ! AIRPORT %in% c("LFML", "LLBG", "LMML", "LOWW")) %>%   # for debug
+   # filter( AIRPORT %in% c("EBBR", "EGLL", "LATI")) %>%   # for debug
+  pull(AIRPORT) %>%
+    purrr::walk(
+      .f = function(icao) {
+        cat(paste0(" (PDF) ==>", icao, "...\n"))
+        rmarkdown::render(
+          input       = here("factsheet_render.Rmd"),
+          params      = prepare_params(icao),
+          output_file = here("docs", "pdf", paste0("Factsheet_", icao, ".pdf")))
+        cat(paste0("(PDF) ==>", icao, "...end\n"))
+      })
