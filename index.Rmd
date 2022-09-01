@@ -46,7 +46,8 @@ apt <- readr::read_csv2(here("data", "APT_DSHBD_AIRPORT.csv")) %>%
     country = CTRY_ABBREVIATION,
     name    = APDF_NAME,
     lon     = LON,
-    lat     = LAT)
+    lat     = LAT) %>%
+  dplyr::filter(icao %in% DEBUG_APTS)
 
 apt %>%
 leaflet(options = leafletOptions(minZoom = 3, maxZoom = 9)) %>%
