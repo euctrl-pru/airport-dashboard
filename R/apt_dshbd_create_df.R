@@ -16,7 +16,9 @@ APT_DF <- APT_DF %>%
     STATE    = CTRY_ABBREVIATION,
     ICAO     = ICAO_CODE,
     IATA     = IATA_CODE,
-    IS_APDF  = IS_APDF
+    IS_APDF  = IS_APDF,
+    LON,
+    LAT
   )
 
 

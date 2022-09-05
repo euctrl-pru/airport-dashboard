@@ -16,24 +16,23 @@ source(here("R", "fac_layout_setup.R"))
 
 # ---- CALL RENDER DASHBOARDS ----
 
-APT_DF <- APT_DF %>% arrange(AIRPORT) %>% mutate(idx = row_number())
+APT_DF <- APT_DF %>% arrange(AIRPORT) %>% mutate(idx = row_number()) %>% 
+  # only the DEBUG subset otherwise ALL
+  { if(DEBUG_DSH == TRUE) filter(., AIRPORT %in% DEBUG_APTS) else .}
 
-APT_DF %>%
-  # filter( AIRPORT %in% c("EBBR", "EGLL", "LATI")) %>%   # for debug
-  # filter(
-  #   # AIRPORT > "LOWW",
-  #   ! AIRPORT %in% c("LFML", "LLBG", "LMML", "LOWW")
-  #   ) %>%   # for debug
-  pull(AIRPORT) %>%
-  purrr::walk(
-    .f = function(icao) {
-      cat(paste0("(HTML) ==>", icao, "...\n"))
-      rmarkdown::render(
-        input       = here("apt_dshbd_render.Rmd"),
-        params      = prepare_params(icao),
-        output_file = here("docs", paste0(icao, ".html")))
-      cat(paste0("(HTML) ==>", icao, "...end\n"))
-    })
+if(BUILD_DSH == TRUE) {
+  APT_DF %>%
+    pull(AIRPORT) %>%
+    purrr::walk(
+      .f = function(icao) {
+        cat(paste0("==>", icao, "...\n"))
+        rmarkdown::render(
+          input       = here("apt_dshbd_render.Rmd"),
+          params      = prepare_params(icao), 
+          output_file = here("docs", paste0(icao, ".html")))
+        cat(paste0("(HTML) ==>", icao, "...end\n"))
+      })
+}
 
 
 # Create factsheets
@@ -44,11 +43,11 @@ APT_DF %>%
 # Create docs/pdf folder
 dir.create(here("docs", "pdf"))
 
-APT_DF %>%
-  # filter(
-  #   # AIRPORT > "LOWW",
-  #   ! AIRPORT %in% c("LFML", "LLBG", "LMML", "LOWW")) %>%   # for debug
-  #  # filter( AIRPORT %in% c("EBBR", "EGLL", "LATI")) %>%   # for debug
+
+
+
+if(BUILD_FAC == TRUE) {
+  APT_DF %>%
   pull(AIRPORT) %>%
     purrr::walk(
       .f = function(icao) {
@@ -59,3 +58,4 @@ APT_DF %>%
           output_file = here("docs", "pdf", paste0("Factsheet_", icao, ".pdf")))
         cat(paste0("(PDF) ==>", icao, "...end\n"))
       })
+}

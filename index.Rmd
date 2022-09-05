@@ -1,6 +1,10 @@
 ---
 title: "AIU Airport Performance Dashboard"
-layout: default
+output:
+  html_document:
+    includes: 
+      in_header: ga_script.html
+
 ---
 
 ```{r setup, message=FALSE, warning=FALSE, include=FALSE}
@@ -39,12 +43,12 @@ pop <- str_c(
   "<span style='font-variant: small-caps;'>ICAO</span>: <b>{icao}</b> | ",
   "<span style='font-variant: small-caps;'>IATA</span>: <b>{iata}</b>")
 tit <- "{name}, {country} ({icao}/{iata})"
-apt <- readr::read_csv2(here("data", "APT_DSHBD_AIRPORT.csv")) %>%
+apt <- APT_DF %>%
   dplyr::select(
-    icao    = ICAO_CODE,
-    iata    = IATA_CODE,
-    country = CTRY_ABBREVIATION,
-    name    = APDF_NAME,
+    icao    = ICAO,
+    iata    = IATA,
+    country = STATE,
+    name    = APT_NAME,
     lon     = LON,
     lat     = LAT)
 

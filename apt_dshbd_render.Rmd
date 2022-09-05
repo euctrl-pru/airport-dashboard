@@ -47,12 +47,14 @@ title         : "`r params$icao`"
 author        : "AIU Home"
 
 output: 
-  flexdashboard ::flex_dashboard:
+  flexdashboard::flex_dashboard:
     orientation : rows
     logo        : '/images/euctrl-logo-noname_48x48.png'
     favicon     : 'favicon.png'
     lib_dir     : 'docs/libs'
     self_contained: FALSE
+    includes: 
+      in_header: media/ga_script.html
 ---
 
 <script>
