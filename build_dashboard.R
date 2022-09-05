@@ -23,16 +23,37 @@ source(here("R","apt_dshbd_get_data.R"), encoding = "UTF8")
 
 # 3. generate the various airport HTML pages
 
-# TODO: use options so as to avoid to change this code...
-BUILD_DSH <- TRUE  # FALSE if you do NOT want to generate the HTML pages
-DEBUG_DSH <- FALSE   # TRUE if you are in DEBUG mode when HTML pages are built, see DEBUG_APTS
+# define your development/debug options (without necessarily changing this script)
+# like the following in your console (build only HTML for EBBR and LFPG)
+# 
+# > options(
+#     airport_dashboard.build_dashboard = TRUE,
+#     airport_dashboard.debug_dashboard = TRUE,
+#     airport_dashboard.build_factsheet = FALSE,
+#     airport_dashboard.debug_dashboard = TRUE, # if above is FALSE this does not matter
+#     airport_dashboard.airports = c("EBBR", "LFPG")
+#   )
+# 
+# To reset to defaults and build everything, execute:
+# > options(
+#     airport_dashboard.build_dashboard = TRUE,
+#     airport_dashboard.debug_dashboard = FALSE,
+#     airport_dashboard.build_factsheet = TRUE,
+#     airport_dashboard.debug_dashboard = FALSE)
 
-BUILD_FAC <- TRUE # FALSE if you do NOT want to generate the PDF factsheet
-DEBUG_FAC <- FALSE  # TRUE if you are in DEBUG mode when PDF factsheets are built, see DEBUG_APTS.
 
+# FALSE if you do NOT want to generate the HTML pages
+BUILD_DSH <- getOption('airport_dashboard.build_dashboard', default = TRUE)
+# TRUE if you are in DEBUG mode when HTML pages are built, see DEBUG_APTS
+DEBUG_DSH <- getOption('airport_dashboard.debug_dashboard', default = FALSE)
+
+# FALSE if you do NOT want to generate the PDF factsheet
+BUILD_FAC <- getOption('airport_dashboard.build_factsheet', default = TRUE) 
+# TRUE if you are in DEBUG mode when PDF factsheets are built, see DEBUG_APTS.
+DEBUG_FAC <- getOption('airport_dashboard.debug_factsheet', default = FALSE)
 
 # the subset of airport you are debugging
-DEBUG_APTS <- c("EBBR")
+DEBUG_APTS <- getOption('airport_dashboard.airports', default = c("EBBR", "LFPG"))
 
 source(here("R","apt_dshbd_render.R"), encoding = "UTF8")
 # source(here("R","apt_dshbd_index.R"), encoding = "UTF8")
