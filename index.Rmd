@@ -104,13 +104,13 @@ apt %>%
     icao = "ICAO",
     iata = "IATA"
   ) %>%
-  tab_style(
-    style = cell_text(font = "Courier"),
-    locations = list(
-      cells_body(columns = "icao"),
-      cells_body(columns = "iata")
-    )
-  ) %>%
+  # tab_style(
+  #   style = cell_text(font = "Courier"),
+  #   locations = list(
+  #     cells_body(columns = "icao"),
+  #     cells_body(columns = "iata")
+  #   )
+  # ) %>%
   tab_options(
     table.width = "unset !important",
     table.margin.left = "unset !important",
