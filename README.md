@@ -5,7 +5,6 @@ Production repo for PRU airport dashboards published on ansperformance.eu.
 For more information contact rainer.koelle@eurocontrol.int.
 
 
-
 # Production
 
 The `master` branch is **PRODUCTION**, i.e. it contains what gets published on the
