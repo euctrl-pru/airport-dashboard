@@ -65,7 +65,7 @@ osm_apt <- function(.bb_lonlat,
       inherit.aes = FALSE,
       color = "lightblue"
     ) +
-    # ----multipolygon ----
+  # --multipolygon --
   geom_sf(data = q$osm_multipolygons,
           #inherit.aes = FALSE,
           color = "lightblue") +
@@ -76,7 +76,7 @@ osm_apt <- function(.bb_lonlat,
       data = q$osm_lines %>% filter(aeroway == "runway"),
       inherit.aes = FALSE,
       color = "black",
-      size = 2 # .4
+      linewidth = 2 # .4
       ,
       alpha = .8
     ) +
@@ -134,7 +134,7 @@ geom_airport <- function(apt_list) {
     unique() %>%
     bb_coerce()
   
-  cat(apt_icao)
+  cat(apt_icao, ": ")
   
   gg_base <- osm_apt(bb_lonlat,
                      .add_north = TRUE)
