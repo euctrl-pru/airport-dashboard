@@ -1,38 +1,38 @@
 
 library(purrr)
 
-TXIN_RWY_MM <- params$txinrwy_mm %>%
+TXOT_RWY_MM <- params$txotrwy_mm %>%
   tidyr::pivot_longer(
     cols      = c("AVG_REF_TIME", "AVG_ADD_TIME"),
     names_to  = "TYPE",
     values_to = "TIME"
   )
 
-TXIN_RWY_MM <- TXIN_RWY_MM %>%
+TXOT_RWY_MM <- TXOT_RWY_MM %>%
   mutate(
     TYPE = factor(TYPE,
                   levels = c("AVG_REF_TIME", "AVG_ADD_TIME"),
                   labels = c("Avg. Reference time", "Avg. Additional time")
     ))
 
-ALL_YEAR <- TXIN_RWY_MM %>%
+ALL_YEAR <- TXOT_RWY_MM %>%
   filter(TIME != "NaN") %>%
   pull(YEAR) %>%
   unique()
 
-ALL_RWY <- TXIN_RWY_MM %>%
+ALL_RWY <- TXOT_RWY_MM %>%
   filter(TIME != "NaN") %>%
   arrange(RUNWAY) %>% 
   pull(RUNWAY) %>%
   unique()
 
-filter_years <- TXIN_RWY_MM %>%
+filter_years <- TXOT_RWY_MM %>%
   pull(YEAR) %>%
   unique()
 
 max_year <- max(filter_years)
 
-TXIN_RWY_MM <- TXIN_RWY_MM %>%
+TXOT_RWY_MM <- TXOT_RWY_MM %>%
   mutate(YEAR = factor(YEAR, levels =  ALL_YEAR),
          RUNWAY=factor(RUNWAY, levels = ALL_RWY)) %>%
   arrange(YEAR, RUNWAY)
@@ -65,7 +65,7 @@ button_type_list <- list(
 subplot(
   map(seq(1, 12), function(.x){
     
-    dat=TXIN_RWY_MM %>%
+    dat=TXOT_RWY_MM %>%
       filter(MONTH_NUM==.x) %>%
       group_by(TYPE) %>%
       arrange(YEAR, MONTH_NUM, RUNWAY)
@@ -98,7 +98,7 @@ subplot(
           hoverformat = ".2f"
         ),
         yaxis     = list(
-          title       = "Average Taxi-in time [min/arr]",
+          title       = "Average Taxi-out time [min/dep]",
           titlefont   = list(size = 11),
           hoverformat = ".2f"
         ),
@@ -129,10 +129,10 @@ subplot(
 
 # Factsheet figure
 
-# TXIN_MM_curr_year=filter(TXIN_MM, YEAR==max_year) %>% 
+# TXOT_MM_curr_year=filter(TXOT_MM, YEAR==max_year) %>% 
 #   mutate(Month=factor(month.abb[MONTH_NUM], levels = month.abb))
 # 
-# TXIN_MM_fig = ggplot(data=filter(TXIN_MM_curr_year, YEAR==max_year)) +
+# TXOT_MM_fig = ggplot(data=filter(TXOT_MM_curr_year, YEAR==max_year)) +
 #   geom_bar(aes(x=Month, y=TIME, fill=TYPE), stat="identity", position = position_stack(reverse = TRUE)) +
 #   # scale_fill_manual(values=slot_col) +
 #   theme_factsheet() +
@@ -145,9 +145,8 @@ subplot(
 #   #       axis.title=element_text(size=100),
 #   #       axis.title.x = element_blank(),
 #   #       plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
-#   labs(x="", y="Average Taxi-in Time (min/arr)\n")
-# ggsave(here("media", "factsheet", paste0("Taxi_In_Times_Monthly_", params$icao, ".png")), plot=TXIN_MM_fig, 
-#        width = Taxi_in_times_layout1[2]*Page_width, height = Taxi_in_times_height1, units = "cm", dpi=100, limitsize = FALSE)
-# 
+#   labs(x="", y="Average Taxi-Out Time (min/dep)\n")
+# ggsave(here("media", "factsheet", paste0("Taxi_Out_Times_Monthly_", params$icao, ".png")), plot=TXOT_MM_fig, 
+#        width = Taxi_out_times_layout1[2]*Page_width, height = Taxi_out_times_height1, units = "cm", dpi=100, limitsize = FALSE)
 
 

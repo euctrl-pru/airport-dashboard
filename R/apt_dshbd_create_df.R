@@ -526,21 +526,21 @@ TXOT_RWY_YY_DF <- TXOT_RWY_DF %>%
   select( 
     AIRPORT,
     YEAR,
-    MONTH,
+    MONTH_NUM,
     RUNWAY,
     NB_TAXI_OUT_FL,
-    TOTAL_ADD_TIME,
-    TOTAL_UNIMPEDED
+    ADD_TAXI_OUT_TIME_MIN,
+    TAXI_OUT_REF_TIME_MIN
   ) %>%
   group_by(AIRPORT, YEAR, RUNWAY) %>%
   summarise(
-    TOT_UNIMP_TIME = sum(TOTAL_UNIMPEDED, na.rm = TRUE),
-    TOT_ADD_TIME   = sum(TOTAL_ADD_TIME,  na.rm = TRUE),
+    TOT_REF_TIME = sum(TAXI_OUT_REF_TIME_MIN, na.rm = TRUE),
+    TOT_ADD_TIME   = sum(ADD_TAXI_OUT_TIME_MIN,  na.rm = TRUE),
     TOT_FLT        = sum(NB_TAXI_OUT_FL,  na.rm = TRUE)
   ) %>%
   ungroup() %>%
   mutate(
-    AVG_UNIMP_TIME = TOT_UNIMP_TIME / TOT_FLT,
+    AVG_REF_TIME = TOT_REF_TIME / TOT_FLT,
     AVG_ADD_TIME = TOT_ADD_TIME / TOT_FLT
   )
 
@@ -550,21 +550,21 @@ TXOT_RWY_MM_DF <- TXOT_RWY_DF %>%
   select( 
     AIRPORT,
     YEAR,
-    MONTH,
+    MONTH_NUM,
     RUNWAY,
     NB_TAXI_OUT_FL,
-    TOTAL_ADD_TIME,
-    TOTAL_UNIMPEDED
+    ADD_TAXI_OUT_TIME_MIN,
+    TAXI_OUT_REF_TIME_MIN
   ) %>%
-  group_by(AIRPORT, YEAR, MONTH, RUNWAY) %>%
+  group_by(AIRPORT, YEAR, MONTH_NUM, RUNWAY) %>%
   summarise(
-    TOT_UNIMP_TIME = sum(TOTAL_UNIMPEDED, na.rm = TRUE),
-    TOT_ADD_TIME   = sum(TOTAL_ADD_TIME,  na.rm = TRUE),
+    TOT_REF_TIME = sum(TAXI_OUT_REF_TIME_MIN, na.rm = TRUE),
+    TOT_ADD_TIME   = sum(ADD_TAXI_OUT_TIME_MIN,  na.rm = TRUE),
     TOT_FLT        = sum(NB_TAXI_OUT_FL,  na.rm = TRUE)
   ) %>%
   ungroup() %>%
   mutate(
-    AVG_UNIMP_TIME = TOT_UNIMP_TIME / TOT_FLT,
+    AVG_REF_TIME = TOT_REF_TIME / TOT_FLT,
     AVG_ADD_TIME = TOT_ADD_TIME / TOT_FLT
   )
 
@@ -575,21 +575,21 @@ TXIN_RWY_YY_DF <- TXIN_RWY_DF %>%
   select( 
     AIRPORT,
     YEAR,
-    MONTH,
+    MONTH_NUM,
     RUNWAY,
     NB_TAXI_IN_FL,
-    TOTAL_ADD_TIME,
-    TOTAL_UNIMPEDED
+    ADD_TAXI_IN_TIME_MIN,
+    TAXI_IN_REF_TIME_MIN
   ) %>%
   group_by(AIRPORT, YEAR, RUNWAY) %>%
   summarise(
-    TOT_UNIMP_TIME = sum(TOTAL_UNIMPEDED, na.rm = TRUE),
-    TOT_ADD_TIME   = sum(TOTAL_ADD_TIME,  na.rm = TRUE),
+    TOT_REF_TIME = sum(TAXI_IN_REF_TIME_MIN, na.rm = TRUE),
+    TOT_ADD_TIME   = sum(ADD_TAXI_IN_TIME_MIN,  na.rm = TRUE),
     TOT_FLT        = sum(NB_TAXI_IN_FL,  na.rm = TRUE)
   ) %>%
   ungroup() %>%
   mutate(
-    AVG_UNIMP_TIME = TOT_UNIMP_TIME / TOT_FLT,
+    AVG_REF_TIME = TOT_REF_TIME / TOT_FLT,
     AVG_ADD_TIME = TOT_ADD_TIME / TOT_FLT
   )
 
@@ -599,21 +599,21 @@ TXIN_RWY_MM_DF <- TXIN_RWY_DF %>%
   select( 
     AIRPORT,
     YEAR,
-    MONTH,
+    MONTH_NUM,
     RUNWAY,
     NB_TAXI_IN_FL,
-    TOTAL_ADD_TIME,
-    TOTAL_UNIMPEDED
+    ADD_TAXI_IN_TIME_MIN,
+    TAXI_IN_REF_TIME_MIN
   ) %>%
-  group_by(AIRPORT, YEAR, MONTH, RUNWAY) %>%
+  group_by(AIRPORT, YEAR, MONTH_NUM, RUNWAY) %>%
   summarise(
-    TOT_UNIMP_TIME = sum(TOTAL_UNIMPEDED, na.rm = TRUE),
-    TOT_ADD_TIME   = sum(TOTAL_ADD_TIME,  na.rm = TRUE),
+    TOT_REF_TIME = sum(TAXI_IN_REF_TIME_MIN, na.rm = TRUE),
+    TOT_ADD_TIME   = sum(ADD_TAXI_IN_TIME_MIN,  na.rm = TRUE),
     TOT_FLT        = sum(NB_TAXI_IN_FL,  na.rm = TRUE)
   ) %>%
   ungroup() %>%
   mutate(
-    AVG_UNIMP_TIME = TOT_UNIMP_TIME / TOT_FLT,
+    AVG_REF_TIME = TOT_REF_TIME / TOT_FLT,
     AVG_ADD_TIME = TOT_ADD_TIME / TOT_FLT
   )
 

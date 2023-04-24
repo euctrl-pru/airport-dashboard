@@ -1114,20 +1114,26 @@ cat("## Row -----------------------------------------------------------")
 
 ```{r Taxi-out-time-title3, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-#cat("### Annual Taxi-Out Time per Runway (Source: APDF)")
+cat("### Annual Taxi-Out Time per Runway (Source: APDF)")
 
 ```
 
 
+```{r TXOT-YEARLY-RUNWAY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_taxi_out_rwy_yearly.R')}
+
+```
 
 
 ```{r Taxi-out-time-title4, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-#cat("### Monthly Taxi-Out Time per Runway (Source: APDF)")
+cat("### Monthly Taxi-Out Time per Runway (Source: APDF)")
 
 ```
 
 
+```{r TAXI-OUT-MONTHLY-RUNWAY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_taxi_out_rwy_monthly.R')}
+
+```
 
 
 # Taxi-In Time
@@ -1179,17 +1185,29 @@ cat("### Monthly Taxi-In Time (Source: APDF)")
 cat("## Row -----------------------------------------------------------")
 
 ```
+
+
 ```{r Taxi-in-time-title3, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-#cat("### Annual Taxi-In Time per runway (Source: APDF)")
+cat("### Annual Taxi-In Time per runway (Source: APDF)")
+
+```
+
+
+```{r TXIN-YEARLY-RUNWAY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_taxi_in_rwy_yearly.R')}
+
+```
+
+
+```{r Taxi-in-time-title4, results='asis', eval=params$apdf == "Y", echo = FALSE}
+
+cat("### Monthly Taxi-In Time per runway (Source: APDF)")
 
 ```
 
 
 
-```{r Taxi-in-time-title4, results='asis', eval=params$apdf == "Y", echo = FALSE}
-
-#cat("### Monthly Taxi-In Time per runway (Source: APDF)")
+```{r TAXI-IN-MONTHLY-RUNWAY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_taxi_in_rwy_monthly.R')}
 
 ```
 
