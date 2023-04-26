@@ -1046,20 +1046,26 @@ cat("## Row -----------------------------------------------------------")
 
 ```{r ASMA-time-title3, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-#cat("### Annual ASMA Time per Runway (Source: APDF)")
+cat("### Annual ASMA Time per Runway (Source: APDF)")
 
 ```
 
 
+```{r ASMA-YEARLY-RUNWAY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_asma_rwy_yearly.R')}
+
+```
 
   
 ```{r ASMA-time-title4, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
-#cat("### Monthly ASMA Time per Runway (Source: APDF)")
+cat("### Monthly ASMA Time per Runway (Source: APDF)")
 
 ```
 
 
+```{r ASMA-MONTHLY-RUNWAY-LAYOUT, results='asis', eval=params$apdf == "Y", echo = FALSE, code=readLines('R/fig_asma_rwy_monthly.R')}
+
+```
 
 
 # Taxi-Out Time
