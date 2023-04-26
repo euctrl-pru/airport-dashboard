@@ -193,11 +193,10 @@ prepare_front_page_DT <- function(.icao,
 
   out[1, "CURRENT"] <- latest$TFC
 
-  out[2, "CURRENT"] <- formatC(latest$AVG_ADD_ASMA, digits = 2, format = "f")
-
-  out[3, "CURRENT"] <- formatC(latest$AVG_ADD_TXOT, digits = 2, format = "f")
-
-  out[4, "CURRENT"] <- formatC(latest$AVG_ARR_ATFM, digits = 2, format = "f")
+  # PROTECT against NULL value for AVG_ADD_TXOT (I HAD to use ifelse rather than if_else...)
+  out[2, "CURRENT"] <- ifelse(!is.null(latest$AVG_ADD_ASMA), formatC(latest$AVG_ADD_ASMA, digits = 2, format = "f"), NA)
+  out[3, "CURRENT"] <- ifelse(!is.null(latest$AVG_ADD_TXOT), formatC(latest$AVG_ADD_TXOT, digits = 2, format = "f"), NA)
+  out[4, "CURRENT"] <- ifelse(!is.null(latest$AVG_ARR_ATFM), formatC(latest$AVG_ARR_ATFM, digits = 2, format = "f"), NA)
 
   out <- out %>% select(NAM, YEAR2019, CURRENT, SPK)
 
