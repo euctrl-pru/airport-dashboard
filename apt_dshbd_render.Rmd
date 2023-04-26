@@ -49,8 +49,8 @@ author        : "AIU Home"
 output: 
   flexdashboard::flex_dashboard:
     orientation : rows
-    logo        : '/images/euctrl-logo-noname_48x48.png'
-    favicon     : 'favicon.png'
+    logo        : 'https://ansperformance.eu/images/EUROCONTROL-logo-standard-rgb.png'
+    favicon     : 'https://ansperformance.eu/favicon.png'
     lib_dir     : 'docs/libs'
     self_contained: FALSE
     includes: 
@@ -64,6 +64,9 @@ $('.navbar-author').wrap('<a href="https://ansperformance.eu">');
 
 <style>
 .navbar-author {color: white;}
+.navbar-logo {
+  height: 48px;
+}
 </style>
 
 ```{r setup, include=FALSE}
@@ -1726,7 +1729,7 @@ plot_ly(TURN_OVER,
 
 ### Powered by
 
-![](https://ansperformance.eu/images/eurocontrol-logo.png){width=30%}
+![](https://ansperformance.eu/images/EUROCONTROL-logo-standard-rgb.png){width=25%}
 
 
 ### About this Dashboard
