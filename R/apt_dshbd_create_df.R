@@ -624,16 +624,16 @@ ASMA_RWY_YY_DF <- ASMA_RWY_DF %>%
   select( 
     AIRPORT,
     YEAR,
-    MONTH,
+    MONTH_NUM,
     RUNWAY,
     NB_ASMA_FL,
-    TOTAL_ADD_TIME,
-    TOTAL_UNIMPEDED
+    ASMA_REF_TIME_MIN,
+    ADD_ASMA_TIME_MIN
   ) %>%
   group_by(AIRPORT, YEAR, RUNWAY) %>%
   summarise(
-    TOT_UNIMP_TIME = sum(TOTAL_UNIMPEDED, na.rm = TRUE),
-    TOT_ADD_TIME   = sum(TOTAL_ADD_TIME,  na.rm = TRUE),
+    TOT_UNIMP_TIME = sum(ASMA_REF_TIME_MIN, na.rm = TRUE),
+    TOT_ADD_TIME   = sum(ADD_ASMA_TIME_MIN,  na.rm = TRUE),
     TOT_FLT        = sum(NB_ASMA_FL,  na.rm = TRUE)
   ) %>%
   ungroup() %>%
@@ -648,16 +648,16 @@ ASMA_RWY_MM_DF <- ASMA_RWY_DF %>%
   select( 
     AIRPORT,
     YEAR,
-    MONTH,
+    MONTH_NUM,
     RUNWAY,
     NB_ASMA_FL,
-    TOTAL_ADD_TIME,
-    TOTAL_UNIMPEDED
+    ASMA_REF_TIME_MIN,
+    ADD_ASMA_TIME_MIN
   ) %>%
-  group_by(AIRPORT, YEAR, MONTH, RUNWAY) %>%
+  group_by(AIRPORT, YEAR, MONTH_NUM, RUNWAY) %>%
   summarise(
-    TOT_UNIMP_TIME = sum(TOTAL_UNIMPEDED, na.rm = TRUE),
-    TOT_ADD_TIME   = sum(TOTAL_ADD_TIME,  na.rm = TRUE),
+    TOT_UNIMP_TIME = sum(ASMA_REF_TIME_MIN, na.rm = TRUE),
+    TOT_ADD_TIME   = sum(ADD_ASMA_TIME_MIN,  na.rm = TRUE),
     TOT_FLT        = sum(NB_ASMA_FL,  na.rm = TRUE)
   ) %>%
   ungroup() %>%
