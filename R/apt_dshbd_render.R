@@ -16,12 +16,14 @@ source(here("R", "fac_layout_setup.R"))
 
 # ---- CALL RENDER DASHBOARDS ----
 
-APT_DF <- APT_DF %>% arrange(AIRPORT) %>% mutate(idx = row_number()) %>% 
-  # only the DEBUG subset otherwise ALL
-  { if(DEBUG_DSH == TRUE) filter(., AIRPORT %in% DEBUG_APTS) else .}
+APT_DF <- APT_DF %>% arrange(AIRPORT) %>% mutate(idx = row_number())
 
 if(BUILD_DSH == TRUE) {
   APT_DF %>%
+    # only the DEBUG subset otherwise ALL
+    { if(DEBUG_DSH == TRUE) filter(., AIRPORT %in% DEBUG_APTS) else .} %>%
+    # process from XXXX onward    
+    # filter(AIRPORT >= "LIMF") %>%
     pull(AIRPORT) %>%
     purrr::walk(
       .f = function(icao) {
@@ -48,7 +50,11 @@ dir.create(here("docs", "pdf"))
 
 if(BUILD_FAC == TRUE) {
   APT_DF %>%
-  pull(AIRPORT) %>%
+    # only the DEBUG subset otherwise ALL
+    { if(DEBUG_FAC == TRUE) filter(., AIRPORT %in% DEBUG_APTS) else .} %>%
+    # process from XXXX onward    
+    filter(AIRPORT >= "EHEH") %>%
+    pull(AIRPORT) %>%
     purrr::walk(
       .f = function(icao) {
         cat(paste0(" (PDF) ==>", icao, "...\n"))
