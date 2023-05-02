@@ -48,7 +48,7 @@ BUILD_DSH <- getOption('airport_dashboard.build_dashboard', default = TRUE)
 DEBUG_DSH <- getOption('airport_dashboard.debug_dashboard', default = FALSE)
 
 # FALSE if you do NOT want to generate the PDF factsheet
-BUILD_FAC <- getOption('airport_dashboard.build_factsheet', default = TRUE) 
+BUILD_FAC <- getOption('airport_dashboard.build_factsheet', default = FALSE) 
 # TRUE if you are in DEBUG mode when PDF factsheets are built, see DEBUG_APTS.
 DEBUG_FAC <- getOption('airport_dashboard.debug_factsheet', default = FALSE)
 

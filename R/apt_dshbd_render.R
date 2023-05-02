@@ -53,7 +53,7 @@ if(BUILD_FAC == TRUE) {
     # only the DEBUG subset otherwise ALL
     { if(DEBUG_FAC == TRUE) filter(., AIRPORT %in% DEBUG_APTS) else .} %>%
     # process from XXXX onward    
-    filter(AIRPORT >= "EHEH") %>%
+    # filter(AIRPORT >= "EHEH") %>%
     pull(AIRPORT) %>%
     purrr::walk(
       .f = function(icao) {
