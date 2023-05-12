@@ -6,7 +6,8 @@ ASMA_RWY_YY <- params$asmarwy_yy %>%
     cols      = c("AVG_UNIMP_TIME", "AVG_ADD_TIME"),
     names_to  = "TYPE",
     values_to = "TIME"
-  )
+  ) %>% 
+  filter(!is.na(RUNWAY))
 
 ASMA_RWY_YY <- ASMA_RWY_YY %>%
   mutate(
@@ -102,7 +103,9 @@ ASMA_RWY_YY <- ASMA_RWY_YY %>%
 
 ################################################################################
 
-subplot(
+if (nrow(ASMA_RWY_YY)>0) {
+  
+  subplot(
   map(ALL_YEAR, function(.x){
     
     dat=ASMA_RWY_YY %>%
@@ -149,7 +152,13 @@ subplot(
     displaylogo = FALSE,
     modeBarButtonsToRemove = config_bar_remove_buttons
   )
-
+  
+} else {
+  
+  cat("<center> 
+No data available </center>")
+  
+}
 
 
 

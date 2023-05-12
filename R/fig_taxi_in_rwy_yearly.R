@@ -6,7 +6,8 @@ TXIN_RWY_YY <- params$txinrwy_yy %>%
     cols      = c("AVG_REF_TIME", "AVG_ADD_TIME"),
     names_to  = "TYPE",
     values_to = "TIME"
-  )
+  ) %>% 
+  filter(!is.na(RUNWAY))
 
 TXIN_RWY_YY <- TXIN_RWY_YY %>%
   mutate(
@@ -102,7 +103,9 @@ TXIN_RWY_YY <- TXIN_RWY_YY %>%
 
 ################################################################################
 
-subplot(
+if (nrow(TXIN_RWY_YY)>0) {
+  
+  subplot(
   map(ALL_YEAR, function(.x){
     
     dat=TXIN_RWY_YY %>%
@@ -149,6 +152,13 @@ subplot(
     displaylogo = FALSE,
     modeBarButtonsToRemove = config_bar_remove_buttons
   )
+
+} else {
+  
+  cat("<center> 
+No data available </center>")
+  
+}
 
 
 

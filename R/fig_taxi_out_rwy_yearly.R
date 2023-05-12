@@ -6,7 +6,8 @@ TXOT_RWY_YY <- params$txotrwy_yy %>%
     cols      = c("AVG_REF_TIME", "AVG_ADD_TIME"),
     names_to  = "TYPE",
     values_to = "TIME"
-  )
+  ) %>% 
+  filter(!is.na(RUNWAY))
 
 TXOT_RWY_YY <- TXOT_RWY_YY %>%
   mutate(
@@ -102,6 +103,8 @@ TXOT_RWY_YY <- TXOT_RWY_YY %>%
 
 ################################################################################
 
+if (nrow(TXOT_RWY_YY)>0) {
+  
 subplot(
   map(ALL_YEAR, function(.x){
     
@@ -150,6 +153,12 @@ subplot(
     modeBarButtonsToRemove = config_bar_remove_buttons
   )
 
+} else {
+  
+  cat("<center> 
+No data available </center>")
+  
+}
 
 
 

@@ -1,5 +1,5 @@
 
-new_release_branch=202203
+new_release_branch=202305
 
 shell("git checkout master")
 

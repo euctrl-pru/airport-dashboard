@@ -42,10 +42,8 @@ params:
    turn_mm:      $turn_mm
    turn_new:     $turn_new
    cdo_cco:      $cdo_cco
-
 title         : "`r params$icao`"
 author        : "AIU Home"
-
 output: 
   flexdashboard::flex_dashboard:
     orientation : rows
@@ -1379,7 +1377,8 @@ cat("### Monthly Average ATC Pre-Departure Delay (Source: APDF)")
 ```{r pre-dep-indicator, results='asis', eval=params$apdf == "Y", echo = FALSE}
 
 predepdly_pm <- params$pddly_mm_avg %>%
-  select(YEAR, MONTH_NUM, DLY_89_PER_FL_MM)
+  select(YEAR, MONTH_NUM, DLY_89_PER_FL_MM) %>% 
+  arrange(YEAR, MONTH_NUM)
 
 filter_years <- predepdly_pm %>%
   pull(YEAR) %>%
@@ -1413,7 +1412,9 @@ button_type_list <- list(
 )
 
 
-predepdly_pm %>%
+predepdly_pm %>% 
+  # mutate(YEAR = factor(YEAR, levels = unique(predepdly_pm$YEAR))) %>%
+  arrange(YEAR, MONTH_NUM) %>% 
   plot_ly(
     x          = ~MONTH_NUM,
     y          = ~DLY_89_PER_FL_MM,

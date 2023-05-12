@@ -512,7 +512,9 @@ PDDLY_YY_AVG_DF <- APDF_MM_DF %>%
 
 # ..PDDLY MONTLHY AVERAGE  ----
 PDDLY_MM_AVG_DF <- APDF_MM_DF %>%
-  select(AIRPORT, APT_ICAO, YEAR, MONTH_NUM, DLY_89_PER_FL_MM) #%>%
+  select(AIRPORT, APT_ICAO, YEAR, MONTH_NUM, DLY_89_PER_FL_MM)  %>%
+  mutate(MONTH_NUM = as.numeric(MONTH_NUM),
+         YEAR =  as.numeric(YEAR))
 
 
 # **************************----
