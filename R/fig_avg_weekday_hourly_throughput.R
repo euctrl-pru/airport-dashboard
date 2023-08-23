@@ -1,9 +1,9 @@
 
-thru <- params$thru %>% # pack_thru(THRU_DF, "EBBR")
-  filter(
-    TIME >= hm("05:55"),
-    TIME <= hm("23:05")
-  ) %>%
+thru <- params$thru %>% # pack_thru(THRU_DF, "EBBR") %>% 
+  # filter(
+  #   TIME >= hm("05:55"),
+  #   TIME <= hm("23:05")
+  # ) %>%
   mutate(PHASE = factor(PHASE,
                         levels = c("DEP", "ARR"),
                         labels = c("Departures", "Arrivals")
@@ -22,7 +22,7 @@ thru_tot <- thru %>%
 thru_max <- thru %>%
   group_by(TIME) %>%
   summarise(ROLLING_HOUR_MVT = mean(PCT99_RHM, na.rm = TRUE)) %>%
-  mutate(PHASE = "Peak Service Rate<br>(2016-2021)") %>%
+  mutate(PHASE = "Peak Service Rate<br>(2016-2023)") %>%
   ungroup()
 
 thru <- thru %>%
@@ -30,14 +30,14 @@ thru <- thru %>%
   bind_rows(thru_max) %>%
   mutate(TIME = as.character(TIME), TIME = strtrim(TIME, 5))
 
-phase_grps <- c(  "Departures",  "Arrivals",  "Total",  "Peak Service Rate<br>(2016-2021)")
+phase_grps <- c(  "Departures",  "Arrivals",  "Total",  "Peak Service Rate<br>(2016-2023)")
 
-phase_lbl  <- c(  "Departures",  "Arrivals",  "Total",  "Peak Service Rate<br>(2016-2021)")
+phase_lbl  <- c(  "Departures",  "Arrivals",  "Total",  "Peak Service Rate<br>(2016-2023)")
 
 xax <- list(
   title = "",
   type = "category",
-  range = c("06:00", "23:00")
+  range = c("00:00", "23:55")
 )
 
 yax <- list(
@@ -48,7 +48,7 @@ yax <- list(
 
 msg <- ifelse(nrow(thru)>0,
               paste0(
-                "<b>Average 15-min rolling hour",
+                "<b>Average 15-min rolling UTC hour",
                 "<br>throughput-weekdays month ",
                 pick_mth[thru_mth], " ",
                 thru_yr,
@@ -119,7 +119,7 @@ thru %>%
 
 # Factsheet figure
 
-phase_lbl2  <- c("Departures", "Arrivals", "Total", "Peak Service Rate\n(2016-2021)")
+phase_lbl2  <- c("Departures", "Arrivals", "Total", "Peak Service Rate\n(2016-2023)")
 
 if (nrow(thru)>0) {
   
