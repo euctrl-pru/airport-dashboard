@@ -56,11 +56,11 @@ msg <- ifelse(nrow(thru)>0,
               paste0("<b>No data available for ", params$icao, "</b>")
 )
 
-if (max(thru$ROLLING_HOUR_MVT) <= 20) {
-  msg_y <- 1.2 * max(thru$ROLLING_HOUR_MVT)
-} else {
-  msg_y <- 0.1 * max(thru$ROLLING_HOUR_MVT)
-}
+# if (max(thru$ROLLING_HOUR_MVT) <= 20) {
+  msg_y <- 1.1 * max(thru$ROLLING_HOUR_MVT)
+# } else {
+#   msg_y <- 0.1 * max(thru$ROLLING_HOUR_MVT)
+# }
 
 
 thru <- thru %>%
