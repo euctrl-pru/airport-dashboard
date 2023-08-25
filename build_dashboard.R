@@ -66,3 +66,8 @@ rmarkdown::render(here("docs", "index.Rmd"),  encoding = 'UTF-8')
 fs::file_delete(path = here("docs", "index.Rmd"))
 fs::file_delete(here("docs","ga_script.html"))
 # fs::file_delete(here("docs","_navbar.yml"))
+
+# 5. Push to Github
+shell("git add -A")
+shell("git commit -m \"Transfer of input files\"")
+shell("git push")
