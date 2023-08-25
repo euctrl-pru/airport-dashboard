@@ -86,7 +86,7 @@ apt %>%
   select(-c("lon", "lat")) %>%
   arrange(country, name) %>%
   mutate(
-    name = glue::glue("[{name}]({icao}.html)"),
+    name = glue::glue("[{name}](https://ansperformance.eu/dashboard/stakeholder/airport/db/{icao}.html)"),
     name = purrr::map(name, gt::md),
   ) %>%
   relocate(name, icao, iata) %>%
