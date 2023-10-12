@@ -18,8 +18,7 @@ fs::dir_ls(here("docs"), recurse = TRUE) %>%
 source(here("R","apt_dshbd_get_data.R"), encoding = "UTF8")
 
 # 2. generate airport layout
-# UNCOMMENT  if new airports have been added
-#source(here("R","apt_dshbd_layout.R"), encoding = "UTF8")
+source(here("R","apt_dshbd_layout.R"), encoding = "UTF8")
 
 # 3. generate the various airport HTML pages
 
