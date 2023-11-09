@@ -68,5 +68,5 @@ fs::file_delete(here("docs","ga_script.html"))
 
 # 5. Push to Github
 shell("git add -A")
-shell("git commit -m \"Transfer of input files\"")
+shell("git commit -m \"Regeneration of the dashboard\"")
 shell("git push")
