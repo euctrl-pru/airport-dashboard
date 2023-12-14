@@ -204,6 +204,6 @@ ASMA_MM_fig = ggplot(data=filter(ASMA_MM_curr_year, YEAR==max_year)) +
   #       axis.title.x = element_blank(),
   #       plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
   labs(x="", y="Average ASMA time (min/arr)\n")
-ggsave(here("media", "factsheet", paste0("ASMA_Monthly_", params$icao, ".png")), plot=ASMA_MM_fig, 
+ggsave(here("media", "factsheet", paste0("ASMA_Monthly_", params$icao, ".pdf")), plot=ASMA_MM_fig, 
        width = ASMA_layout1[2]*Page_width, height = ASMA_height1, units = "cm", dpi=100, limitsize = FALSE)
 

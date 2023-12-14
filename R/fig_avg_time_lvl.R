@@ -263,6 +263,6 @@ if (nrow(filter(AVG_TIME_LVL_PLOT, YEAR==max_year))==1) {
                         labels=c("Descent (Fuel CDO)", "Descent (Noise CDO)", "Climb (Fuel CCO)", "Climb (Noise CCO)"))
 }
 
-ggsave(here("media", "factsheet", paste0("Avg_time_lvl_", params$icao, ".png")), 
+ggsave(here("media", "factsheet", paste0("Avg_time_lvl_", params$icao, ".pdf")), 
        plot=AVG_TIME_LVL_PLOT_fig, width = VFE_layout1[1]*Page_width, height = VFE_height1, 
        units = "cm", dpi=100, limitsize = FALSE)

@@ -144,6 +144,6 @@ TXOT_YY_fig = ggplot(data=TXOT_YY) +
   #       axis.title.x = element_blank(),
   #       plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
   labs(x="", y="Average Taxi-Out Time (min/dep)\n")
-ggsave(here("media", "factsheet", paste0("Taxi_Out_Times_Yearly_", params$icao, ".png")), plot=TXOT_YY_fig, 
+ggsave(here("media", "factsheet", paste0("Taxi_Out_Times_Yearly_", params$icao, ".pdf")), plot=TXOT_YY_fig, 
        width = Taxi_out_times_layout1[1]*Page_width, height = Taxi_out_times_height1, units = "cm", dpi=100, limitsize = FALSE)
 

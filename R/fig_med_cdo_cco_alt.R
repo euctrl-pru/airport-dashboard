@@ -145,7 +145,7 @@ if (nrow(filter(MED_CDO_CCO_ALT_PLOT, YEAR==max_year))==1) {
                         labels=c("Descent (Fuel CDO)", "Climb (Fuel CCO)"))
 }
 
-ggsave(here("media", "factsheet", paste0("Med_CDO_CCO_alt_", params$icao, ".png")), 
+ggsave(here("media", "factsheet", paste0("Med_CDO_CCO_alt_", params$icao, ".pdf")), 
        plot=MED_CDO_CCO_ALT_PLOT_fig, width = VFE_layout1[2]*Page_width, height = VFE_height1, 
        units = "cm", dpi=100, limitsize = FALSE)
 

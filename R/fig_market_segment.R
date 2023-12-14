@@ -70,6 +70,6 @@ if (nrow(share_market)>1) {
     theme(legend.position = "none")
 }
 
-ggsave(here("media", "factsheet", paste0("Market_segments_", params$icao, ".png")), 
+ggsave(here("media", "factsheet", paste0("Market_segments_", params$icao, ".pdf")), 
        width = Traffic_layout1[3]*Page_width, height = Traffic_height1, units = "cm", dpi=100, limitsize = FALSE)
 

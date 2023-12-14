@@ -134,6 +134,6 @@ atfm_pa_fig = ggplot(data=atfm_pa) +
   #       axis.title.x = element_blank(),
   #       plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
   labs(x="", y="Average arrival ATFM delay (min/arr)\n")
-ggsave(here("media", "factsheet", paste0("Annual_Arr_ATFM_Delay_", params$icao, ".png")), plot=atfm_pa_fig, 
+ggsave(here("media", "factsheet", paste0("Annual_Arr_ATFM_Delay_", params$icao, ".pdf")), plot=atfm_pa_fig, 
        width = Arr_ATFM_Delay_layout1[1]*Page_width, height = Arr_ATFM_Delay_height1, units = "cm", dpi=100, limitsize = FALSE)
 

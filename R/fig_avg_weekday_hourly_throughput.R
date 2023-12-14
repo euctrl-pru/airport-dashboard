@@ -152,5 +152,5 @@ if (nrow(thru)>0) {
   
 }
 
-ggsave(here("media", "factsheet", paste0("Avg_weekday_hourly_throughput_", params$icao, ".png")), plot = mvts_pm_fig,
+ggsave(here("media", "factsheet", paste0("Avg_weekday_hourly_throughput_", params$icao, ".pdf")), plot = mvts_pm_fig,
        width = Traffic_layout3[1]*Page_width, height = Traffic_height3, units = "cm", dpi=100, limitsize = FALSE)

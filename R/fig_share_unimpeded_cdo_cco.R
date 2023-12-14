@@ -149,7 +149,7 @@ SHARE_CDO_CCO_FLIGHTS_PLOT_curr_year_fig = ggplot(data=SHARE_CDO_CCO_FLIGHTS_PLO
   theme_factsheet() +
   theme_void()
 
-ggsave(here("media", "factsheet", paste0("Share_CDO_CCO_flights_", params$icao, ".png")), 
+ggsave(here("media", "factsheet", paste0("Share_CDO_CCO_flights_", params$icao, ".pdf")), 
        plot=SHARE_CDO_CCO_FLIGHTS_PLOT_curr_year_fig, width = VFE_layout1[3]*Page_width, height = VFE_height1, 
        units = "cm", dpi=100, limitsize = FALSE)
 

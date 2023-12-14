@@ -132,6 +132,6 @@ punc_arr_mm_plot_fig = ggplot(data=punc_arr_mm_plot_curr_year) +
   #       axis.title.x = element_blank(),
   #       plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
   labs(x="", y="Arrival Punctuality repartition (%)\n")
-ggsave(here("media", "factsheet", paste0("Punc_Arr_Monthly_", params$icao, ".png")), plot=punc_arr_mm_plot_fig, 
+ggsave(here("media", "factsheet", paste0("Punc_Arr_Monthly_", params$icao, ".pdf")), plot=punc_arr_mm_plot_fig, 
        width = Punctuality_layout2[2]*Page_width, height = Punctuality_height2, units = "cm", dpi=100, limitsize = FALSE)
 

@@ -91,6 +91,6 @@ mvts_pm_fig = ggplot(mutate(mvts_pm,
   #       axis.title.x = element_blank(),
   #       plot.margin = unit(c(5.5, 20, 5.5, 60), "pt")) +
   labs(x="", y="", title="Monthly movements")
-ggsave(here("media", "factsheet", paste0("Monthly_mvmts_", params$icao, ".png")), 
+ggsave(here("media", "factsheet", paste0("Monthly_mvmts_", params$icao, ".pdf")), 
        width = Traffic_layout1[2]*Page_width, height = Traffic_height1, units = "cm", dpi=100, limitsize = FALSE)
 
