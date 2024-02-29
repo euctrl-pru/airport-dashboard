@@ -5,19 +5,19 @@ thru <- params$thru %>% # pack_thru(THRU_DF, "EBBR") %>%
   #   TIME <= hm("23:05")
   # ) %>%
   mutate(PHASE = factor(PHASE,
-                        levels = c("DEP", "ARR"),
-                        labels = c("Departures", "Arrivals")
+                        levels = c("DEP", "ARR", "TOT"),
+                        labels = c("Departures", "Arrivals", "Total")
   ))
 
 thru_yr <- unique(thru$YEAR)
 
 thru_mth <- unique(thru$MONTH_NUM)
 
-thru_tot <- thru %>%
-  group_by(TIME) %>%
-  summarise(ROLLING_HOUR_MVT = sum(ROLLING_HOUR_MVT, na.rm = TRUE)) %>%
-  mutate(PHASE = "Total") %>%
-  ungroup()
+# thru_tot <- thru %>%
+#   group_by(TIME) %>%
+#   summarise(ROLLING_HOUR_MVT = sum(ROLLING_HOUR_MVT, na.rm = TRUE)) %>%
+#   mutate(PHASE = "Total") %>%
+#   ungroup()
 
 thru_max <- thru %>%
   group_by(TIME) %>%
@@ -26,7 +26,7 @@ thru_max <- thru %>%
   ungroup()
 
 thru <- thru %>%
-  bind_rows(thru_tot) %>%
+  # bind_rows(thru_tot) %>%
   bind_rows(thru_max) %>%
   mutate(TIME = as.character(TIME), TIME = strtrim(TIME, 5))
 
@@ -126,7 +126,7 @@ if (nrow(thru)>0) {
   mvts_pm_fig = ggplot(mutate(thru, PHASE = factor(PHASE,
                                                    levels = phase_grps,
                                                    labels = phase_lbl2))) +
-    geom_line(aes(x=TIME, y = ROLLING_HOUR_MVT, group = PHASE, color = PHASE), size=linesize_factsheet) +
+    geom_line(aes(x=TIME, y = ROLLING_HOUR_MVT, group = PHASE, color = PHASE), linewidth=linesize_factsheet) +
     theme_factsheet() +
     # theme_bw() +
     # theme(plot.title = element_text(size=100, face="bold", hjust=0.5),
