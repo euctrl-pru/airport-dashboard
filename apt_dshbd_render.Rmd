@@ -165,7 +165,7 @@ RWY_CONFIG <- params$config %>%
   mutate(TEXT2 = paste0(round(100 * TEXT2), "%")) %>%
   na.omit()
 
-RWY_CONFIG$ITEM[1] <- "Configurations in 2019"
+RWY_CONFIG$ITEM[1] <- "Configurations in 2023"
 
 ID_TBL <- ID_TBL %>%
   bind_rows(RWY_CONFIG)
