@@ -1,16 +1,17 @@
 
-market_max_year <- params$market %>%
-  pull(YEAR) %>%
-  max() %>%
-  unique()
+# market_max_year <- params$market %>%
+#   pull(YEAR) %>%
+#   max() %>%
+#   unique()
 
 share_market <- params$market %>%
-  filter(YEAR == market_max_year) %>%
-  group_by(RULE_NAME) %>%
+  # filter(YEAR == market_max_year) %>%
+  group_by(YEAR, RULE_NAME) %>%
   summarise(
     FLT_TOT = sum(NB_FLIGHT, na.rm = TRUE)
   ) %>%
   ungroup() %>%
+  group_by(YEAR) %>% 
   mutate(
     FLIGHT_TOT   = sum(FLT_TOT, na.rm = TRUE),
     FLIGHT_SHARE = round(FLT_TOT / FLIGHT_TOT, 2),
@@ -20,37 +21,75 @@ share_market <- params$market %>%
 # %>%
 # filter(FLIGHT_SHARE > 0)
 
-center_text <- paste0("<b>", market_max_year, "</b>")
+# center_text <- paste0("<b>", market_max_year, "</b>")
 
-share_market %>%
+filter_years <- share_market %>%
+  pull(YEAR) %>%
+  unique()
+
+max_year <- max(filter_years)
+
+button_list <- lapply(
+  1:length(filter_years),
+  function(x) {
+    list(
+      method = "restyle",
+      args = list("transforms[0].value", filter_years[x]),
+      label = filter_years[x]
+    )
+  }
+)
+
+button_type_list <- list(
+  buttons   = button_list,
+  type      = "buttons",
+  bgcolor   = "#c3c1e8",
+  active    = length(filter_years) - 1,
+  direction = "right",
+  xref      = "paper",
+  x         = 0.3,
+  xanchor   = "left",
+  yref      = "paper",
+  y         = 1.2,
+  yanchor   = "bottom"
+)
+
+share_market_fig=share_market %>%
   plot_ly(
     labels = ~RULE_NAME,
-    values = ~FLIGHT_SHARE
+    values = ~FLIGHT_SHARE,
+    customdata = ~YEAR,
+    transforms = list(list(type      = 'filter',
+                           target    = "customdata",
+                           operation = '=',
+                           value     = max_year))
   ) %>%
   add_pie(
     hole         = 0.4,
     textposition = "outside"
   ) %>%
-  add_annotations(
-    text      = center_text,
-    font      = list(size = 18),
-    x         = 0.5,
-    y         = 0.5,
-    showarrow = FALSE
-  ) %>%
+  # add_annotations(
+  #   text      = center_text,
+  #   font      = list(size = 18),
+  #   x         = 0.5,
+  #   y         = 0.5,
+  #   showarrow = FALSE
+  # ) %>%
+  layout(showlegend  = TRUE,
+         updatemenus = list( button_type_list )) %>% 
   config(
     displaylogo = FALSE,
     modeBarButtonsToRemove = config_bar_remove_buttons
   )
 
-
+share_market_fig
 
 
 
 # Factsheet figure
 
 if (nrow(share_market)>1) {
-  share_market_fig=ggplot(share_market, aes(area = FLT_TOT, fill = RULE_NAME, label = label)) +
+  share_market_fig=ggplot(filter(share_market, YEAR==max_year), aes(area = FLT_TOT, fill = RULE_NAME, label = label)) +
     geom_treemap() +
     geom_treemap_text(colour = "white",
                       place = "centre",
@@ -59,7 +98,7 @@ if (nrow(share_market)>1) {
     theme_factsheet() +
     theme(legend.position = "none")
 } else {
-  share_market_fig = ggplot(data=share_market, aes(x=3, y=FLT_TOT, fill=RULE_NAME)) +
+  share_market_fig = ggplot(data=filter(share_market, YEAR==max_year), aes(x=3, y=FLT_TOT, fill=RULE_NAME)) +
     geom_col() +
     scale_fill_brewer(palette=4) +
     coord_polar(theta="y") +
