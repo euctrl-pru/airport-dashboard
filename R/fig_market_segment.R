@@ -1,11 +1,9 @@
 
-# market_max_year <- params$market %>%
-#   pull(YEAR) %>%
-#   max() %>%
-#   unique()
+mkt_seg=c("Lowcost", "Scheduled", "Mainline", "Regional", "Business", "Cargo", "Non-Scheduled", "Military", "Other")
+colours = c("#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "pink", "#7f7f7f", "#bcbd22")
+mkt_seg_col=data.frame(cbind(mkt_seg, colours))
 
 share_market <- params$market %>%
-  # filter(YEAR == market_max_year) %>%
   group_by(YEAR, RULE_NAME) %>%
   summarise(
     FLT_TOT = sum(NB_FLIGHT, na.rm = TRUE)
@@ -15,13 +13,11 @@ share_market <- params$market %>%
   mutate(
     FLIGHT_TOT   = sum(FLT_TOT, na.rm = TRUE),
     FLIGHT_SHARE = round(FLT_TOT / FLIGHT_TOT, 2),
+    RULE_NAME    = factor(RULE_NAME, levels = c("Lowcost", "Scheduled", "Mainline", "Regional", "Business", "Cargo", "Non-Scheduled", "Military", "Other")),
     LABELS       = paste0(RULE_NAME, "<br>", FLIGHT_SHARE, "%"),
     label        = paste0(RULE_NAME, "\n", FLIGHT_SHARE*100, "%")
-  ) 
-# %>%
-# filter(FLIGHT_SHARE > 0)
-
-# center_text <- paste0("<b>", market_max_year, "</b>")
+  ) %>% 
+  left_join(mkt_seg_col, by=c("RULE_NAME"="mkt_seg"))
 
 filter_years <- share_market %>%
   pull(YEAR) %>%
@@ -56,8 +52,12 @@ button_type_list <- list(
 
 share_market_fig=share_market %>%
   plot_ly(
-    labels = ~RULE_NAME,
-    values = ~FLIGHT_SHARE,
+    labels     = ~factor(RULE_NAME, levels = c("Lowcost", "Scheduled", "Mainline", "Regional", "Business", "Cargo", "Non-Scheduled", "Military", "Other")),
+    values     = ~FLIGHT_SHARE,
+    textposition = "outside",
+    type='pie',
+    hole=0.4,
+    marker = list(colors = ~colours),
     customdata = ~YEAR,
     transforms = list(list(type      = 'filter',
                            target    = "customdata",
@@ -65,16 +65,8 @@ share_market_fig=share_market %>%
                            value     = max_year))
   ) %>%
   add_pie(
-    hole         = 0.4,
-    textposition = "outside"
+    hole         = 0.4
   ) %>%
-  # add_annotations(
-  #   text      = center_text,
-  #   font      = list(size = 18),
-  #   x         = 0.5,
-  #   y         = 0.5,
-  #   showarrow = FALSE
-  # ) %>%
   layout(showlegend  = TRUE,
          updatemenus = list( button_type_list )) %>% 
   config(
