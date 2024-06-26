@@ -54,6 +54,8 @@ share_market_fig=share_market %>%
   plot_ly(
     labels     = ~factor(RULE_NAME, levels = c("Lowcost", "Scheduled", "Mainline", "Regional", "Business", "Cargo", "Non-Scheduled", "Military", "Other")),
     values     = ~FLIGHT_SHARE,
+    sort=FALSE,
+    direction = "clockwise",
     textposition = "outside",
     type='pie',
     hole=0.4,
