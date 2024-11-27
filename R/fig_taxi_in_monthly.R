@@ -163,7 +163,8 @@ layout(
   config(
     displaylogo = FALSE,
     modeBarButtonsToRemove = config_bar_remove_buttons
-  )
+  ) %>% 
+  add_download_button(TXIN_MM)
 if (!is.null(annotations[[length(filter_years)]])) {
   txin_mm_fig=txin_mm_fig %>% 
     add_annotations(x         = annotations[[length(filter_years)]]$x,

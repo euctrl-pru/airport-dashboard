@@ -1,6 +1,7 @@
 library(dplyr)
 library(here)
 library(stringr)
+source('R/plotly_download_wrapper.R')
 
 # 0. cleanup: remove everything but (favicons and) `images/` 
 fs::dir_delete(here("docs", "libs"))

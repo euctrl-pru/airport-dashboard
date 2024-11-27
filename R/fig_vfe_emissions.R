@@ -104,7 +104,8 @@ vfe_emissions_fig = vfe_emissions_fig  %>%
          updatemenus = list( button_type_list )
   ) %>% 
   config( displaylogo = FALSE,
-          modeBarButtonsToRemove = config_bar_remove_buttons)
+          modeBarButtonsToRemove = config_bar_remove_buttons) %>% 
+  add_download_button(VFE_EMISSIONS_PLOT)
 
 vfe_emissions_fig
 

@@ -75,7 +75,6 @@ key_msg <- list(
 
 ###########################################################################
 
-
 ASMA_YY %>%
   plotly::plot_ly(
     x          = ~YEAR,
@@ -110,7 +109,8 @@ ASMA_YY %>%
 config(
   displaylogo = FALSE,
   modeBarButtonsToRemove = config_bar_remove_buttons
-)
+) %>% 
+  add_download_button(ASMA_YY)
 
 
 

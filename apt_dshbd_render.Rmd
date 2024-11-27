@@ -279,7 +279,9 @@ if (params$apdf == "Y") {
 if (nrow(params$tfcvar) < 1) {
   cat("<p><b>Traffic evolution for this airport under development!</b>")
 } else {
-  fig1 <- params$tfcvar %>%
+  tfcvar <- params$tfcvar
+  
+  fig1 <- tfcvar %>%
     plot_ly() %>%
     add_lines(
       x = ~DAY,
@@ -297,7 +299,7 @@ if (nrow(params$tfcvar) < 1) {
     ) %>%
     layout(yaxis = list(title = "movements"))
 
-  fig2 <- params$tfcvar %>%
+  fig2 <- tfcvar %>%
     plot_ly() %>%
     add_lines(
       x = ~DAY,
@@ -333,7 +335,8 @@ if (nrow(params$tfcvar) < 1) {
     config(
       displaylogo = FALSE,
       modeBarButtonsToRemove = config_bar_remove_buttons
-    )
+    ) %>% 
+    add_download_button(tfcvar)
 
   fig
 }
@@ -418,7 +421,8 @@ pbox_group <- tmp %>%
   config(
     displaylogo = FALSE,
     modeBarButtonsToRemove = config_bar_remove_buttons
-  )
+  ) %>% 
+  add_download_button(tmp)
 
 pbox_group
 
@@ -542,7 +546,8 @@ if (nrow(params$atfm) > 0) {
     config(
       displaylogo = FALSE,
       modeBarButtonsToRemove = config_bar_remove_buttons
-    )
+    ) %>% 
+    add_download_button(tmp)
 
   p
 }
@@ -630,7 +635,8 @@ if (nrow(params$atfm) > 0) {
     config(
       displaylogo = FALSE,
       modeBarButtonsToRemove = config_bar_remove_buttons
-    )
+    ) %>% 
+    add_download_button(share_atfm)
 }
 
 ```
@@ -661,7 +667,6 @@ SLOT_YY_PLOT1 <- params$slot_yy %>%
 
 SLOT_YY_PLOT1 <- SLOT_YY_PLOT1 %>%
   mutate(YEAR = as.character(YEAR))
-
 
 SLOT_YY_PLOT1 %>%
   plot_ly(
@@ -708,7 +713,8 @@ SLOT_YY_PLOT1 %>%
   config(
     displaylogo = FALSE,
     modeBarButtonsToRemove = config_bar_remove_buttons
-  )
+  ) %>% 
+  add_download_button(SLOT_YY_PLOT1)
 
 
 ```
@@ -796,7 +802,8 @@ button_type_list <- list(
 #          updatemenus = list( button_type_list )
 #         ) %>%
 #  config( displaylogo = FALSE,
-#        modeBarButtonsToRemove = config_bar_remove_buttons)
+#        modeBarButtonsToRemove = config_bar_remove_buttons) %>% 
+#    add_download_button(SLOT_YY_PLOT1)
 
 SLOT_MM_PLOT1 %>%
   plot_ly(
@@ -854,7 +861,8 @@ SLOT_MM_PLOT1 %>%
   config(
     displaylogo = FALSE,
     modeBarButtonsToRemove = config_bar_remove_buttons
-  )
+  ) %>% 
+  add_download_button(SLOT_MM_PLOT1)
 
 
 ```
@@ -990,7 +998,8 @@ cat("### Delta CO~2~ emissions due to level segments (Source: AIU analysis)")
 #          ##############################################################################
 #   ) %>% 
 #   config( displaylogo = FALSE,
-#           modeBarButtonsToRemove = config_bar_remove_buttons)
+#           modeBarButtonsToRemove = config_bar_remove_buttons) %>% 
+#    add_download_button(MED_CDO_CCO_ALT_AVG_TIME_LVL_PLOT)
 
 ```
 
@@ -1362,7 +1371,8 @@ predepdly_py %>%
   config(
     displaylogo = FALSE,
     modeBarButtonsToRemove = config_bar_remove_buttons
-  )
+  ) %>% 
+  add_download_button(predepdly_py)
 
 ```
 
@@ -1459,7 +1469,8 @@ predepdly_pm %>%
   config(
     displaylogo = FALSE,
     modeBarButtonsToRemove = config_bar_remove_buttons
-  )
+  ) %>% 
+  add_download_button(predepdly_pm)
 
 ```
 
@@ -1658,7 +1669,8 @@ plot_ly(TURN_DDI,
          showlegend = TRUE
          ) %>% 
   config( displaylogo = FALSE,
-          modeBarButtonsToRemove = config_bar_remove_buttons)
+          modeBarButtonsToRemove = config_bar_remove_buttons) %>% 
+  add_download_button(TURN_DDI)
 
 ```
 
@@ -1726,7 +1738,8 @@ plot_ly(TURN_OVER,
          showlegend = FALSE
          ) %>% 
   config( displaylogo = FALSE,
-          modeBarButtonsToRemove = config_bar_remove_buttons)
+          modeBarButtonsToRemove = config_bar_remove_buttons) %>% 
+  add_download_button(TURN_OVER)
 ```
 
 

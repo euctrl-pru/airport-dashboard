@@ -100,7 +100,8 @@ med_cdo_cco_fig=med_cdo_cco_fig %>%
          ##############################################################################
   ) %>% 
   config( displaylogo = FALSE,
-          modeBarButtonsToRemove = config_bar_remove_buttons)
+          modeBarButtonsToRemove = config_bar_remove_buttons) %>% 
+  add_download_button(MED_CDO_CCO_ALT_PLOT)
 
 med_cdo_cco_fig
 

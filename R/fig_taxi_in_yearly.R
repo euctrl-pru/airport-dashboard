@@ -123,7 +123,8 @@ TXIN_YY %>%
 config(
   displaylogo = FALSE,
   modeBarButtonsToRemove = config_bar_remove_buttons
-)
+) %>% 
+  add_download_button(TXIN_YY)
 
 
 

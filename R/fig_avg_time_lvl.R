@@ -199,7 +199,8 @@ avg_time_lvl_fig=avg_time_lvl_fig %>%
          
   ) %>% 
   config( displaylogo = FALSE,
-          modeBarButtonsToRemove = config_bar_remove_buttons)
+          modeBarButtonsToRemove = config_bar_remove_buttons) %>% 
+  add_download_button(AVG_TIME_LVL_PLOT)
 
 if (!is.null(annotations[[length(filter_years)]])) {
   avg_time_lvl_fig=avg_time_lvl_fig %>% 

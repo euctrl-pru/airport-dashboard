@@ -121,7 +121,8 @@ share_cdo_cdo_fig = share_cdo_cdo_fig  %>%
          ##############################################################################
   ) %>% 
   config( displaylogo = FALSE,
-          modeBarButtonsToRemove = config_bar_remove_buttons)
+          modeBarButtonsToRemove = config_bar_remove_buttons) %>% 
+  add_download_button(SHARE_CDO_CCO_FLIGHTS_PLOT)
 
 share_cdo_cdo_fig
 

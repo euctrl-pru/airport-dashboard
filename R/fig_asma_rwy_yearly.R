@@ -151,7 +151,8 @@ if (nrow(ASMA_RWY_YY)>0) {
   config(
     displaylogo = FALSE,
     modeBarButtonsToRemove = config_bar_remove_buttons
-  )
+  ) %>% 
+    add_download_button(ASMA_RWY_YY)
   
 } else {
   
@@ -159,8 +160,6 @@ if (nrow(ASMA_RWY_YY)>0) {
 No data available </center>")
   
 }
-
-
 
 # TXOT_RWY_YY %>%
 #   plotly::plot_ly(
@@ -197,7 +196,8 @@ No data available </center>")
 # config(
 #   displaylogo = FALSE,
 #   modeBarButtonsToRemove = config_bar_remove_buttons
-# )
+# ) %>% 
+# add_download_button(TXOT_RWY_YY)
 
 # xax <- list(title = "")
 # 
@@ -230,7 +230,8 @@ No data available </center>")
 #   config(
 #     displaylogo = FALSE,
 #     modeBarButtonsToRemove = config_bar_remove_buttons
-#   )
+#   ) %>% 
+# add_download_button(TXOT_RWY_YY)
 
 
 

@@ -1,0 +1,120 @@
+---
+title: "AIU Airport Performance Dashboard"
+output:
+  html_document:
+    includes: 
+      in_header: ga_script.html
+
+---
+
+```{r setup, message=FALSE, warning=FALSE, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE,
+  error = FALSE,
+  NULL
+)
+
+library(leaflet)
+library(leaflet.extras)
+library(readr)
+library(here)
+library(dplyr)
+library(stringr)
+library(htmltools)
+library(gt)
+```
+
+Consolidated monthly overview of operational performance at European airports
+across a wide spectrum of indicators.
+
+
+Please **select**/**search** the airport you are interested in from the following map:
+
+<!-- <div id='findbox' style='position: relative;'> -->
+<!-- </div> -->
+<!-- <br> -->
+
+```{r airport-selection-map, out.width = '100%'}
+# a lot to learn from https://www.jla-data.net/eng/leaflet-in-r-tips-and-tricks/
+pop <- str_c(
+  "<a href='{icao}.html'><strong>{name}</strong></a> ({country})<br>",
+  "<span style='font-variant: small-caps;'>ICAO</span>: <b>{icao}</b> | ",
+  "<span style='font-variant: small-caps;'>IATA</span>: <b>{iata}</b>")
+tit <- "{name}, {country} ({icao}/{iata})"
+apt <- APT_DF %>%
+  dplyr::select(
+    icao    = ICAO,
+    iata    = IATA,
+    country = STATE,
+    name    = APT_NAME,
+    lon     = LON,
+    lat     = LAT)
+
+apt %>%
+leaflet(options = leafletOptions(minZoom = 3, maxZoom = 9)) %>%
+  setMaxBounds(lng1 = -34, lat1 = 20,
+               lng2 =  52, lat2 = 73) %>%
+  addTiles() %>%
+  addMarkers(lng = ~lon, lat = ~lat,
+             group = "airports",
+             # icon = makeIcon(iconUrl = "aerodrome_symbol.png",
+             #                 iconWidth = 18, iconHeight = 18),
+             popup = ~str_glue(pop) %>%
+               lapply(htmltools::HTML),
+             label = ~str_glue(tit) %>%
+               lapply(htmltools::HTML)
+             ) %>%
+  addSearchFeatures(targetGroups = "airports",
+                    options = searchFeaturesOptions(
+                      zoom = 8.25,
+                      position = 'topright',
+                      collapsed = FALSE,
+                      # container = 'findbox',
+                      textPlaceholder = 'Search...'
+                    ))
+  
+```
+
+<br>
+
+```{r airport-selection-table}
+library(gt)
+
+apt %>%
+  select(-c("lon", "lat")) %>%
+  arrange(country, name) %>%
+  mutate(
+    name = glue::glue("[{name}](https://ansperformance.eu/dashboard/stakeholder/airport/db/{icao}.html)"),
+    name = purrr::map(name, gt::md),
+  ) %>%
+  relocate(name, icao, iata) %>%
+  group_by(country) %>%
+  gt(
+    rowname_col = "name",
+    groupname_col = "country"
+  ) %>%
+  tab_header(title = "Airports in the dashboard") %>%
+  cols_align(
+    align = "left",
+    columns = c(name)
+  )  %>%
+  cols_label(
+    icao = "ICAO",
+    iata = "IATA"
+  ) %>%
+  # tab_style(
+  #   style = cell_text(font = "Courier"),
+  #   locations = list(
+  #     cells_body(columns = "icao"),
+  #     cells_body(columns = "iata")
+  #   )
+  # ) %>%
+  tab_options(
+    table.width = "unset !important",
+    table.margin.left = "unset !important",
+    row_group.font.weight = "bold"
+  )
+```
+

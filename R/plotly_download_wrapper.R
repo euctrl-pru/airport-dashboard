@@ -1,7 +1,8 @@
 library(plotly)
 
 # Wrapper function for plotly graphs to add dataset download button
-add_download_button <- function(plot, dataset, dataset_name) {
+add_download_button <- function(plot, dataset) {
+  dataset_name <- deparse(substitute(dataset))
   # Convert dataset to CSV format
   csv_data <- capture.output(write.csv(dataset, row.names = FALSE))
   csv_data_js <- paste(csv_data, collapse = "\\n") # Escape newlines for JavaScript
@@ -38,3 +39,4 @@ add_download_button <- function(plot, dataset, dataset_name) {
       )
     )
 }
+

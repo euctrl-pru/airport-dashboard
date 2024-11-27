@@ -19,6 +19,8 @@ share_market <- params$market %>%
   ) %>% 
   left_join(mkt_seg_col, by=c("RULE_NAME"="mkt_seg"))
 
+share_market_copy <- cbind(share_market) %>% select(-colours)
+
 filter_years <- share_market %>%
   pull(YEAR) %>%
   unique()
@@ -72,9 +74,10 @@ share_market_fig=share_market %>%
   layout(showlegend  = TRUE,
          updatemenus = list( button_type_list )) %>% 
   config(
-    displaylogo = FALSE,
-    modeBarButtonsToRemove = config_bar_remove_buttons
-  )
+    displaylogo = FALSE#,
+    #modeBarButtonsToRemove = config_bar_remove_buttons
+  ) %>% 
+  add_download_button(share_market_copy)
 
 share_market_fig
 

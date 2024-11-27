@@ -164,7 +164,10 @@ layout(
   config(
     displaylogo = FALSE,
     modeBarButtonsToRemove = config_bar_remove_buttons
-  )
+  ) %>% 
+  add_download_button(TXOT_MM)
+
+
 if (!is.null(annotations[[length(filter_years)]])) {
   txot_mm_fig=txot_mm_fig %>% 
     add_annotations(x         = annotations[[length(filter_years)]]$x,

@@ -151,7 +151,8 @@ if (nrow(TXIN_RWY_YY)>0) {
   config(
     displaylogo = FALSE,
     modeBarButtonsToRemove = config_bar_remove_buttons
-  )
+  ) %>% 
+    add_download_button(TXIN_RWY_YY)
 
 } else {
   
@@ -197,7 +198,8 @@ No data available </center>")
 # config(
 #   displaylogo = FALSE,
 #   modeBarButtonsToRemove = config_bar_remove_buttons
-# )
+# ) %>% 
+# add_download_button(TXIN_RWY_YY)
 
 
 
