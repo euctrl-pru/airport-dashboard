@@ -137,7 +137,9 @@ DLY_YY %>%
     displaylogo = FALSE,
     modeBarButtonsToRemove = config_bar_remove_buttons
   ) %>% 
-  add_download_button(DLY_YY)
+  add_download_button(
+    DLY_YY %>% select(YEAR, DLY_CAT, DLY_DUR), 
+    "PRE_DEP_DLY_YY")
 
 
 

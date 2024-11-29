@@ -69,7 +69,7 @@ mvts_pm %>%
     displaylogo = FALSE,
     modeBarButtonsToRemove = config_bar_remove_buttons
   ) %>% 
-  add_download_button(mvts_pm)
+  add_download_button(mvts_pm, "TRAFFIC_MM")
 
 
 

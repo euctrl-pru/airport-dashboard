@@ -165,7 +165,20 @@ layout(
     displaylogo = FALSE,
     modeBarButtonsToRemove = config_bar_remove_buttons
   ) %>% 
-  add_download_button(ASMA_MM)
+  add_download_button(
+    ASMA_MM %>% 
+      select(
+        AIRPORT, 
+        YEAR, 
+        MONTH = MONTH_NUM,
+        TOT_REF_TIME = TOT_UNINMP_TIME,
+        TOT_ADD_TIME, 
+        TOT_FLT,  
+        TYPE, 
+        AVG_ASMA_TIME = TIME), 
+    "ASMA_MM")
+
+
 if (!is.null(annotations[[length(filter_years)]])) {
   asma_mm_fig=asma_mm_fig %>% 
     add_annotations(x         = annotations[[length(filter_years)]]$x,

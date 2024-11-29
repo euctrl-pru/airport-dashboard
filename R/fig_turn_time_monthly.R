@@ -119,7 +119,14 @@ TURN_MM %>%
     displaylogo = FALSE,
     modeBarButtonsToRemove = config_bar_remove_buttons
   ) %>% 
-  add_download_button(TURN_MM)
+  add_download_button(
+    TURN_MM %>%
+      select(
+        YEAR,
+        MONTH = MONTH_NUM,
+        AC_CLASS,
+        AVG_ACTUAL_TT = AVG_ACTT, 
+        AVG_SCHED_TT = AVG_SDTT), "TURNAROUND_MM")
 
 
 

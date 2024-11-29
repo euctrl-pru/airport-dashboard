@@ -123,7 +123,17 @@ config(
   displaylogo = FALSE,
   modeBarButtonsToRemove = config_bar_remove_buttons
 ) %>% 
-  add_download_button(TXOT_YY)
+  add_download_button(
+    TXOT_YY %>%
+      select(
+        AIRPORT, 
+        YEAR, 
+        TOT_REF_TIME = TOT_UNINMP_TIME,
+        TOT_ADD_TIME, 
+        TOT_FLT,  
+        TYPE, 
+        AVG_TXOT_TIME = TIME), 
+    "TXOT_YY")
 
 
 

@@ -219,7 +219,10 @@ if (nrow(params$atfm) > 0) {
       displaylogo = FALSE,
       modeBarButtonsToRemove = config_bar_remove_buttons
     ) %>% 
-    add_download_button(atfm_pm)
+    add_download_button(atfm_pm %>%
+      select(YEAR, MONTH = MONTH_NUM, REG_REASON, AVG_ARR_ATFM_DLY = AVG_ARR_ATFM_REG), 
+      "ARR_ATFM_DLY_MM")
+
   if (!is.null(annotations[[length(filter_years)]])) {
     atfm_pm_fig=atfm_pm_fig %>% 
       add_annotations(x         = annotations[[length(filter_years)]]$x,

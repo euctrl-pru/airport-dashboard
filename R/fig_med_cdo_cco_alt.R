@@ -101,7 +101,13 @@ med_cdo_cco_fig=med_cdo_cco_fig %>%
   ) %>% 
   config( displaylogo = FALSE,
           modeBarButtonsToRemove = config_bar_remove_buttons) %>% 
-  add_download_button(MED_CDO_CCO_ALT_PLOT)
+  add_download_button(MED_CDO_CCO_ALT_PLOT %>% 
+    select(
+      YEAR, 
+      MONTH = MONTH_NUM, 
+      MED_CDO_ALT_DESCENT = MEDIAN_CDO_ALT, 
+      MED_CCO_ALT_CLIMB = MEDIAN_CCO_ALT
+    ), "MED_CDO_CCO_ALT_MM")
 
 med_cdo_cco_fig
 

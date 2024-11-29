@@ -105,7 +105,16 @@ vfe_emissions_fig = vfe_emissions_fig  %>%
   ) %>% 
   config( displaylogo = FALSE,
           modeBarButtonsToRemove = config_bar_remove_buttons) %>% 
-  add_download_button(VFE_EMISSIONS_PLOT)
+  add_download_button(
+    VFE_EMISSIONS_PLOT %>%
+      select(
+        YEAR,
+        MONTH = MONTH_NUM, 
+        TOT_DELTA_CO2_DESCENT_FUEL_CDO = TOT_DELTA_CO2_KG_DESCENT, 
+        TOT_DELTA_CO2_CLIMB_FUEL_CCO = TOT_DELTA_CO2_KG_CLIMB,
+        TOT_DELTA_CO2_DESCENT_NOISE_CDO = TOT_DELTA_CO2_KG_DESC_BLW_70,
+        TOT_DELTA_CO2_CLIMB_NOISE_CCO = TOT_DELTA_CO2_KG_CLIMB_BLW_100), 
+    "VFE_EMISSIONS_MM")
 
 vfe_emissions_fig
 
