@@ -158,7 +158,7 @@ if (nrow(ASMA_RWY_YY)>0) {
         AIRPORT, 
         YEAR, 
         RUNWAY,
-        TOT_REF_TIME = TOT_UNINMP_TIME,
+        TOT_REF_TIME = TOT_UNIMP_TIME,
         TOT_ADD_TIME, 
         TOT_FLT,  
         TYPE, 

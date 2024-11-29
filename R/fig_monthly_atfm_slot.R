@@ -112,7 +112,7 @@ SLOT_MM_PLOT2 %>%
   add_download_button(
     SLOT_MM_PLOT2 %>% 
       mutate(SLOT_CAT = str_replace_all(SLOT_CAT, "<br>", " ")) %>%
-      select(YEAR, MONTH = MONTH_NUM, SLOT_ADH_CAT = SLOT_CAT, NB_REG_DEP = NB_SLOT),, "SLOT_ADH_MM_2")
+      select(YEAR, MONTH = MONTH_NUM, SLOT_ADH_CAT = SLOT_CAT, NB_REG_DEP = NB_SLOT), "SLOT_ADH_MM_2")
 
 
 

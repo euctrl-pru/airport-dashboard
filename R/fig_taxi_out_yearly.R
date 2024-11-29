@@ -128,7 +128,7 @@ config(
       select(
         AIRPORT, 
         YEAR, 
-        TOT_REF_TIME = TOT_UNINMP_TIME,
+        TOT_REF_TIME = TOT_UNIMP_TIME,
         TOT_ADD_TIME, 
         TOT_FLT,  
         TYPE, 

@@ -185,7 +185,7 @@ PUNC_DEP_YY_DF <- PUNC_DF %>%
     PUNCT_CAT,	
     # ..........
     NB_FLT,	
-    MONTHLY_TRAFFIC
+    MONTHLY_TRAFFIC = MONTHLY_TRAFIC
     # ..........
   ) %>%
   filter(PHASE == "DEP") %>%
@@ -211,7 +211,7 @@ PUNC_DEP_MM_DF <- PUNC_DF %>%
     PUNCT_CAT,	
     # ..........
     NB_FLT,	
-    MONTHLY_TRAFFIC
+    MONTHLY_TRAFFIC = MONTHLY_TRAFIC
     # ..........
   ) %>%
   filter(PHASE == "DEP") %>%
@@ -235,7 +235,7 @@ PUNC_ARR_YY_DF <- PUNC_DF %>%
     PUNCT_CAT,	
     # ..........
     NB_FLT,	
-    MONTHLY_TRAFFIC
+    MONTHLY_TRAFFIC = MONTHLY_TRAFIC
     # ..........
   ) %>%
   filter(PHASE == "ARR") %>%
@@ -261,7 +261,7 @@ PUNC_ARR_MM_DF <- PUNC_DF %>%
     PUNCT_CAT,	
     # ..........
     NB_FLT,	
-    MONTHLY_TRAFFIC
+    MONTHLY_TRAFFIC = MONTHLY_TRAFIC
     # ..........
   ) %>%
   filter(PHASE == "ARR") %>%

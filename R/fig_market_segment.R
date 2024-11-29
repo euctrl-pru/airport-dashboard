@@ -78,7 +78,7 @@ share_market_fig=share_market %>%
     #modeBarButtonsToRemove = config_bar_remove_buttons
   ) %>% 
   add_download_button(share_market_copy %>% 
-    select(YEAR, MARKET_SEGMENT = RULE_NAME, FLT_TOT, FLT_TOT_YEAR, SHARE = FLIGHT_SHARE), 
+    select(YEAR, MARKET_SEGMENT = RULE_NAME, FLT_TOT, FLT_TOT_YEAR = FLIGHT_TOT, SHARE = FLIGHT_SHARE), 
     "SHARE_MARKET_SEGMENT_YY")
 
 share_market_fig

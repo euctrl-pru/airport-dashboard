@@ -126,7 +126,7 @@ subplot(
         YEAR, 
         MONTH = MONTH_NUM,
         RUNWAY,
-        TOT_REF_TIME = TOT_UNINMP_TIME,
+        TOT_REF_TIME = TOT_UNIMP_TIME,
         TOT_ADD_TIME, 
         TOT_FLT,  
         TYPE, 
