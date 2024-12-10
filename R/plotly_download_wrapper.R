@@ -15,6 +15,7 @@ add_download_button <- function(plot, dataset, dataset_name = NULL) {
   # Embed CSV data into the HTML using JavaScript
   plot %>%
     config(
+      displayModeBar = TRUE,  
       modeBarButtonsToAdd = list(
         list(
           name = "Download data",
