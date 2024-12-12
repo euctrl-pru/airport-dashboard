@@ -162,7 +162,8 @@ if (nrow(TXIN_RWY_YY)>0) {
         TOT_ADD_TIME, 
         TOT_FLT,  
         TYPE, 
-        AVG_TXIT_TIME = TIME), 
+        AVG_TXIT_TIME = TIME) %>%
+      filter(!is.na(RUNWAY)), 
     "TXIT_RWY_YY")
 
 } else {

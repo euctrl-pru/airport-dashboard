@@ -162,7 +162,8 @@ subplot(
         TOT_ADD_TIME, 
         TOT_FLT,  
         TYPE, 
-        AVG_TXOT_TIME = TIME), 
+        AVG_TXOT_TIME = TIME) %>%
+      filter(!is.na(RUNWAY)), 
     "TXOT_RWY_YY")
 
 } else {
