@@ -199,7 +199,22 @@ avg_time_lvl_fig=avg_time_lvl_fig %>%
          
   ) %>% 
   config( displaylogo = FALSE,
-          modeBarButtonsToRemove = config_bar_remove_buttons)
+          modeBarButtonsToRemove = config_bar_remove_buttons) %>% 
+  add_download_button(
+    AVG_TIME_LVL_PLOT %>%
+      mutate(
+        AVG_TIME_LVL_DESCENT = AVG_TIME_LVL_DESCENT/60,
+        AVG_TIME_LVL_CLIMB = AVG_TIME_LVL_CLIMB/60, 
+        AVG_TIME_LVL_DESCENT_BLW_70 = AVG_TIME_LVL_DESCENT_BLW_70/60, 
+        AVG_TIME_LVL_CLIMB_BLW_100 = AVG_TIME_LVL_CLIMB_BLW_100/60) %>%
+      select(
+        YEAR,
+        MONTH = MONTH_NUM, 
+        AVG_TIME_LVL_DESCENT_FUEL_CDO = AVG_TIME_LVL_DESCENT, 
+        AVG_TIME_LVL_CLIMB_FUEL_CCO = AVG_TIME_LVL_CLIMB, 
+        AVG_TIME_LVL_DESCENT_NOISE_CDO = AVG_TIME_LVL_DESCENT_BLW_70,
+        AVG_TIME_LVL_CLIMB_NOISE_CCO = AVG_TIME_LVL_CLIMB_BLW_100), 
+    "AVG_TIME_LVL_MM")
 
 if (!is.null(annotations[[length(filter_years)]])) {
   avg_time_lvl_fig=avg_time_lvl_fig %>% 

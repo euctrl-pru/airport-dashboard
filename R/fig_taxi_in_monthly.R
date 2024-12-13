@@ -163,7 +163,19 @@ layout(
   config(
     displaylogo = FALSE,
     modeBarButtonsToRemove = config_bar_remove_buttons
-  )
+  ) %>% 
+  add_download_button(
+    TXIN_MM %>%
+      select(
+        AIRPORT, 
+        YEAR, 
+        MONTH = MONTH_NUM,
+        TOT_REF_TIME = TOT_UNIMP_TIME,
+        TOT_ADD_TIME, 
+        TOT_FLT,  
+        TYPE, 
+        AVG_TXIT_TIME = TIME), 
+    "TXIT_MM")
 if (!is.null(annotations[[length(filter_years)]])) {
   txin_mm_fig=txin_mm_fig %>% 
     add_annotations(x         = annotations[[length(filter_years)]]$x,

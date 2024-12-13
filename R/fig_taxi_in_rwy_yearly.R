@@ -151,7 +151,20 @@ if (nrow(TXIN_RWY_YY)>0) {
   config(
     displaylogo = FALSE,
     modeBarButtonsToRemove = config_bar_remove_buttons
-  )
+  ) %>% 
+  add_download_button(
+    TXIN_RWY_YY %>%
+      select(
+        AIRPORT, 
+        YEAR, 
+        RUNWAY,
+        TOT_REF_TIME,
+        TOT_ADD_TIME, 
+        TOT_FLT,  
+        TYPE, 
+        AVG_TXIT_TIME = TIME) %>%
+      filter(!is.na(RUNWAY)), 
+    "TXIT_RWY_YY")
 
 } else {
   
@@ -197,7 +210,8 @@ No data available </center>")
 # config(
 #   displaylogo = FALSE,
 #   modeBarButtonsToRemove = config_bar_remove_buttons
-# )
+# ) %>% 
+# add_download_button(TXIN_RWY_YY)
 
 
 

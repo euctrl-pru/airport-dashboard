@@ -75,7 +75,6 @@ key_msg <- list(
 
 ###########################################################################
 
-
 ASMA_YY %>%
   plotly::plot_ly(
     x          = ~YEAR,
@@ -110,7 +109,18 @@ ASMA_YY %>%
 config(
   displaylogo = FALSE,
   modeBarButtonsToRemove = config_bar_remove_buttons
-)
+) %>% 
+  add_download_button(
+    ASMA_YY %>% 
+      select(
+        AIRPORT, 
+        YEAR, 
+        TOT_REF_TIME = TOT_UNIMP_TIME,
+        TOT_ADD_TIME, 
+        TOT_FLT,  
+        TYPE, 
+        AVG_ASMA_TIME = TIME), 
+    "ASMA_YY")
 
 
 

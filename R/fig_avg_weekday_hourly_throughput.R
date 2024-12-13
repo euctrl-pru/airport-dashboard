@@ -111,7 +111,10 @@ thru %>%
   config(
     displaylogo = FALSE,
     modeBarButtonsToRemove = config_bar_remove_buttons
-  )
+  ) %>% 
+  add_download_button(thru %>%
+    select(YEAR, MONTH = MONTH_NUM, TIME, PHASE, PEAK_SERVICE_RATE = PCT99_RHM, AVG_THROUGHPUT_RATE = ROLLING_HOUR_MVT), 
+    "HOURLY_THROUGHPUT_MM")
 
 
 

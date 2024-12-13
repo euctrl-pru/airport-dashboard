@@ -1,6 +1,7 @@
 library(dplyr)
 library(here)
 library(stringr)
+source('R/plotly_download_wrapper.R')
 
 # 0. cleanup: remove everything but (favicons and) `images/` 
 fs::dir_delete(here("docs", "libs"))
@@ -15,7 +16,7 @@ fs::dir_ls(here("docs"), recurse = TRUE) %>%
 
 # 1. export the data to CSV from DB
 # UNCOMMENT  if data needs to be refreshed
-source(here("R","apt_dshbd_get_data.R"), encoding = "UTF8")
+#source(here("R","apt_dshbd_get_data.R"), encoding = "UTF8")
 
 # 2. generate airport layout
 source(here("R","apt_dshbd_layout.R"), encoding = "UTF8")

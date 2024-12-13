@@ -111,7 +111,10 @@ if (nrow(params$atfm) > 0) {
     config(
       displaylogo = FALSE,
       modeBarButtonsToRemove = config_bar_remove_buttons
-    )
+    ) %>% 
+    add_download_button(
+      atfm_pa %>% select(YEAR, REG_REASON, AVG_ARR_ATFM_DLY = AVG_ARR_ATFM_REG), 
+      "ARR_ATFM_DLY_YY")
 }
 
 

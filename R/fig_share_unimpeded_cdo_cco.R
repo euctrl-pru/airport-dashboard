@@ -121,11 +121,19 @@ share_cdo_cdo_fig = share_cdo_cdo_fig  %>%
          ##############################################################################
   ) %>% 
   config( displaylogo = FALSE,
-          modeBarButtonsToRemove = config_bar_remove_buttons)
+          modeBarButtonsToRemove = config_bar_remove_buttons) %>% 
+  add_download_button(
+    SHARE_CDO_CCO_FLIGHTS_PLOT %>%
+    select(
+      YEAR, 
+      MONTH = MONTH_NUM, 
+      SHARE_DESCENT_FUEL_CDO = SHARE_CDO_FLIGHTS, 
+      SHARE_CLIMB_FUEL_CCO = SHARE_CCO_FLIGHTS,
+      SHARE_DESCENT_NOISE_CDO = SHARE_CDO_FLIGHTS_BLW_70,
+      SHARE_CLIMB_NOISE_CCO = SHARE_CCO_FLIGHTS_BLW_100), 
+    "SHARE_CDO_CCO_FLIGHTS_MM")
 
 share_cdo_cdo_fig
-
-
 
 # Factsheet figure
 

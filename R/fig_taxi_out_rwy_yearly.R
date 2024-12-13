@@ -151,7 +151,20 @@ subplot(
   config(
     displaylogo = FALSE,
     modeBarButtonsToRemove = config_bar_remove_buttons
-  )
+  ) %>%
+  add_download_button(
+    TXOT_RWY_YY %>%
+      select(
+        AIRPORT, 
+        YEAR, 
+        RUNWAY,
+        TOT_REF_TIME,
+        TOT_ADD_TIME, 
+        TOT_FLT,  
+        TYPE, 
+        AVG_TXOT_TIME = TIME) %>%
+      filter(!is.na(RUNWAY)), 
+    "TXOT_RWY_YY")
 
 } else {
   

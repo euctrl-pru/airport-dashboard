@@ -108,8 +108,10 @@ punc_dep_mm_plot %>%
   config(
     displaylogo = FALSE,
     modeBarButtonsToRemove = config_bar_remove_buttons
-  )
-
+  ) %>% 
+  add_download_button(
+    punc_dep_mm_plot %>% 
+    select(AIRPORT, PHASE, YEAR, MONTH = MONTH_NUM, PUNCT_CAT, PUNC_CAT_SHARE = AVG_PER_CATEG) , "PUNCT_DEP_MM")
 
 
 

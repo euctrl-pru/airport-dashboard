@@ -65,7 +65,12 @@ SLOT_YY_PLOT2 %>%
   config(
     displaylogo = FALSE,
     modeBarButtonsToRemove = config_bar_remove_buttons
-  )
+  ) %>% 
+  add_download_button(
+    SLOT_YY_PLOT2 %>% 
+      mutate(SLOT_CAT = str_replace_all(SLOT_CAT, "<br>", " ")) %>%
+      select(YEAR, SLOT_ADH_CAT = SLOT_CAT, NB_REG_DEP = NB_SLOT), 
+    "SLOT_ADH_YY_2")
 
 
 

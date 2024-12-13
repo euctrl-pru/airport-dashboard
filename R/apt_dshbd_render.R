@@ -16,7 +16,10 @@ source(here("R", "fac_layout_setup.R"))
 
 # ---- CALL RENDER DASHBOARDS ----
 
-APT_DF <- APT_DF %>% arrange(AIRPORT) %>% mutate(idx = row_number())
+library(stringr)
+
+APT_DF <- APT_DF %>% arrange(AIRPORT) %>% mutate(idx = row_number()) %>% 
+  mutate(STATE = if_else(str_detect(STATE, "rkiye"), "Türkiye",STATE))
 
 if(BUILD_DSH == TRUE) {
   APT_DF %>%
@@ -44,9 +47,6 @@ if(BUILD_DSH == TRUE) {
 
 # Create docs/pdf folder
 dir.create(here("docs", "pdf"))
-
-
-
 
 if(BUILD_FAC == TRUE) {
   APT_DF %>%

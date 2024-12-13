@@ -151,16 +151,26 @@ if (nrow(ASMA_RWY_YY)>0) {
   config(
     displaylogo = FALSE,
     modeBarButtonsToRemove = config_bar_remove_buttons
-  )
-  
+  ) %>%
+  add_download_button(
+    ASMA_RWY_YY %>% 
+      select(
+        AIRPORT, 
+        YEAR, 
+        RUNWAY,
+        TOT_REF_TIME = TOT_UNIMP_TIME,
+        TOT_ADD_TIME, 
+        TOT_FLT,  
+        TYPE, 
+        AVG_ASMA_TIME = TIME) %>%
+      filter(!is.na(RUNWAY)), 
+    "ASMA_RWY_YY")
 } else {
   
   cat("<center> 
 No data available </center>")
   
 }
-
-
 
 # TXOT_RWY_YY %>%
 #   plotly::plot_ly(
@@ -197,7 +207,8 @@ No data available </center>")
 # config(
 #   displaylogo = FALSE,
 #   modeBarButtonsToRemove = config_bar_remove_buttons
-# )
+# ) %>% 
+# add_download_button(TXOT_RWY_YY)
 
 # xax <- list(title = "")
 # 
@@ -230,7 +241,8 @@ No data available </center>")
 #   config(
 #     displaylogo = FALSE,
 #     modeBarButtonsToRemove = config_bar_remove_buttons
-#   )
+#   ) %>% 
+# add_download_button(TXOT_RWY_YY)
 
 
 

@@ -185,18 +185,18 @@ PUNC_DEP_YY_DF <- PUNC_DF %>%
     PUNCT_CAT,	
     # ..........
     NB_FLT,	
-    MONTHLY_TRAFIC
+    MONTHLY_TRAFFIC = MONTHLY_TRAFIC
     # ..........
   ) %>%
   filter(PHASE == "DEP") %>%
   group_by(AIRPORT, APT_ICAO, PHASE, YEAR, PUNCT_CAT) %>%
   summarise(
     TOT_FLT    = sum(NB_FLT,         na.rm = TRUE),
-    TOT_TRAFIC = sum(MONTHLY_TRAFIC, na.rm = TRUE)
+    TOT_TRAFFIC = sum(MONTHLY_TRAFFIC, na.rm = TRUE)
   ) %>%
   ungroup() %>%
   mutate(
-    AVG_PER_CATEG = (TOT_FLT / TOT_TRAFIC)*100
+    AVG_PER_CATEG = (TOT_FLT / TOT_TRAFFIC)*100
   )
 
 
@@ -211,18 +211,18 @@ PUNC_DEP_MM_DF <- PUNC_DF %>%
     PUNCT_CAT,	
     # ..........
     NB_FLT,	
-    MONTHLY_TRAFIC
+    MONTHLY_TRAFFIC = MONTHLY_TRAFIC
     # ..........
   ) %>%
   filter(PHASE == "DEP") %>%
   group_by(AIRPORT, APT_ICAO, PHASE, YEAR, MONTH_NUM,PUNCT_CAT) %>%
   summarise(
     TOT_FLT    = sum(NB_FLT,         na.rm = TRUE),
-    TOT_TRAFIC = sum(MONTHLY_TRAFIC, na.rm = TRUE)
+    TOT_TRAFFIC = sum(MONTHLY_TRAFFIC, na.rm = TRUE)
   ) %>%
   ungroup() %>%
   mutate(
-    AVG_PER_CATEG = (TOT_FLT / TOT_TRAFIC)*100
+    AVG_PER_CATEG = (TOT_FLT / TOT_TRAFFIC)*100
   )
 
 # ..PUNC ARR YEARLY DATA ----
@@ -235,18 +235,18 @@ PUNC_ARR_YY_DF <- PUNC_DF %>%
     PUNCT_CAT,	
     # ..........
     NB_FLT,	
-    MONTHLY_TRAFIC
+    MONTHLY_TRAFFIC = MONTHLY_TRAFIC
     # ..........
   ) %>%
   filter(PHASE == "ARR") %>%
   group_by(AIRPORT, APT_ICAO, PHASE, YEAR, PUNCT_CAT) %>%
   summarise(
     TOT_FLT    = sum(NB_FLT,         na.rm = TRUE),
-    TOT_TRAFIC = sum(MONTHLY_TRAFIC, na.rm = TRUE)
+    TOT_TRAFFIC = sum(MONTHLY_TRAFFIC, na.rm = TRUE)
   ) %>%
   ungroup() %>%
   mutate(
-    AVG_PER_CATEG = (TOT_FLT / TOT_TRAFIC)*100
+    AVG_PER_CATEG = (TOT_FLT / TOT_TRAFFIC)*100
   )
 
 
@@ -261,18 +261,18 @@ PUNC_ARR_MM_DF <- PUNC_DF %>%
     PUNCT_CAT,	
     # ..........
     NB_FLT,	
-    MONTHLY_TRAFIC
+    MONTHLY_TRAFFIC = MONTHLY_TRAFIC
     # ..........
   ) %>%
   filter(PHASE == "ARR") %>%
   group_by(AIRPORT, APT_ICAO, PHASE, YEAR, MONTH_NUM,PUNCT_CAT) %>%
   summarise(
     TOT_FLT    = sum(NB_FLT,         na.rm = TRUE),
-    TOT_TRAFIC = sum(MONTHLY_TRAFIC, na.rm = TRUE)
+    TOT_TRAFFIC = sum(MONTHLY_TRAFFIC, na.rm = TRUE)
   ) %>%
   ungroup() %>%
   mutate(
-    AVG_PER_CATEG = (TOT_FLT / TOT_TRAFIC)*100
+    AVG_PER_CATEG = (TOT_FLT / TOT_TRAFFIC)*100
   )
 
 
