@@ -200,6 +200,7 @@ rrr <- rwys %>%
   # exclude errors regarding runways
   filter(!(airport_ident == "LYPG" & le_ident %in% c("08"))) %>%
   filter(!(airport_ident == "UGTB" & le_ident %in% c("13L"))) %>%
+  filter(!is.na(he_heading_degT) & !is.na(le_heading_degT)) %>% 
   # keep only certain attributes
   select(
     airport_ident,
