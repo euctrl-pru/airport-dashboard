@@ -75,6 +75,9 @@ key_msg <- list(
 
 ###########################################################################
 
+if (nrow(ASMA_YY)>0) {
+  
+  
 ASMA_YY %>%
   plotly::plot_ly(
     x          = ~YEAR,
@@ -122,7 +125,12 @@ config(
         AVG_ASMA_TIME = TIME), 
     "ASMA_YY")
 
-
+} else {
+  
+  cat("<center> 
+No data available </center>")
+  
+}
 
 
 

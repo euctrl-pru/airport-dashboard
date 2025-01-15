@@ -28,6 +28,8 @@ MONTHLY_HIGH_ASMA = ASMA_MM %>%
   filter(TIME==max(TIME)) %>% 
   arrange(YEAR)
 
+if (nrow(ASMA_MM)>0) {
+  
 annotations = vector(mode = "list", length = length(filter_years))
 for (i in 1:length(filter_years)) {
   MONTHLY_HIGH_ASMA_temp=filter(MONTHLY_HIGH_ASMA, YEAR==filter_years[i])
@@ -195,7 +197,12 @@ if (!is.null(annotations[[length(filter_years)]])) {
 
 asma_mm_fig
 
-
+} else {
+  
+  cat("<center> 
+No data available </center>")
+  
+}
 
 
 

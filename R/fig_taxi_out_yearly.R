@@ -87,7 +87,8 @@ key_msg <- list(
 
 ################################################################################
 
-
+if (nrow(TXOT_YY)>0) {
+  
 TXOT_YY %>%
   plotly::plot_ly(
     x          = ~YEAR,
@@ -135,7 +136,12 @@ config(
         AVG_TXOT_TIME = TIME), 
     "TXOT_YY")
 
-
+} else {
+  
+  cat("<center> 
+No data available </center>")
+  
+}
 
 
 

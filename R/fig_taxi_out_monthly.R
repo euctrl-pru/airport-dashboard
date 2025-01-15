@@ -28,6 +28,8 @@ MONTHLY_HIGH_TXOT = TXOT_MM %>%
   filter(TIME==max(TIME)) %>% 
   arrange(YEAR)
 
+if (nrow(TXOT_MM)>0) {
+  
 annotations = vector(mode = "list", length = length(filter_years))
 for (i in 1:length(filter_years)) {
   MONTHLY_HIGH_TXOT_temp=filter(MONTHLY_HIGH_TXOT, YEAR==filter_years[i])
@@ -195,7 +197,12 @@ if (!is.null(annotations[[length(filter_years)]])) {
 
 txot_mm_fig
 
-
+} else {
+  
+  cat("<center> 
+No data available </center>")
+  
+}
 
 
 

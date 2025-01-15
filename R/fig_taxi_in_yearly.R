@@ -88,6 +88,7 @@ key_msg <- list(
 
 ################################################################################
 
+if (nrow(TXIN_YY)>0) {
 
 TXIN_YY %>%
   plotly::plot_ly(
@@ -136,7 +137,12 @@ config(
         AVG_TXIT_TIME = TIME), 
     "TXIT_YY")
 
-
+} else {
+  
+  cat("<center> 
+No data available </center>")
+  
+}
 
 
 # Factsheet figure

@@ -37,6 +37,8 @@ TXOT_RWY_MM <- TXOT_RWY_MM %>%
          RUNWAY=factor(RUNWAY, levels = ALL_RWY)) %>%
   arrange(YEAR, RUNWAY)
 
+if (nrow(TXOT_RWY_MM)>0) {
+  
 button_list <- lapply(
   1:length(filter_years),
   function(x) {
@@ -134,7 +136,12 @@ subplot(
       filter(!is.na(RUNWAY)), 
     "TXOT_RWY_MM")
 
-
+} else {
+  
+  cat("<center> 
+No data available </center>")
+  
+}
 
 
 
