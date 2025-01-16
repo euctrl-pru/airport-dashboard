@@ -90,6 +90,10 @@ landing_page_indicators <- function(.tfc = TFC_DF, .df = APDF_MM_DF, .atfm = ATF
                 mutate(AVG_ARR_ATFM = round(DLY_APT_ARR_1 / FLT_ARR_1,2) ) %>%
                 select(AVG_ARR_ATFM)
 
+        if (nrow(ind_tfc_2019)==0) {
+          ind_tfc_2019[1,]=NA
+        }
+        
         if (pick_apt_apdf(APT_DF,.apt)=='Y')
         {        
         out           <- ind_tfc_2019 %>%
