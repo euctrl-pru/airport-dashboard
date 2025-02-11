@@ -107,7 +107,12 @@ DLY_YY_annot=group_by(DLY_YY, YEAR) %>%
 
 DLY_YY=left_join(DLY_YY, DLY_YY_annot)
 
-DLY_YY %>%
+if (length(unique(DLY_YY$YEAR))==1) {
+  DLY_YY = mutate(DLY_YY, YEAR=as.character(YEAR))
+}
+  
+
+plot = DLY_YY %>%
   plot_ly(
     x             = ~YEAR,
     y             = ~DLY_DUR,
@@ -116,13 +121,6 @@ DLY_YY %>%
     #colors        = predep_col,
     # legendgroup = ~DLY_CAT,
     hovertemplate = "%{y:.r}"
-  ) %>%
-  add_annotations(
-    data      = DLY_YY %>% select(YEAR, DLY_DUR_TOT) %>% unique(),
-    x         = ~ YEAR,
-    y         = ~ DLY_DUR_TOT + 100000,
-    text      = ~ paste0(round(DLY_DUR_TOT/1000000, 2), "M"),
-    showarrow = FALSE
   ) %>%
   layout(
     barmode   = "stack",
@@ -141,8 +139,18 @@ DLY_YY %>%
     DLY_YY %>% select(YEAR, DLY_CAT, DLY_DUR), 
     "PRE_DEP_DLY_YY")
 
-
-
+if (length(unique(DLY_YY$YEAR))>1) {
+  plot %>%
+    add_annotations(
+      data      = DLY_YY %>% select(YEAR, DLY_DUR_TOT) %>% unique(),
+      x         = ~ YEAR,
+      y         = ~ DLY_DUR_TOT + 100000,
+      text      = ~ paste0(round(DLY_DUR_TOT/1000000, 2), "M"),
+      showarrow = FALSE
+    )
+} else {
+  plot
+}
 
 
 # Factsheet figure

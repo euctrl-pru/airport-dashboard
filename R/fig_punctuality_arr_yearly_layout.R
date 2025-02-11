@@ -34,7 +34,7 @@ punc_arr_yy_plot$PUNCT_CAT <- factor(
 
 punc_arr_yy_plot %>%
   plot_ly(
-    x      = ~YEAR,
+    x      = ~as.character(YEAR),
     y      = ~AVG_PER_CATEG,
     color  = ~PUNCT_CAT,
     colors = pun_col,
