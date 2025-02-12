@@ -86,7 +86,8 @@ if (nrow(params$atfm) > 0) {
     layout(
       barmode   = "stack",
       hovermode = "x unified",
-      xaxis     = list(title = ""),
+      xaxis     = list(tickformat = ".0f",
+                       title = ""),
       yaxis     = list(
         title       = "Average Arrival ATFM delay [min/arr]",
         titlefont   = list(size = 11),
