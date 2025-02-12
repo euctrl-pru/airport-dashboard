@@ -87,6 +87,8 @@ if (nrow(params$atfm) > 0) {
       barmode   = "stack",
       hovermode = "x unified",
       xaxis     = list(tickformat = ".0f",
+                       ticktext = unique(atfm_pa$YEAR),
+                       tickvals=unique(atfm_pa$YEAR),
                        title = ""),
       yaxis     = list(
         title       = "Average Arrival ATFM delay [min/arr]",
