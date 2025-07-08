@@ -1,6 +1,9 @@
 library(dplyr)
 library(here)
 library(stringr)
+
+shell("git push")
+
 source('R/plotly_download_wrapper.R')
 
 # 0. cleanup: remove everything but (favicons and) `images/` 
