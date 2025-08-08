@@ -2,7 +2,7 @@ library(dplyr)
 library(here)
 library(stringr)
 
-shell("git push")
+shell("git pull")
 
 source('R/plotly_download_wrapper.R')
 
