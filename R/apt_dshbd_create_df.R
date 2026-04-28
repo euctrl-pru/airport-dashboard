@@ -505,9 +505,9 @@ PDDLY_MM_DF <- APDF_MM_DF %>%
 #  summarise( DLY_89_PER_FL_YY = mean(DLY_89_PER_FL_YY)) %>%
 #  ungroup()
 PDDLY_YY_AVG_DF <- APDF_MM_DF %>%
-  select(AIRPORT, APT_ICAO, YEAR, DLY_89_PER_FL_MM)%>%
+  filter(!is.na(DLY_89_PER_FL_MM)) %>% 
   group_by(AIRPORT, APT_ICAO, YEAR)%>%
-  summarise( DLY_89_PER_FL_YY = mean(DLY_89_PER_FL_MM, na.rm = TRUE)) %>%
+  summarise(DLY_89_PER_FL_YY = sum(DLY_89_MIN, na.rm = TRUE)/sum(NB_DLY_DEP_FL, na.rm = TRUE)) %>%
   ungroup()
 
 # ..PDDLY MONTLHY AVERAGE  ----
