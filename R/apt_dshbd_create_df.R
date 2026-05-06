@@ -63,35 +63,35 @@ THRU_DF <- read_csv2(here("data", "APT_DSHBD_THROUGHPUT.csv")) %>%
 # ATFM ----
 
 ATFM_DF <- read_csv2(here("data", "APT_DSHBD_ATFM.csv")) %>%
-      mutate(AIRPORT  = APT_ICAO,
-             FLT_DATE = lubridate::date(FLT_DATE),
-      #   
+  mutate(AIRPORT  = APT_ICAO,
+         FLT_DATE = lubridate::date(FLT_DATE),
+         #   
          across(starts_with("DLY_APT_ARR_"),
                 ~ tidyr::replace_na(.x, 0)),
-      #
-      AD_DISRUPTION = DLY_APT_ARR_A_1 +
-         DLY_APT_ARR_E_1 +
-         DLY_APT_ARR_N_1 +
-         DLY_APT_ARR_O_1 +
-         DLY_APT_ARR_NA_1,
-       #
-       AD_CAPACITY = DLY_APT_ARR_G_1 +
-         DLY_APT_ARR_M_1 +
-         DLY_APT_ARR_R_1 +
-         DLY_APT_ARR_V_1,
-       #
-       AD_WEATHER = DLY_APT_ARR_D_1 +
-         DLY_APT_ARR_W_1,
-       #
-       AD_DISRUPTION_ATC = DLY_APT_ARR_I_1 +
-         DLY_APT_ARR_T_1,
-       #
-       AD_CAPACITY_ATC = DLY_APT_ARR_C_1,
-       #
-       AD_STAFFING_ATC = DLY_APT_ARR_S_1,
-       #
-       AD_EVENTS = DLY_APT_ARR_P_1
-) %>%
+         #
+         AD_DISRUPTION = DLY_APT_ARR_A_1 +
+           DLY_APT_ARR_E_1 +
+           DLY_APT_ARR_N_1 +
+           DLY_APT_ARR_O_1 +
+           DLY_APT_ARR_NA_1,
+         #
+         AD_CAPACITY = DLY_APT_ARR_G_1 +
+           DLY_APT_ARR_M_1 +
+           DLY_APT_ARR_R_1 +
+           DLY_APT_ARR_V_1,
+         #
+         AD_WEATHER = DLY_APT_ARR_D_1 +
+           DLY_APT_ARR_W_1,
+         #
+         AD_DISRUPTION_ATC = DLY_APT_ARR_I_1 +
+           DLY_APT_ARR_T_1,
+         #
+         AD_CAPACITY_ATC = DLY_APT_ARR_C_1,
+         #
+         AD_STAFFING_ATC = DLY_APT_ARR_S_1,
+         #
+         AD_EVENTS = DLY_APT_ARR_P_1
+  ) %>%
   select(
     AIRPORT,
     YEAR,
@@ -505,10 +505,17 @@ PDDLY_MM_DF <- APDF_MM_DF %>%
 #  summarise( DLY_89_PER_FL_YY = mean(DLY_89_PER_FL_YY)) %>%
 #  ungroup()
 PDDLY_YY_AVG_DF <- APDF_MM_DF %>%
-  filter(!is.na(DLY_89_PER_FL_MM)) %>% 
+  # filter(!is.na(DLY_89_PER_FL_MM)) %>% 
   group_by(AIRPORT, APT_ICAO, YEAR)%>%
-  summarise(DLY_89_PER_FL_YY = sum(DLY_89_MIN, na.rm = TRUE)/sum(NB_DLY_DEP_FL, na.rm = TRUE)) %>%
-  ungroup()
+  summarize(
+    DLY_89_PER_FL_YY = ifelse(
+      sum(!is.na(DLY_89_PER_FL_MM)) >= 10,
+      sum(DLY_89_MIN[!is.na(DLY_89_PER_FL_MM)]) / sum(NB_DLY_DEP_FL[!is.na(DLY_89_PER_FL_MM)]),
+      NA_real_
+    ),
+    .groups = "drop"
+  ) %>%
+  arrange(AIRPORT, APT_ICAO, YEAR)
 
 # ..PDDLY MONTLHY AVERAGE  ----
 PDDLY_MM_AVG_DF <- APDF_MM_DF %>%
@@ -735,7 +742,7 @@ DLY_MM_DF <- APDF_DELAY_DF %>%
     OTHER    
   ) %>%
   mutate(MONTH = as.numeric(MONTH),
-        YEAR =  as.numeric(YEAR))%>%
+         YEAR =  as.numeric(YEAR))%>%
   group_by(AIRPORT, YEAR, MONTH) %>%
   summarise(
     TOT_DLY_AIRLINE       = sum(AIRLINE, na.rm = TRUE),
