@@ -22,7 +22,7 @@ thru_mth <- unique(thru$MONTH_NUM)
 thru_max <- thru %>%
   group_by(TIME) %>%
   summarise(ROLLING_HOUR_MVT = mean(PCT99_RHM, na.rm = TRUE)) %>%
-  mutate(PHASE = "Peak Service Rate<br>(2016-2023)") %>%
+  mutate(PHASE = "Peak Service Rate<br>(2016-2026)") %>%
   ungroup()
 
 thru <- thru %>%
@@ -30,9 +30,9 @@ thru <- thru %>%
   bind_rows(thru_max) %>%
   mutate(TIME = as.character(TIME), TIME = strtrim(TIME, 5))
 
-phase_grps <- c(  "Departures",  "Arrivals",  "Total",  "Peak Service Rate<br>(2016-2023)")
+phase_grps <- c(  "Departures",  "Arrivals",  "Total",  "Peak Service Rate<br>(2016-2026)")
 
-phase_lbl  <- c(  "Departures",  "Arrivals",  "Total",  "Peak Service Rate<br>(2016-2023)")
+phase_lbl  <- c(  "Departures",  "Arrivals",  "Total",  "Peak Service Rate<br>(2016-2026)")
 
 xax <- list(
   title = "",
@@ -122,7 +122,7 @@ thru %>%
 
 # Factsheet figure
 
-phase_lbl2  <- c("Departures", "Arrivals", "Total", "Peak Service Rate\n(2016-2023)")
+phase_lbl2  <- c("Departures", "Arrivals", "Total", "Peak Service Rate\n(2016-2026)")
 
 if (nrow(thru)>0) {
   
