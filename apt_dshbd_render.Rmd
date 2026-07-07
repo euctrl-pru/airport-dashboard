@@ -51,8 +51,10 @@ output:
     favicon     : 'https://ansperformance.eu/favicon.png'
     lib_dir     : 'docs/libs'
     self_contained: FALSE
-    includes: 
-      in_header: media/ga_script.html
+    includes:
+      in_header:
+        - media/ga_script.html
+        - media/matomo.html
 ---
 
 <script>

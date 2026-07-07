@@ -2,8 +2,10 @@
 title: "AIU Airport Performance Dashboard"
 output:
   html_document:
-    includes: 
-      in_header: ga_script.html
+    includes:
+      in_header:
+        - ga_script.html
+        - matomo.html
 
 ---
 
