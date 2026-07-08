@@ -3,28 +3,28 @@ punc_arr_mm_plot <- params$punc_arr_mm
 
 #punc_arr_mm_plot$PUNCT_CAT <- factor(punc_arr_mm_plot$PUNCT_CAT,
 #                                     levels = c(
-#                                       "Early >30",
+#                                       "Early =>31",
 #                                       "Early 16-30",
 #                                       "Early 5-15",
 #                                       "On Time -+4",
 #                                       "Late 5-15",
 #                                       "Late 16-30",
 #                                       "Late 31-60",
-#                                       "Late >60"
+#                                       "Late =>61"
 #                                     )
 #)
 
 
 punc_arr_mm_plot$PUNCT_CAT <- factor(punc_arr_mm_plot$PUNCT_CAT,
                                      levels = c(
-                                       "[<-30]",
+                                       "[<=-31]",
                                        "[-16, -30]",
                                        "[- 5, -15]",
                                        "[- 4, + 4]",
                                        "[+ 5, +15]",
                                        "[+16, +30]",
                                        "[+31, +60]",
-                                       "[>+60]"
+                                       "[>=+61]"
                                      )
 )
 
