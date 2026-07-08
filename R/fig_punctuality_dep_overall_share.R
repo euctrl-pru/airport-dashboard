@@ -2,14 +2,14 @@
 punc_dep_yy <- params$punc_dep_yy %>% 
   mutate(PUNCT_CAT=factor(PUNCT_CAT,
                           levels = c(
-                            "[<-30]",
+                            "[<=-31]",
                             "[-16, -30]",
                             "[- 5, -15]",
                             "[- 4, + 4]",
                             "[+ 5, +15]",
                             "[+16, +30]",
                             "[+31, +60]",
-                            "[>+60]"
+                            "[>=+61]"
                           )
   ))
 
@@ -28,7 +28,7 @@ punc_dep_yy_share_curr_year=filter(punc_dep_yy, YEAR == max_year)
 punc_dep_within_15_min=sum(filter(punc_dep_yy_share_curr_year, 
                                   PUNCT_CAT %in% c("[- 5, -15]", "[- 4, + 4]", "[+ 5, +15]"))$AVG_PER_CATEG)
 punc_dep_OTP=sum(filter(punc_dep_yy_share_curr_year, 
-                        PUNCT_CAT %in% c("[<-30]", "[-16, -30]", "[- 5, -15]", "[- 4, + 4]", "[+ 5, +15]"))$AVG_PER_CATEG)
+                        PUNCT_CAT %in% c("[<=-31]", "[-16, -30]", "[- 5, -15]", "[- 4, + 4]", "[+ 5, +15]"))$AVG_PER_CATEG)
 
 punc_dep_yy_share_plot_fig = ggplot() +
   geom_rect(aes(xmin=0, xmax=1, ymin=1, ymax=2), colour='black', fill='grey') +
